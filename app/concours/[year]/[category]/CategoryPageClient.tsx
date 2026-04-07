@@ -88,7 +88,7 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
                   marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
                   background: 'rgba(124,76,232,0.1)', border: '1px solid rgba(124,76,232,0.25)',
                   color: '#7C4CE8', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ {revisionData.questions.length} exercices d&apos;entraînement · {revisionData.duration} min</div>
+                }}>✦ {revisionData.questions.length} practice exercises · {revisionData.duration} min</div>
               )}
               {tipsData && (
                 <div style={{
@@ -96,7 +96,7 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
                   marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
                   background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)',
                   color: '#C9A84C', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ {tipsData.length} astuces stratégiques</div>
+                }}>✦ {tipsData.length} strategic tips</div>
               )}
               {recapData && (
                 <div style={{
@@ -104,7 +104,7 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
                   marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
                   background: 'rgba(76,232,124,0.1)', border: '1px solid rgba(76,232,124,0.25)',
                   color: '#4CE87C', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ {recapData.length} chapitres avec formules et théorèmes</div>
+                }}>✦ {recapData.length} chapters with formulas and theorems</div>
               )}
             </motion.div>
           </div>
@@ -126,7 +126,7 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
             }}>
               <div>
                 <div style={{ color: '#F5F0E8', fontWeight: 700, fontSize: '0.95rem', marginBottom: '4px' }}>{examData.title}</div>
-                <div style={{ color: '#8B8FA8', fontSize: '0.8rem' }}>{examData.date} · Épreuve de Mathématiques · Durée {examData.duration} min</div>
+                <div style={{ color: '#8B8FA8', fontSize: '0.8rem' }}>{examData.date} · Mathematics Paper · Duration {examData.duration} min</div>
               </div>
             </div>
             <div style={{
@@ -167,9 +167,9 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
             border: '1px solid rgba(255,255,255,0.06)',
           }}>
             <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{category.icon}</div>
-            <h2 style={{ color: '#F5F0E8', marginBottom: '0.5rem' }}>Contenu en préparation</h2>
+            <h2 style={{ color: '#F5F0E8', marginBottom: '0.5rem' }}>Content in preparation</h2>
             <p style={{ color: '#8B8FA8', fontSize: '0.9rem' }}>
-              Le contenu de cette section pour {year} sera bientôt disponible.
+              The content for this section in {year} will be available soon.
             </p>
           </div>
         )}

@@ -1,7 +1,6 @@
 // ============================================================
-// Real Exam Data – Concours Médecine UM6SS 2024
-// All LaTeX uses template literals: \frac, \text etc. (single backslash)
-// Solutions are string[] arrays: each element = one rendered step
+// Real Exam Data – UM6SS Medical Entrance Exam 2024
+// Mathematics Paper — July 20, 2024 — Duration 30 min
 // ============================================================
 
 export interface Choice {
@@ -17,7 +16,7 @@ export interface ExamQuestion {
   statement: string
   question: string
   choices: Choice[]
-  solution: string[]    // each entry = one KaTeX step
+  solution: string[]
   difficulty: 'easy' | 'medium' | 'hard'
   tags: string[]
 }
@@ -35,18 +34,18 @@ export interface ExamData {
 // ─────────────────────────────────────────────────────────────
 export const EXAM_2024_REAL: ExamData = {
   year: 2024,
-  date: '20 Juillet 2024',
+  date: 'July 20, 2024',
   duration: 30,
   categoryId: 'real-exam',
-  title: `Concours commun d'accès aux Facultés de Médecine, Médecine Dentaire, Pharmacie, Médecine Anglophone`,
-  instructions: `Pour chaque question, choisir parmi les quatre réponses proposées – L'UNIQUE RÉPONSE EXACTE en indiquant à chaque fois – sur la grille – la lettre correspondante à votre réponse. L'usage de la calculette est strictement interdit.`,
+  title: `Common Entrance Exam for Faculties of Medicine, Dental Medicine, Pharmacy — English Track`,
+  instructions: `For each question, choose among the four proposed answers – THE UNIQUE CORRECT ANSWER by indicating on the answer sheet the letter corresponding to your answer. The use of calculators is strictly forbidden.`,
   questions: [
-    // ── EXERCICE 1 ──────────────────────────────────────────
+    // ── EXERCISE 1 ──────────────────────────────────────────
     {
       number: 1,
       exercise: 1,
-      topic: 'Suites numériques',
-      statement: `\\text{On considère la suite numérique } (u_n) \\text{ définie par :}`,
+      topic: 'Sequences',
+      statement: `\\text{Consider the numerical sequence } (u_n) \\text{ defined by:}`,
       question: `u_n = \\dfrac{1 + 5 + 5^2 + \\cdots + 5^n}{1 - 5^n} \\;,\\quad \\forall n \\in \\mathbb{N}^*`,
       choices: [
         { id: 'A', latex: `\\lim u_n = -1`, isCorrect: false },
@@ -55,45 +54,45 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `\\lim u_n = -\\dfrac{1}{4}`, isCorrect: false },
       ],
       solution: [
-        `\\text{Le numérateur est une suite géométrique de raison 5 :}`,
+        `\\text{The numerator is a geometric series with ratio 5:}`,
         `1+5+\\cdots+5^n = \\dfrac{5^{n+1}-1}{5-1} = \\dfrac{5^{n+1}-1}{4}`,
         `u_n = \\dfrac{5^{n+1}-1}{4(1-5^n)} = \\dfrac{5 \\cdot 5^n - 1}{4(1 - 5^n)}`,
-        `\\text{On divise par } 5^n : \\quad u_n = \\dfrac{5 - 5^{-n}}{4(5^{-n} - 1)} \\xrightarrow[n\\to+\\infty]{} \\dfrac{5}{-4} = \\boxed{-\\dfrac{5}{4}}`,
+        `\\text{Divide by } 5^n : \\quad u_n = \\dfrac{5 - 5^{-n}}{4(5^{-n} - 1)} \\xrightarrow[n\\to+\\infty]{} \\dfrac{5}{-4} = \\boxed{-\\dfrac{5}{4}}`,
       ],
       difficulty: 'medium',
-      tags: ['suites', 'limite', 'géométrique'],
+      tags: ['sequences', 'limit', 'geometric'],
     },
 
-    // ── EXERCICE 2 ──────────────────────────────────────────
+    // ── EXERCISE 2 ──────────────────────────────────────────
     {
       number: 2,
       exercise: 2,
-      topic: 'Suites numériques',
-      statement: `(v_n) \\text{ est la suite numérique à termes positifs non nuls définie par :}`,
+      topic: 'Sequences',
+      statement: `(v_n) \\text{ is a sequence with positive nonzero terms defined by:}`,
       question: `\\ln(5^n \\times v_n) = \\dfrac{1}{2}\\,n \\;,\\quad \\forall n \\in \\mathbb{N}`,
       choices: [
-        { id: 'A', latex: `(v_n) \\text{ est arithmétique de raison } \\dfrac{e}{5}`, isCorrect: false },
-        { id: 'B', latex: `(v_n) \\text{ est géométrique de raison } \\dfrac{e}{5}`, isCorrect: false },
-        { id: 'C', latex: `(v_n) \\text{ est arithmétique de raison } \\dfrac{\\sqrt{e}}{5}`, isCorrect: false },
-        { id: 'D', latex: `(v_n) \\text{ est géométrique de raison } \\dfrac{\\sqrt{e}}{5}`, isCorrect: true },
+        { id: 'A', latex: `(v_n) \\text{ is arithmetic with ratio } \\dfrac{e}{5}`, isCorrect: false },
+        { id: 'B', latex: `(v_n) \\text{ is geometric with ratio } \\dfrac{e}{5}`, isCorrect: false },
+        { id: 'C', latex: `(v_n) \\text{ is arithmetic with ratio } \\dfrac{\\sqrt{e}}{5}`, isCorrect: false },
+        { id: 'D', latex: `(v_n) \\text{ is geometric with ratio } \\dfrac{\\sqrt{e}}{5}`, isCorrect: true },
       ],
       solution: [
         `\\ln(5^n \\cdot v_n) = \\tfrac{n}{2} \\implies n\\ln 5 + \\ln v_n = \\tfrac{n}{2}`,
         `\\ln v_n = \\tfrac{n}{2} - n\\ln 5 = n\\!\\left(\\tfrac{1}{2} - \\ln 5\\right)`,
         `v_n = e^{n(\\frac{1}{2}-\\ln 5)} = \\left(e^{\\frac{1}{2}-\\ln 5}\\right)^n = \\left(\\dfrac{\\sqrt{e}}{5}\\right)^{\\!n}`,
-        `\\boxed{\\text{Suite géométrique de raison } \\dfrac{\\sqrt{e}}{5}}`,
+        `\\boxed{\\text{Geometric sequence with ratio } \\dfrac{\\sqrt{e}}{5}}`,
       ],
       difficulty: 'medium',
-      tags: ['suites', 'logarithme', 'géométrique', 'arithmétique'],
+      tags: ['sequences', 'logarithm', 'geometric', 'arithmetic'],
     },
 
-    // ── EXERCICE 3 ──────────────────────────────────────────
+    // ── EXERCISE 3 ──────────────────────────────────────────
     {
       number: 3,
       exercise: 3,
-      topic: 'Nombres complexes',
-      statement: `\\text{Dans le plan rapporté à un repère orthonormé direct } (O,\\vec{u},\\vec{v})`,
-      question: `z = -e^{i\\frac{5\\pi}{12}} \\quad \\text{et} \\quad z' = (1+i)\\,\\bar{z} \\quad \\text{Trouver } \\arg(z')`,
+      topic: 'Complex Numbers',
+      statement: `\\text{In the plane with a direct orthonormal frame } (O,\\vec{u},\\vec{v})`,
+      question: `z = -e^{i\\frac{5\\pi}{12}} \\quad \\text{and} \\quad z' = (1+i)\\,\\bar{z} \\quad \\text{Find } \\arg(z')`,
       choices: [
         { id: 'A', latex: `\\arg(z') \\equiv -\\dfrac{7\\pi}{6} \\pmod{2\\pi}`, isCorrect: true },
         { id: 'B', latex: `\\arg(z') \\equiv -\\dfrac{\\pi}{6} \\pmod{2\\pi}`, isCorrect: false },
@@ -108,14 +107,14 @@ export const EXAM_2024_REAL: ExamData = {
         `\\boxed{\\arg(z') = \\tfrac{5\\pi}{6} \\equiv -\\tfrac{7\\pi}{6} \\pmod{2\\pi}}`,
       ],
       difficulty: 'hard',
-      tags: ['complexes', 'argument', 'conjugué', 'trigonométrie'],
+      tags: ['complex numbers', 'argument', 'conjugate', 'trigonometry'],
     },
 
-    // ── EXERCICE 4 ──────────────────────────────────────────
+    // ── EXERCISE 4 ──────────────────────────────────────────
     {
       number: 4,
       exercise: 4,
-      topic: 'Nombres complexes',
+      topic: 'Complex Numbers',
       statement: `z_A = 4+i \\;,\\; z_B = e^{-i\\frac{\\pi}{2}} = -i \\;,\\; A' = R\\!\\left(B,\\tfrac{\\pi}{2}\\right)(A)`,
       question: `z_{A'} = \\;?`,
       choices: [
@@ -132,16 +131,16 @@ export const EXAM_2024_REAL: ExamData = {
         `\\boxed{z_{A'} = z_B + (-2+4i) = -i-2+4i = -2+3i}`,
       ],
       difficulty: 'medium',
-      tags: ['complexes', 'rotation', 'géométrie'],
+      tags: ['complex numbers', 'rotation', 'geometry'],
     },
 
-    // ── EXERCICE 5 – PARTIE 1 ────────────────────────────────
+    // ── EXERCISE 5 – PART 1 ──────────────────────────────────
     {
       number: 5,
       exercise: 5,
-      topic: 'Intégrales',
-      statement: `\\text{On considère les intégrales :}`,
-      question: `I = \\int_{\\frac{\\pi}{6}}^{\\frac{\\pi}{3}} \\tan(x)\\,dx \\quad \\text{et} \\quad J = \\int_{\\frac{\\pi}{6}}^{\\frac{\\pi}{3}} \\dfrac{1}{\\tan(x)}\\,dx`,
+      topic: 'Integrals',
+      statement: `\\text{Consider the integrals:}`,
+      question: `I = \\int_{\\frac{\\pi}{6}}^{\\frac{\\pi}{3}} \\tan(x)\\,dx \\quad \\text{and} \\quad J = \\int_{\\frac{\\pi}{6}}^{\\frac{\\pi}{3}} \\dfrac{1}{\\tan(x)}\\,dx`,
       choices: [
         { id: 'A', latex: `I = -\\ln(\\sqrt{3})`, isCorrect: false },
         { id: 'B', latex: `I = \\ln(\\sqrt{3})`, isCorrect: true },
@@ -155,16 +154,16 @@ export const EXAM_2024_REAL: ExamData = {
         `\\boxed{I = \\ln\\sqrt{3}}`,
       ],
       difficulty: 'medium',
-      tags: ['intégrales', 'trigonométrie', 'logarithme'],
+      tags: ['integrals', 'trigonometry', 'logarithm'],
     },
 
-    // ── EXERCICE 5 – PARTIE 2 ────────────────────────────────
+    // ── EXERCISE 5 – PART 2 ──────────────────────────────────
     {
       number: 6,
       exercise: 5,
-      topic: 'Intégrales',
-      statement: `\\text{Avec les mêmes } I \\text{ et } J \\text{ (suite)}`,
-      question: `\\text{Trouver la relation entre } I \\text{ et } J`,
+      topic: 'Integrals',
+      statement: `\\text{With the same } I \\text{ and } J \\text{ (continued)}`,
+      question: `\\text{Find the relationship between } I \\text{ and } J`,
       choices: [
         { id: 'A', latex: `I = J`, isCorrect: true },
         { id: 'B', latex: `I = -J`, isCorrect: false },
@@ -177,16 +176,16 @@ export const EXAM_2024_REAL: ExamData = {
         `\\boxed{I = J = \\ln\\sqrt{3}}`,
       ],
       difficulty: 'medium',
-      tags: ['intégrales', 'trigonométrie'],
+      tags: ['integrals', 'trigonometry'],
     },
 
-    // ── EXERCICE 6 ──────────────────────────────────────────
+    // ── EXERCISE 6 ──────────────────────────────────────────
     {
       number: 7,
       exercise: 6,
-      topic: 'Intégrales impropres',
-      statement: `\\text{Pour } \\lambda \\in\\,]0\\,;\\,2[\\, \\text{ on pose :}`,
-      question: `I(\\lambda) = \\int_{\\lambda}^{2} \\ln(x)\\,dx \\quad \\text{Calculer } \\lim_{\\lambda \\to 0^+} I(\\lambda)`,
+      topic: 'Improper Integrals',
+      statement: `\\text{For } \\lambda \\in\\,]0\\,;\\,2[\\, \\text{ we define:}`,
+      question: `I(\\lambda) = \\int_{\\lambda}^{2} \\ln(x)\\,dx \\quad \\text{Compute } \\lim_{\\lambda \\to 0^+} I(\\lambda)`,
       choices: [
         { id: 'A', latex: `\\lim_{\\lambda \\to 0^+} I(\\lambda) = -2 + \\ln 4`, isCorrect: true },
         { id: 'B', latex: `\\lim_{\\lambda \\to 0^+} I(\\lambda) = 2 - \\ln 4`, isCorrect: false },
@@ -195,82 +194,82 @@ export const EXAM_2024_REAL: ExamData = {
       ],
       solution: [
         `I(\\lambda) = \\Big[x\\ln x - x\\Big]_{\\lambda}^{2} = (2\\ln 2 - 2)-(\\lambda\\ln\\lambda - \\lambda)`,
-        `\\lim_{\\lambda\\to 0^+}\\lambda\\ln\\lambda = 0 \\quad \\text{et} \\quad \\lim_{\\lambda\\to 0^+}\\lambda = 0`,
+        `\\lim_{\\lambda\\to 0^+}\\lambda\\ln\\lambda = 0 \\quad \\text{and} \\quad \\lim_{\\lambda\\to 0^+}\\lambda = 0`,
         `\\boxed{\\lim_{\\lambda\\to 0^+} I(\\lambda) = 2\\ln 2 - 2 = \\ln 4 - 2}`,
       ],
       difficulty: 'hard',
-      tags: ['intégrales', 'intégrale impropre', 'logarithme', 'limite'],
+      tags: ['integrals', 'improper integral', 'logarithm', 'limit'],
     },
 
-    // ── EXERCICE 7 – PARTIE 1 ────────────────────────────────
+    // ── EXERCISE 7 – PART 1 ──────────────────────────────────
     {
       number: 8,
       exercise: 7,
-      topic: 'Analyse de fonctions',
-      statement: `\\text{Soit } f \\text{ définie sur } [0,+\\infty[ \\text{ par } \\begin{cases} f(x) = e^x + x[\\ln(x)-e-1] & x>0 \\\\ f(0)= 1 \\end{cases}`,
-      question: `\\text{Comportement asymptotique de } (C_f) \\text{ :}`,
+      topic: 'Function Analysis',
+      statement: `\\text{Let } f \\text{ be defined on } [0,+\\infty[ \\text{ by } \\begin{cases} f(x) = e^x + x[\\ln(x)-e-1] & x>0 \\\\ f(0)= 1 \\end{cases}`,
+      question: `\\text{Asymptotic behavior of } (C_f) \\text{:}`,
       choices: [
-        { id: 'A', latex: `(C_f) \\text{ admet une asymptote verticale}`, isCorrect: false },
-        { id: 'B', latex: `(C_f) \\text{ admet une asymptote horizontale}`, isCorrect: false },
-        { id: 'C', latex: `(C_f) \\text{ admet une BP de direction l'axe } Ox`, isCorrect: false },
-        { id: 'D', latex: `(C_f) \\text{ admet une BP de direction l'axe } Oy`, isCorrect: true },
+        { id: 'A', latex: `(C_f) \\text{ has a vertical asymptote}`, isCorrect: false },
+        { id: 'B', latex: `(C_f) \\text{ has a horizontal asymptote}`, isCorrect: false },
+        { id: 'C', latex: `(C_f) \\text{ has a parabolic branch in the direction of } Ox`, isCorrect: false },
+        { id: 'D', latex: `(C_f) \\text{ has a parabolic branch in the direction of } Oy`, isCorrect: true },
       ],
       solution: [
-        `\\lim_{x\\to +\\infty} f(x) = +\\infty \\quad \\text{(pas d'asymptote horizontale)}`,
-        `f \\text{ est continue en } 0,\\; f(0)=1 \\quad \\text{(pas d'asymptote verticale)}`,
+        `\\lim_{x\\to +\\infty} f(x) = +\\infty \\quad \\text{(no horizontal asymptote)}`,
+        `f \\text{ is continuous at } 0,\\; f(0)=1 \\quad \\text{(no vertical asymptote)}`,
         `\\dfrac{f(x)}{x} = \\dfrac{e^x}{x} + \\ln x - e -1 \\xrightarrow[x\\to+\\infty]{} +\\infty`,
-        `\\boxed{(C_f) \\text{ admet une branche parabolique de direction l'axe } Oy}`,
+        `\\boxed{(C_f) \\text{ has a parabolic branch in the direction of } Oy}`,
       ],
       difficulty: 'hard',
-      tags: ['fonctions', 'asymptote', 'branche parabolique'],
+      tags: ['functions', 'asymptote', 'parabolic branch'],
     },
 
-    // ── EXERCICE 7 – PARTIE 2 ────────────────────────────────
+    // ── EXERCISE 7 – PART 2 ──────────────────────────────────
     {
       number: 9,
       exercise: 7,
-      topic: 'Analyse de fonctions',
-      statement: `\\text{Sachant que } f'(x) = e^x + \\ln(x) - e \\;,\\; \\forall x > 0`,
-      question: `\\text{Demi-tangente à droite de } 0 \\text{ pour } (C_f) \\text{ :}`,
+      topic: 'Function Analysis',
+      statement: `\\text{Given that } f'(x) = e^x + \\ln(x) - e \\;,\\; \\forall x > 0`,
+      question: `\\text{Half-tangent on the right of } 0 \\text{ for } (C_f) \\text{:}`,
       choices: [
-        { id: 'A', latex: `\\text{Demi-tangente horizontale}`, isCorrect: false },
-        { id: 'B', latex: `\\text{Demi-tangente verticale dirigée vers le bas}`, isCorrect: false },
-        { id: 'C', latex: `\\text{Demi-tangente verticale dirigée vers le haut}`, isCorrect: true },
-        { id: 'D', latex: `\\text{Le point } x=1 \\text{ est un point d'inflexion}`, isCorrect: false },
+        { id: 'A', latex: `\\text{Horizontal half-tangent}`, isCorrect: false },
+        { id: 'B', latex: `\\text{Vertical half-tangent pointing downward}`, isCorrect: false },
+        { id: 'C', latex: `\\text{Vertical half-tangent pointing upward}`, isCorrect: true },
+        { id: 'D', latex: `\\text{The point } x=1 \\text{ is an inflection point}`, isCorrect: false },
       ],
       solution: [
         `\\lim_{x\\to 0^+} \\dfrac{f(x)-f(0)}{x} = \\lim_{x\\to 0^+} \\dfrac{e^x-1}{x} + \\ln x - e - 1`,
         `= 1 + (-\\infty) - e - 1 = -\\infty`,
-        `\\text{La pente tend vers } -\\infty \\text{, donc tangente verticale.}`,
-        `\\text{Comme } f(x) \\to f(0)=1 \\text{ par valeurs > 1 au voisinage de } 0^+`,
-        `\\boxed{\\text{La courbe admet une demi-tangente verticale dirigée vers le haut}}`,
+        `\\text{The slope tends to } -\\infty \\text{, so it is a vertical tangent.}`,
+        `\\text{Since } f(x) \\to f(0)=1 \\text{ from values > 1 near } 0^+`,
+        `\\boxed{\\text{The curve has a vertical half-tangent pointing upward}}`,
       ],
       difficulty: 'hard',
-      tags: ['fonctions', 'dérivée', 'tangente'],
+      tags: ['functions', 'derivative', 'tangent'],
     },
 
-    // ── EXERCICE 7 – PARTIE 3 ────────────────────────────────
+    // ── EXERCISE 7 – PART 3 ──────────────────────────────────
     {
       number: 10,
       exercise: 7,
-      topic: 'Analyse de fonctions',
-      statement: `\\text{(Suite de l'exercice 7)}`,
-      question: `\\text{Déterminer les propriétés de } f \\text{ :}`,
+      topic: 'Function Analysis',
+      statement: `\\text{(Continuation of Exercise 7)}`,
+      question: `\\text{Determine the properties of } f \\text{:}`,
       choices: [
-        { id: 'A', latex: `f \\text{ est concave sur } [0,1] \\text{ et convexe sur } [1,+\\infty[`, isCorrect: false },
+        { id: 'A', latex: `f \\text{ is concave on } [0,1] \\text{ and convex on } [1,+\\infty[`, isCorrect: false },
         { id: 'B', latex: `f([0,+\\infty[) = [-1,+\\infty[`, isCorrect: true },
         { id: 'C', latex: `f([0,+\\infty[) = [1,+\\infty[`, isCorrect: false },
         { id: 'D', latex: `f([0,+\\infty[) = ]-1,+\\infty[`, isCorrect: false },
       ],
       solution: [
-        `f''(x) = e^x + \\dfrac{1}{x} > 0 \\;\\forall x>0 \\implies f \\text{ est convexe (A faux)}`,
-        `f'(1) = e + 0 - e = 0 \\quad \\text{et} \\quad f''(1) = e+1>0 \\implies x=1 \\text{ est un minimum}`,
+        `f''(x) = e^x + \\dfrac{1}{x} > 0 \\;\\forall x>0 \\implies f \\text{ is convex (A is false)}`,
+        `f'(1) = e + 0 - e = 0 \\quad \\text{and} \\quad f''(1) = e+1>0 \\implies x=1 \\text{ is a minimum}`,
         `f(1) = e + 1\\cdot[\\ln 1 - e - 1] = e + (0-e-1) = -1`,
         `f(0) = 1,\\; f(1)=-1,\\; \\lim_{x\\to+\\infty} f(x)=+\\infty`,
         `\\boxed{f([0,+\\infty[) = [-1,+\\infty[}`,
       ],
       difficulty: 'hard',
-      tags: ['fonctions', 'convexité', 'image', 'minimum'],
+      tags: ['functions', 'convexity', 'range', 'minimum'],
     },
   ],
 }

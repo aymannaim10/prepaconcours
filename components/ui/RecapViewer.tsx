@@ -74,7 +74,7 @@ export default function RecapViewer({ topics }: { topics: RecapTopic[] }) {
           <div style={{
             color: topic.color, fontSize: '0.72rem', fontWeight: 700,
             letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem',
-          }}>📐 Formules essentielles</div>
+          }}>📐 Essential formulas</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {topic.formulas.map((f, i) => (
               <FormulaCard key={i} f={f} color={topic.color} i={i} />
@@ -87,7 +87,7 @@ export default function RecapViewer({ topics }: { topics: RecapTopic[] }) {
           <div style={{
             color: '#4CADE8', fontSize: '0.72rem', fontWeight: 700,
             letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem',
-          }}>📖 Théorèmes clés</div>
+          }}>📖 Key theorems</div>
           {topic.theorems.map((th, i) => (
             <div key={i} style={{
               padding: '1rem 1.25rem', borderRadius: '10px',
@@ -109,7 +109,7 @@ export default function RecapViewer({ topics }: { topics: RecapTopic[] }) {
             color: '#E84C4C', fontSize: '0.72rem', fontWeight: 700,
             letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem',
             display: 'flex', alignItems: 'center', gap: '6px',
-          }}><AlertTriangle size={13} /> Pièges à éviter</div>
+          }}><AlertTriangle size={13} /> Common Pitfalls</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {topic.pitfalls.map((p, i) => (
               <div key={i} style={{

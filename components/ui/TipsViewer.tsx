@@ -83,7 +83,7 @@ function TipCard({ tip, index }: { tip: Tip; index: number }) {
                   color: tip.color, fontSize: '0.72rem', fontWeight: 700,
                   letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '1rem',
                 }}>
-                  <Sparkles size={13} /> Formules clés
+                  <Sparkles size={13} /> Key formulas
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                   {tip.formulas.map((f, i) => (
@@ -116,7 +116,7 @@ function TipCard({ tip, index }: { tip: Tip; index: number }) {
                 <div style={{
                   fontSize: '0.72rem', fontWeight: 700, color: tip.color,
                   letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem',
-                }}>💡 Exemple résolu</div>
+                }}>💡 Worked example</div>
                 <div style={{ marginBottom: '0.6rem' }}>
                   <MathRenderer latex={tip.example.question} block />
                 </div>
@@ -169,7 +169,7 @@ export default function TipsViewer({ tips }: { tips: Tip[] }) {
             fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
             fontFamily: 'var(--font-body)', transition: 'all 0.2s',
           }}
-        >Tous ({tips.length})</button>
+        >All ({tips.length})</button>
         {topics.map(topic => (
           <button
             key={topic}

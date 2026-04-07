@@ -100,7 +100,7 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
           fontWeight: 700,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-        }}>Exercice {q.exercise}</div>
+        }}>Exercise {q.exercise}</div>
         <div style={{
           padding: '4px 12px',
           borderRadius: '20px',
@@ -285,7 +285,7 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
                   letterSpacing: '0.1em', textTransform: 'uppercase',
                 }}>
                   <BookOpen size={14} />
-                  Correction détaillée
+                  Detailed Correction
                 </div>
                 <div style={{
                   padding: '3px 10px', borderRadius: '6px',
@@ -294,7 +294,7 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
                   color: selected === correctId ? '#4CE87C' : '#E84C4C',
                   fontSize: '0.7rem', fontWeight: 700,
                 }}>
-                  {selected === correctId ? '✓ Bonne réponse' : '✗ Mauvaise réponse — la bonne est ' + correctId}
+                  {selected === correctId ? '✓ Correct answer' : '✗ Wrong answer — the correct one is ' + correctId}
                 </div>
               </div>
 
