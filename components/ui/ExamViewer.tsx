@@ -1,41 +1,39 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { Clock, ChevronLeft, ChevronRight, CheckCircle, XCircle, Eye, EyeOff, BookOpen, Target, Award, RotateCcw } from 'lucide-react'
+import { Clock, ChevronLeft, ChevronRight, CheckCircle, XCircle, Eye, BookOpen, Target, Award, RotateCcw, Lightbulb } from 'lucide-react'
 import MathRenderer from './MathRenderer'
+import InlineMath from './InlineMath'
 import type { ExamData, ExamQuestion } from '@/lib/exam-data'
+import { TIPS_2024 } from '@/lib/content-2024'
 
 // ── Timer ────────────────────────────────────────────────────
 function Timer({ totalSeconds }: { totalSeconds: number }) {
   const [remaining, setRemaining] = useState(totalSeconds)
 
   useEffect(() => {
-    if (remaining <= 0) return
-    const id = setInterval(() => setRemaining((r) => r - 1), 1000)
+    const id = setInterval(() => {
+      setRemaining((r) => {
+        if (r <= 0) return 0
+        return r - 1
+      })
+    }, 1000)
     return () => clearInterval(id)
-  }, [remaining])
+  }, [])
 
   const mins = Math.floor(remaining / 60)
   const secs = remaining % 60
-  const pct = (remaining / totalSeconds) * 100
   const urgent = remaining < 300
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      padding: '0.5rem 1rem',
-      borderRadius: '10px',
-      background: urgent ? 'rgba(232,76,76,0.12)' : 'rgba(201,168,76,0.1)',
-      border: `1px solid ${urgent ? 'rgba(232,76,76,0.3)' : 'rgba(201,168,76,0.25)'}`,
-      color: urgent ? '#E84C4C' : '#C9A84C',
-      fontFamily: 'monospace',
-      fontSize: '1.05rem',
-      fontWeight: 700,
-      transition: 'all 0.3s',
-    }}>
+    <div
+      role="timer"
+      aria-live="polite"
+      className={`flex items-center gap-2.5 px-4 py-2 rounded-lg font-mono text-base font-bold transition-all duration-300 ${
+        urgent ? 'timer-urgent' : 'timer-normal'
+      }`}
+    >
       <Clock size={16} />
       {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
     </div>
@@ -45,20 +43,41 @@ function Timer({ totalSeconds }: { totalSeconds: number }) {
 // ── Progress Bar ──────────────────────────────────────────────
 function ProgressBar({ answered, total }: { answered: number; total: number }) {
   return (
-    <div style={{ marginBottom: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-        <span style={{ fontSize: '0.8rem', color: '#8B8FA8' }}>Progress</span>
-        <span style={{ fontSize: '0.8rem', color: '#C9A84C', fontWeight: 700 }}>
-          {answered}/{total} answered
-        </span>
+    <div className="mb-8">
+      <div className="flex justify-between mb-2">
+        <span className="text-xs text-muted">Progress</span>
+        <span className="text-xs text-gold font-bold">{answered}/{total} answered</span>
       </div>
-      <div style={{ height: '6px', borderRadius: '3px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
         <motion.div
           animate={{ width: `${(answered / total) * 100}%` }}
           transition={{ duration: 0.4 }}
-          style={{ height: '100%', borderRadius: '3px', background: 'linear-gradient(90deg, #C9A84C, #E8C96A)' }}
+          className="h-full rounded-full bg-gradient-to-r from-gold to-gold-light"
         />
       </div>
+    </div>
+  )
+}
+
+// ── Related Tips ──────────────────────────────────────────────
+function RelatedTips({ tipIds }: { tipIds: string[] }) {
+  const tips = tipIds.map(id => TIPS_2024.find(t => t.id === id)).filter(Boolean)
+  if (tips.length === 0) return null
+  return (
+    <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center gap-2 flex-wrap">
+      <Lightbulb size={13} className="text-blue-accent shrink-0" />
+      <span className="text-[0.65rem] font-bold tracking-widest uppercase text-blue-accent">
+        Shortcut:
+      </span>
+      {tips.map(tip => (
+        <Link
+          key={tip!.id}
+          href="/concours/2024/tips-tricks"
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[0.65rem] font-semibold no-underline transition-colors bg-blue-accent/10 border border-blue-accent/25 text-blue-accent hover:bg-blue-accent/15"
+        >
+          {tip!.title}
+        </Link>
+      ))}
     </div>
   )
 }
@@ -66,19 +85,20 @@ function ProgressBar({ answered, total }: { answered: number; total: number }) {
 // ── Question Card ─────────────────────────────────────────────
 interface QCardProps {
   q: ExamQuestion
-  qIndex: number
   selected: string | null
   revealed: boolean
   onSelect: (id: string) => void
   onReveal: () => void
 }
 
-function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCardProps) {
-  const correctId = q.choices.find(c => c.isCorrect)?.id
+// Matches @theme tokens: gold, blue-accent, purple-accent, green-accent
+const CHOICE_COLORS: Record<string, string> = {
+  A: '#C9A84C', B: '#4CADE8', C: '#9066EE', D: '#4CE87C',
+}
 
-  const choiceColors: Record<string, string> = {
-    A: '#C9A84C', B: '#4CADE8', C: '#7C4CE8', D: '#4CE87C',
-  }
+function QuestionCard({ q, selected, revealed, onSelect, onReveal }: QCardProps) {
+  const correctId = q.choices.find(c => c.isCorrect)?.id
+  const isCorrect = revealed && selected === correctId
 
   return (
     <motion.div
@@ -89,76 +109,47 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
       transition={{ duration: 0.35 }}
     >
       {/* Exercise badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-        <div style={{
-          padding: '4px 14px',
-          borderRadius: '20px',
-          background: 'rgba(201,168,76,0.1)',
-          border: '1px solid rgba(201,168,76,0.25)',
-          color: '#C9A84C',
-          fontSize: '0.72rem',
-          fontWeight: 700,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-        }}>Exercise {q.exercise}</div>
-        <div style={{
-          padding: '4px 12px',
-          borderRadius: '20px',
-          background: 'rgba(76,173,232,0.1)',
-          border: '1px solid rgba(76,173,232,0.2)',
-          color: '#4CADE8',
-          fontSize: '0.72rem',
-          fontWeight: 600,
-        }}>{q.topic}</div>
-        <div style={{
-          padding: '3px 10px',
-          borderRadius: '20px',
-          background: q.difficulty === 'hard' ? 'rgba(232,76,76,0.1)' : q.difficulty === 'medium' ? 'rgba(201,168,76,0.08)' : 'rgba(76,232,124,0.1)',
-          color: q.difficulty === 'hard' ? '#E84C4C' : q.difficulty === 'medium' ? '#C9A84C' : '#4CE87C',
-          fontSize: '0.68rem',
-          fontWeight: 700,
-          textTransform: 'capitalize',
-        }}>{q.difficulty}</div>
+      <div className="flex items-center gap-2.5 mb-6 flex-wrap">
+        <div className="badge-tag bg-gold-dim border border-gold/25 text-gold uppercase tracking-wide">
+          Exercise {q.exercise}
+        </div>
+        <div className="badge-tag bg-blue-accent/10 border border-blue-accent/20 text-blue-accent">
+          {q.topic}
+        </div>
+        <div className={`badge-dot ${
+          q.difficulty === 'hard'
+            ? 'text-danger'
+            : q.difficulty === 'medium'
+            ? 'text-gold'
+            : 'text-green-accent'
+        }`}>
+          {q.difficulty}
+        </div>
       </div>
 
       {/* Statement */}
       {q.statement && (
-        <div style={{
-          padding: '1rem 1.25rem',
-          background: 'rgba(255,255,255,0.03)',
-          borderRadius: '10px',
-          border: '1px solid rgba(255,255,255,0.05)',
-          marginBottom: '1.25rem',
-          color: '#C8C4BE',
-          fontSize: '0.9rem',
-          lineHeight: 1.7,
-        }}>
+        <div className="px-5 py-4 bg-white/[0.03] rounded-lg border border-white/5 mb-5 text-text-secondary leading-relaxed">
           <MathRenderer latex={q.statement} block />
         </div>
       )}
 
       {/* Question */}
-      <div style={{
-        padding: '1.5rem',
-        background: 'rgba(201,168,76,0.04)',
-        borderRadius: '12px',
-        border: '1px solid rgba(201,168,76,0.12)',
-        marginBottom: '1.75rem',
-      }}>
-        <div style={{ color: '#F5F0E8', fontSize: '0.85rem', marginBottom: '0.75rem', fontWeight: 600, letterSpacing: '0.04em' }}>
+      <div className="p-6 bg-gold/4 rounded-xl border border-gold/12 mb-7">
+        <div className="text-foreground text-sm mb-3 font-semibold tracking-wide">
           Q{q.number} —
         </div>
-        <MathRenderer latex={q.question} block style={{ color: '#F5F0E8' }} />
+        <MathRenderer latex={q.question} block className="text-foreground" />
       </div>
 
       {/* Choices */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.75rem' }}>
+      <div className="flex flex-col gap-2.5 mb-7">
         {q.choices.map((choice) => {
           const isSelected = selected === choice.id
-          const color = choiceColors[choice.id]
+          const color = CHOICE_COLORS[choice.id]
           const showResult = revealed && selected
           const isCorrectChoice = choice.isCorrect
-          const isWrong = showResult && isSelected && !isCorrectChoice
+          const isThisChoiceWrong = showResult && isSelected && !isCorrectChoice
 
           return (
             <motion.button
@@ -166,64 +157,63 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
               whileHover={!revealed ? { x: 4 } : {}}
               whileTap={!revealed ? { scale: 0.98 } : {}}
               onClick={() => !revealed && onSelect(choice.id)}
+              className="flex items-center gap-4 px-5 py-3.5 rounded-lg text-left transition-all duration-200 w-full font-body cursor-pointer disabled:cursor-default focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none"
+              disabled={revealed}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '0.9rem 1.25rem',
-                borderRadius: '10px',
                 border: `1px solid ${
                   showResult && isCorrectChoice ? '#4CE87C40'
-                  : showResult && isWrong ? '#E84C4C40'
+                  : showResult && isThisChoiceWrong ? '#E84C4C40'
                   : isSelected ? `${color}50`
                   : 'rgba(255,255,255,0.06)'
                 }`,
                 background: showResult && isCorrectChoice
                   ? 'rgba(76,232,124,0.08)'
-                  : showResult && isWrong
+                  : showResult && isThisChoiceWrong
                   ? 'rgba(232,76,76,0.08)'
                   : isSelected
                   ? `${color}12`
                   : 'rgba(13,18,32,0.4)',
-                cursor: revealed ? 'default' : 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.2s',
-                width: '100%',
-                fontFamily: 'var(--font-body)',
               }}
             >
               {/* Letter */}
-              <div style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: showResult && isCorrectChoice
-                  ? 'rgba(76,232,124,0.2)'
-                  : showResult && isWrong
-                  ? 'rgba(232,76,76,0.2)'
-                  : isSelected
-                  ? `${color}25`
-                  : 'rgba(255,255,255,0.05)',
-                border: `1px solid ${
-                  showResult && isCorrectChoice ? '#4CE87C50'
-                  : showResult && isWrong ? '#E84C4C50'
-                  : isSelected ? `${color}60`
-                  : 'rgba(255,255,255,0.1)'
-                }`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                color: showResult && isCorrectChoice ? '#4CE87C' : showResult && isWrong ? '#E84C4C' : isSelected ? color : '#8B8FA8',
-                fontWeight: 800,
-                fontSize: '0.85rem',
-              }}>
-                {showResult && isCorrectChoice ? '✓' : showResult && isWrong ? '✗' : choice.id}
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-extrabold text-sm"
+                style={{
+                  background: showResult && isCorrectChoice
+                    ? 'rgba(76,232,124,0.2)'
+                    : showResult && isThisChoiceWrong
+                    ? 'rgba(232,76,76,0.2)'
+                    : isSelected
+                    ? `${color}25`
+                    : 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${
+                    showResult && isCorrectChoice ? '#4CE87C50'
+                    : showResult && isThisChoiceWrong ? '#E84C4C50'
+                    : isSelected ? `${color}60`
+                    : 'rgba(255,255,255,0.1)'
+                  }`,
+                  color: showResult && isCorrectChoice ? '#4CE87C' : showResult && isThisChoiceWrong ? '#E84C4C' : isSelected ? color : '#8B8FA8',
+                }}
+              >
+                {showResult && isCorrectChoice ? '✓' : showResult && isThisChoiceWrong ? '✗' : choice.id}
               </div>
 
               {/* Math */}
-              <div style={{ flex: 1, color: isSelected ? '#F5F0E8' : '#C8C4BE', fontSize: '0.95rem' }}>
+              <div
+                className="flex-1 text-sm"
+                style={{ color: isSelected ? '#F5F0E8' : (showResult && isCorrectChoice ? '#4CE87C' : '#C8C4BE') }}
+              >
                 <MathRenderer latex={choice.latex} />
+                {showResult && isCorrectChoice && !isSelected && (
+                  <motion.span
+                    initial={{ opacity: 0, x: 6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15, duration: 0.22 }}
+                    className="inline-flex items-center gap-1 ml-2.5 px-2 py-0.5 rounded bg-green-accent/15 border border-green-accent/30 text-green-accent text-[0.65rem] font-bold tracking-wide uppercase align-middle whitespace-nowrap"
+                  >
+                    ← Correct answer
+                  </motion.span>
+                )}
               </div>
             </motion.button>
           )
@@ -231,32 +221,90 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
       </div>
 
       {/* Action buttons */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-        <button
-          onClick={onReveal}
-          disabled={!selected}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '0.6rem 1.25rem',
-            borderRadius: '8px',
-            background: selected && !revealed ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.04)',
-            border: `1px solid ${selected && !revealed ? 'rgba(201,168,76,0.35)' : 'rgba(255,255,255,0.06)'}`,
-            color: selected && !revealed ? '#C9A84C' : '#4A4E62',
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            cursor: selected && !revealed ? 'pointer' : 'default',
-            fontFamily: 'var(--font-body)',
-            transition: 'all 0.2s',
-          }}
-        >
-          {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
-          {revealed ? 'Answer revealed' : 'Check answer'}
-        </button>
+      <div className="flex gap-3 flex-wrap items-center">
+        <AnimatePresence>
+          {!revealed && (
+            <motion.button
+              key="verify-btn"
+              initial={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.18 } }}
+              onClick={onReveal}
+              disabled={!selected}
+              className={`flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-sm font-bold font-body tracking-wide transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none ${
+                selected
+                  ? 'bg-gold/15 border border-gold/35 text-gold'
+                  : 'bg-white/[0.04] border border-white/[0.06] text-[#4A4E62] cursor-default'
+              }`}
+            >
+              <Eye size={14} />
+              Check answer
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {revealed && (
+            <motion.div
+              key="result-pill"
+              initial={{ opacity: 0, scale: 0.8, x: -8 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold tracking-wide ${
+                isCorrect ? 'state-correct' : 'state-wrong'
+              }`}
+            >
+              {isCorrect
+                ? <><CheckCircle size={13} /> Correct</>
+                : <><XCircle size={13} /> Wrong</>
+              }
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Solution – Premium Step-by-Step Design */}
+      {/* Result Announcement Banner */}
+      <AnimatePresence>
+        {revealed && (
+          <motion.div
+            key="result-banner"
+            initial={{ opacity: 0, y: -14, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className={`mt-5 px-6 py-4 rounded-xl flex items-center gap-4 ${
+              isCorrect
+                ? 'bg-gradient-to-br from-green-accent/10 to-green-accent/4 border border-green-accent/25'
+                : 'bg-gradient-to-br from-danger/10 to-danger/4 border border-danger/25'
+            }`}
+          >
+            <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${
+              isCorrect
+                ? 'bg-green-accent/15 border-[1.5px] border-green-accent/40'
+                : 'bg-danger/15 border-[1.5px] border-danger/40'
+            }`}>
+              {isCorrect
+                ? <CheckCircle size={22} className="text-green-accent" />
+                : <XCircle size={22} className="text-danger" />
+              }
+            </div>
+            <div>
+              <div className={`text-base font-extrabold font-body tracking-tight mb-0.5 ${
+                isCorrect ? 'text-green-accent' : 'text-danger'
+              }`}>
+                {isCorrect ? 'Correct answer!' : 'Wrong answer'}
+              </div>
+              <div className="text-xs text-muted font-body">
+                {isCorrect
+                  ? 'Check the detailed correction below.'
+                  : `The correct answer is ${correctId} — see the correction below.`
+                }
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Solution – Timeline Stepper Design */}
       <AnimatePresence>
         {revealed && (
           <motion.div
@@ -264,83 +312,67 @@ function QuestionCard({ q, qIndex, selected, revealed, onSelect, onReveal }: QCa
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-            style={{ overflow: 'hidden' }}
+            className="overflow-hidden"
           >
-            <div style={{
-              marginTop: '1.5rem',
-              borderRadius: '14px',
-              overflow: 'hidden',
-              border: '1px solid rgba(76,173,232,0.2)',
-            }}>
-              {/* Gradient Header */}
-              <div style={{
-                padding: '1rem 1.5rem',
-                background: 'linear-gradient(135deg, rgba(76,173,232,0.15) 0%, rgba(124,76,232,0.1) 100%)',
-                borderBottom: '1px solid rgba(76,173,232,0.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  color: '#4CADE8', fontSize: '0.75rem', fontWeight: 700,
-                  letterSpacing: '0.1em', textTransform: 'uppercase',
-                }}>
-                  <BookOpen size={14} />
+            <div className="mt-6 rounded-2xl overflow-hidden panel-blue">
+              {/* Panel Header */}
+              <div className="px-6 py-4 panel-blue-header flex items-center gap-2">
+                <BookOpen size={15} className="text-blue-accent" />
+                <span className="text-blue-accent text-xs font-bold tracking-widest uppercase">
                   Detailed Correction
-                </div>
-                <div style={{
-                  padding: '3px 10px', borderRadius: '6px',
-                  background: selected === correctId ? 'rgba(76,232,124,0.15)' : 'rgba(232,76,76,0.15)',
-                  border: `1px solid ${selected === correctId ? '#4CE87C40' : '#E84C4C40'}`,
-                  color: selected === correctId ? '#4CE87C' : '#E84C4C',
-                  fontSize: '0.7rem', fontWeight: 700,
-                }}>
-                  {selected === correctId ? '✓ Correct answer' : '✗ Wrong answer — the correct one is ' + correctId}
-                </div>
+                </span>
               </div>
 
-              {/* Steps Body */}
-              <div style={{
-                padding: '1.5rem',
-                background: 'rgba(13,18,32,0.5)',
-              }}>
-                {(() => {
-                  const rawSteps: string[] = q.solution
-                  return rawSteps.map((step: string, si: number) => (
-                    <motion.div
+              {/* Steps Body — Timeline Layout */}
+              <div className="p-6 pl-5 bg-surface/50">
+                {q.solution.map((step, si) => {
+                  const isFinal = si === q.solution.length - 1
+                  return (
+                    <div
                       key={si}
-                      initial={{ opacity: 0, x: -15 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: si * 0.12, duration: 0.35 }}
-                      style={{
-                        display: 'flex', gap: '1rem', alignItems: 'flex-start',
-                        marginBottom: si < rawSteps.length - 1 ? '1rem' : 0,
-                        paddingBottom: si < rawSteps.length - 1 ? '1rem' : 0,
-                        borderBottom: si < rawSteps.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-                      }}
+                      className="flex items-stretch"
                     >
-                      {/* Step number */}
-                      <div style={{
-                        width: '26px', height: '26px', borderRadius: '50%',
-                        background: si === rawSteps.length - 1 ? 'rgba(201,168,76,0.2)' : 'rgba(76,173,232,0.12)',
-                        border: `1px solid ${si === rawSteps.length - 1 ? '#C9A84C50' : '#4CADE830'}`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, marginTop: '2px',
-                        color: si === rawSteps.length - 1 ? '#C9A84C' : '#4CADE8',
-                        fontSize: '0.7rem', fontWeight: 800,
-                      }}>{si + 1}</div>
-                      {/* Step content */}
-                      <div style={{
-                        flex: 1, overflow: 'auto',
-                        padding: si === rawSteps.length - 1 ? '0.5rem 0.75rem' : undefined,
-                        borderRadius: si === rawSteps.length - 1 ? '8px' : undefined,
-                        background: si === rawSteps.length - 1 ? 'rgba(201,168,76,0.06)' : undefined,
-                        borderLeft: si === rawSteps.length - 1 ? '3px solid rgba(201,168,76,0.3)' : undefined,
-                      }}>
-                        <MathRenderer latex={step} block style={{ color: '#C8C4BE', lineHeight: 1.8 }} />
+                      {/* Left column: bubble + connector line */}
+                      <div className="flex flex-col items-center w-11 shrink-0 mr-4">
+                        <div
+                          className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-xs font-extrabold ${
+                            isFinal
+                              ? 'bg-gold/18 border-[1.5px] border-gold/50 text-gold'
+                              : 'bg-blue-accent/12 border-[1.5px] border-blue-accent/35 text-blue-accent'
+                          }`}
+                        >
+                          {si + 1}
+                        </div>
+                        {!isFinal && (
+                          <div className="flex-1 w-px bg-gradient-to-b from-blue-accent/25 to-blue-accent/6 mt-1 mb-1 min-h-[20px]" />
+                        )}
                       </div>
-                    </motion.div>
-                  ))
-                })()}
+
+                      {/* Right column: label + math */}
+                      <div
+                        className={`flex-1 overflow-auto ${!isFinal ? 'pb-6' : ''} ${
+                          isFinal ? 'px-4 py-3.5 rounded-lg bg-gold/6 border border-gold/30' : ''
+                        }`}
+                      >
+                        <div className={`text-xs font-bold tracking-tight mb-2 leading-relaxed ${
+                          isFinal ? 'text-gold' : 'text-[#5B9EC4]'
+                        }`}>
+                          <InlineMath text={step.label} />
+                        </div>
+                        <MathRenderer
+                          latex={step.latex}
+                          block
+                          style={{ color: isFinal ? 'var(--color-gold-light)' : 'var(--color-text-secondary)' }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* Related Tips */}
+                {q.relatedTips && q.relatedTips.length > 0 ? (
+                  <RelatedTips tipIds={q.relatedTips} />
+                ) : null}
               </div>
             </div>
           </motion.div>
@@ -359,46 +391,33 @@ function Results({ exam, answers, onRestart }: {
   const total = exam.questions.length
   const correct = exam.questions.filter((q) => answers[q.number] === q.choices.find(c => c.isCorrect)?.id).length
   const score = Math.round((correct / total) * 100)
+  const scoreColor = score >= 70 ? '#4CE87C' : score >= 50 ? '#C9A84C' : '#E84C4C'
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      style={{ textAlign: 'center', padding: '2rem 0' }}
+      className="text-center py-8"
     >
-      <div style={{
-        width: '100px',
-        height: '100px',
-        borderRadius: '50%',
-        background: score >= 70
-          ? 'rgba(76,232,124,0.15)'
-          : score >= 50
-          ? 'rgba(201,168,76,0.15)'
-          : 'rgba(232,76,76,0.15)',
-        border: `2px solid ${score >= 70 ? '#4CE87C' : score >= 50 ? '#C9A84C' : '#E84C4C'}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: '0 auto 1.5rem',
-      }}>
-        <Award size={40} color={score >= 70 ? '#4CE87C' : score >= 50 ? '#C9A84C' : '#E84C4C'} />
+      <div
+        className="w-[100px] h-[100px] rounded-full flex items-center justify-center mx-auto mb-6"
+        style={{
+          background: score >= 70 ? 'rgba(76,232,124,0.15)' : score >= 50 ? 'rgba(201,168,76,0.15)' : 'rgba(232,76,76,0.15)',
+          border: `2px solid ${scoreColor}`,
+        }}
+      >
+        <Award size={40} color={scoreColor} aria-hidden="true" />
       </div>
-      <h2 style={{ color: '#F5F0E8', marginBottom: '0.5rem' }}>Exam Completed!</h2>
-      <div style={{
-        fontSize: '3rem',
-        fontFamily: 'var(--font-playfair)',
-        fontWeight: 900,
-        color: score >= 70 ? '#4CE87C' : score >= 50 ? '#C9A84C' : '#E84C4C',
-        marginBottom: '0.5rem',
-      }}>{score}%</div>
-      <p style={{ color: '#8B8FA8', marginBottom: '2rem' }}>
-        {correct}/{total} correct answers
-      </p>
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <button onClick={onRestart} className="btn-gold" style={{ gap: '8px', display: 'flex', alignItems: 'center' }}>
+      <h2 className="text-foreground mb-2">Exam Completed!</h2>
+      <div className="text-5xl font-display font-black mb-2" style={{ color: scoreColor }}>
+        {score}%
+      </div>
+      <p className="text-muted mb-8">{correct}/{total} correct answers</p>
+      <div className="flex gap-4 justify-center flex-wrap">
+        <button onClick={onRestart} className="btn-gold flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none">
           <RotateCcw size={16} /> Restart Exam
         </button>
-        <Link href="/concours/2024" className="btn-outline">
+        <Link href="/concours/2024" className="btn-outline focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none">
           ← Back to 2024
         </Link>
       </div>
@@ -416,7 +435,6 @@ export default function ExamViewer({ exam }: Props) {
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [revealed, setRevealed] = useState<Record<number, boolean>>({})
   const [submitted, setSubmitted] = useState(false)
-  const [mode, setMode] = useState<'practice' | 'exam'>('practice')
 
   const q = exam.questions[current]
   const total = exam.questions.length
@@ -449,38 +467,21 @@ export default function ExamViewer({ exam }: Props) {
   return (
     <div>
       {/* Header Bar */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: '2rem',
-        flexWrap: 'wrap',
-        gap: '1rem',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            fontFamily: 'var(--font-playfair)',
-            fontSize: '1.2rem',
-            fontWeight: 700,
-            color: '#F5F0E8',
-          }}>
-            Question <span style={{ color: '#C9A84C' }}>{current + 1}</span>
-            <span style={{ color: '#8B8FA8', fontSize: '0.9rem', fontFamily: 'var(--font-body)', fontWeight: 400 }}>
-              {' '}/ {total}
-            </span>
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <div className="font-display text-xl font-bold text-foreground">
+            Question <span className="text-gold">{current + 1}</span>
+            <span className="text-muted text-sm font-body font-normal"> / {total}</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div className="flex gap-3 items-center">
           <Timer totalSeconds={exam.duration * 60} />
-          <button onClick={handleRestart} title="Restart" style={{
-            padding: '0.5rem',
-            borderRadius: '8px',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            cursor: 'pointer',
-            color: '#8B8FA8',
-          }}>
+          <button
+            onClick={handleRestart}
+            title="Restart"
+            className="p-2 rounded-lg bg-white/[0.04] border border-white/[0.06] cursor-pointer text-muted hover:text-foreground hover:border-white/10 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none"
+          >
             <RotateCcw size={16} />
           </button>
         </div>
@@ -490,47 +491,37 @@ export default function ExamViewer({ exam }: Props) {
       <ProgressBar answered={answered} total={total} />
 
       {/* Question dots nav */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '2rem', flexWrap: 'wrap' }}>
-        {exam.questions.map((question, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              border: `1px solid ${
-                i === current
-                  ? 'rgba(201,168,76,0.6)'
-                  : answers[question.number]
-                  ? 'rgba(76,232,124,0.3)'
-                  : 'rgba(255,255,255,0.08)'
-              }`,
-              background: i === current
-                ? 'rgba(201,168,76,0.15)'
-                : answers[question.number]
-                ? 'rgba(76,232,124,0.08)'
-                : 'rgba(13,18,32,0.4)',
-              color: i === current ? '#C9A84C' : answers[question.number] ? '#4CE87C' : '#8B8FA8',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              fontFamily: 'var(--font-body)',
-              transition: 'all 0.2s',
-            }}
-          >
-            Q{i + 1}
-          </button>
-        ))}
+      <div className="flex gap-1.5 mb-8 flex-wrap" role="tablist">
+        {exam.questions.map((question, i) => {
+          const isCurrent = i === current
+          const isAnswered = !!answers[question.number]
+          return (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              role="tab"
+              aria-selected={isCurrent}
+              aria-label={`Q${i + 1}`}
+              className={`w-9 h-9 rounded-lg text-xs font-bold font-body cursor-pointer transition-all duration-200 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none ${
+                isCurrent
+                  ? 'bg-gold/15 border border-gold/60 text-gold'
+                  : isAnswered
+                  ? 'bg-green-accent/8 border border-green-accent/30 text-green-accent'
+                  : 'bg-surface/40 border border-white/[0.08] text-muted'
+              }`}
+            >
+              Q{i + 1}
+            </button>
+          )
+        })}
       </div>
 
       {/* Card */}
-      <div className="glass-card" style={{ padding: '2rem' }}>
+      <div className="glass-card p-8" role="tabpanel">
         <AnimatePresence mode="wait">
           <QuestionCard
             key={q.number}
             q={q}
-            qIndex={current}
             selected={answers[q.number] ?? null}
             revealed={!!revealed[q.number]}
             onSelect={handleSelect}
@@ -540,55 +531,33 @@ export default function ExamViewer({ exam }: Props) {
       </div>
 
       {/* Navigation */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: '1.5rem',
-        flexWrap: 'wrap',
-        gap: '1rem',
-      }}>
+      <div className="flex items-center justify-between mt-6 flex-wrap gap-4">
         <button
           onClick={handlePrev}
           disabled={current === 0}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '6px',
-            padding: '0.7rem 1.25rem', borderRadius: '8px',
-            background: 'rgba(13,18,32,0.4)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            color: current === 0 ? '#4A4E62' : '#8B8FA8',
-            cursor: current === 0 ? 'default' : 'pointer',
-            fontFamily: 'var(--font-body)', fontSize: '0.875rem',
-            transition: 'all 0.2s',
-          }}
+          aria-label="Previous question"
+          className={`flex items-center gap-1.5 px-5 py-2.5 rounded-lg nav-btn-subtle font-body text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none ${
+            current === 0 ? 'text-[#4A4E62] cursor-default' : 'text-muted cursor-pointer hover:text-foreground hover:border-white/10'
+          }`}
         >
           <ChevronLeft size={16} /> Previous
         </button>
 
-        <span style={{ color: '#8B8FA8', fontSize: '0.8rem' }}>
-          {answered} of {total} answered
-        </span>
+        <span className="text-muted text-xs">{answered} of {total} answered</span>
 
         {current < total - 1 ? (
           <button
             onClick={handleNext}
-            style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
-              padding: '0.7rem 1.25rem', borderRadius: '8px',
-              background: 'rgba(201,168,76,0.12)',
-              border: '1px solid rgba(201,168,76,0.3)',
-              color: '#C9A84C', cursor: 'pointer',
-              fontFamily: 'var(--font-body)', fontSize: '0.875rem',
-              fontWeight: 600, transition: 'all 0.2s',
-            }}
+            aria-label="Next question"
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-lg nav-btn-gold cursor-pointer font-body text-sm font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none"
           >
             Next <ChevronRight size={16} />
           </button>
         ) : (
           <button
             onClick={() => setSubmitted(true)}
-            className="btn-gold"
-            style={{ padding: '0.7rem 1.5rem', fontSize: '0.875rem' }}
+            aria-label="Submit exam"
+            className="btn-gold flex items-center gap-2 px-6 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none"
           >
             <Target size={16} /> Submit Exam
           </button>

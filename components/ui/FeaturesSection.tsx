@@ -1,35 +1,37 @@
 'use client'
 import { motion } from 'framer-motion'
 import { ClipboardList, Lightbulb, BookOpenCheck, BookMarked, Target, TrendingUp, Users, Award } from 'lucide-react'
+import PageHeader from './PageHeader'
+import SectionBadge from './SectionBadge'
 
 const features = [
-  {
-    icon: <ClipboardList size={24} />,
-    color: '#C9A84C',
-    bg: 'rgba(201,168,76,0.1)',
-    title: 'Official Exam Papers',
-    desc: 'Every real UM6SS concours from 2014 to 2025 with official marking schemes and model answers.',
-  },
-  {
-    icon: <Lightbulb size={24} />,
-    color: '#4CADE8',
-    bg: 'rgba(76,173,232,0.1)',
-    title: 'Strategic Tips & Tricks',
-    desc: 'Prof. Yasmine\'s proven mnemonics and score-maximizing strategies tailored to UM6SS style.',
-  },
-  {
-    icon: <BookOpenCheck size={24} />,
-    color: '#7C4CE8',
-    bg: 'rgba(124,76,232,0.1)',
-    title: 'Curated Revision Series',
-    desc: 'Topic-specific practice sets and exercises ordered by difficulty for deep exam mastery.',
-  },
   {
     icon: <BookMarked size={24} />,
     color: '#4CE87C',
     bg: 'rgba(76,232,124,0.1)',
     title: 'Concise Course Recaps',
     desc: 'Crystal-clear summaries of all mathematical concepts required to master the concours.',
+  },
+  {
+    icon: <BookOpenCheck size={24} />,
+    color: '#9066EE',
+    bg: 'rgba(124,76,232,0.1)',
+    title: 'Curated Revision Series',
+    desc: 'Topic-specific practice sets and exercises ordered by difficulty for deep exam mastery.',
+  },
+  {
+    icon: <Lightbulb size={24} />,
+    color: '#4CADE8',
+    bg: 'rgba(76,173,232,0.1)',
+    title: 'Strategic Tips & Tricks',
+    desc: "Prof. Yasmine's proven mnemonics and score-maximizing strategies tailored to UM6SS style.",
+  },
+  {
+    icon: <ClipboardList size={24} />,
+    color: '#C9A84C',
+    bg: 'rgba(201,168,76,0.1)',
+    title: 'Official Exam Papers',
+    desc: 'Every real UM6SS concours from 2014 to 2025 with official marking schemes and model answers.',
   },
   {
     icon: <Target size={24} />,
@@ -58,74 +60,29 @@ export default function FeaturesSection() {
   return (
     <>
       {/* Features Grid */}
-      <section className="section-pad" style={{ background: 'rgba(13,18,32,0.5)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            style={{ textAlign: 'center', marginBottom: '4rem' }}
-          >
-            <div style={{
-              display: 'inline-flex',
-              padding: '4px 14px',
-              borderRadius: '20px',
-              background: 'rgba(201,168,76,0.1)',
-              border: '1px solid rgba(201,168,76,0.25)',
-              color: '#C9A84C',
-              fontSize: '0.75rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              marginBottom: '1rem',
-            }}>Platform Features</div>
-            <h2 style={{ color: '#F5F0E8', marginBottom: '1rem' }}>
-              Everything You Need to <span className="gradient-gold">Succeed</span>
-            </h2>
-            <p style={{ color: '#8B8FA8', maxWidth: '520px', margin: '0 auto', fontSize: '1rem', lineHeight: 1.7 }}>
-              A complete ecosystem built around the real UM6SS concours structure, with expert-curated resources for every stage of preparation.
-            </p>
-          </motion.div>
+      <section className="section-pad bg-surface/50">
+        <div className="container-main">
+          <PageHeader
+            badge="Platform Features"
+            title={<>Everything You Need to <span className="gradient-gold">Succeed</span></>}
+            subtitle="A complete ecosystem built around the real UM6SS concours structure, with expert-curated resources for every stage of preparation."
+          />
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.25rem',
-          }}>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
             {features.map((f, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                whileHover={{ y: -4 }}
-                className="glass-card"
-                style={{ padding: '1.75rem', transition: 'box-shadow 0.3s' }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 12px 30px ${f.bg}`
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = 'none'
-                }}
+                className="glass-card p-7 transition-all duration-300 hover:-translate-y-1"
               >
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: f.bg,
-                  border: `1px solid ${f.color}30`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: f.color,
-                  marginBottom: '1.25rem',
-                }}>{f.icon}</div>
-                <h3 style={{ color: '#F5F0E8', marginBottom: '0.5rem', fontSize: '1.1rem' }}>{f.title}</h3>
-                <p style={{ color: '#8B8FA8', fontSize: '0.875rem', lineHeight: 1.65 }}>{f.desc}</p>
-              </motion.div>
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: f.bg, border: `1px solid ${f.color}30`, color: f.color }}
+                >
+                  {f.icon}
+                </div>
+                <h3 className="text-foreground mb-2 text-lg">{f.title}</h3>
+                <p className="text-muted text-sm leading-relaxed">{f.desc}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -133,118 +90,66 @@ export default function FeaturesSection() {
 
       {/* Why Prof Yasmine */}
       <section className="section-pad grid-bg">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-            gap: '4rem',
-            alignItems: 'center',
-          }}>
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
-              <div style={{
-                display: 'inline-flex',
-                padding: '4px 14px',
-                borderRadius: '20px',
-                background: 'rgba(201,168,76,0.1)',
-                border: '1px solid rgba(201,168,76,0.25)',
-                color: '#C9A84C',
-                fontSize: '0.75rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: 700,
-                marginBottom: '1.25rem',
-              }}>Why Choose Prof. Yasmine</div>
-              <h2 style={{ color: '#F5F0E8', marginBottom: '1.25rem' }}>
+        <div className="container-main">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="mb-5">
+                <SectionBadge>Why Choose Prof. Yasmine</SectionBadge>
+              </div>
+              <h2 className="text-foreground mb-5">
                 Guided by an Expert Who <span className="gradient-gold">Knows the System</span>
               </h2>
-              <p style={{ color: '#8B8FA8', lineHeight: 1.8, marginBottom: '2rem', fontSize: '0.95rem' }}>
+              <p className="text-muted leading-relaxed mb-8 text-sm">
                 Professor Yasmine has spent over a decade at UM6SS, decoding the exact patterns
-                and expectations of the medical entrance concours. Her platform isn't generic —
+                and expectations of the medical entrance concours. Her platform isn&apos;t generic —
                 every resource is specifically calibrated to the UM6SS English track format.
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div className="flex flex-col gap-3.5">
                 {whyYasmine.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 + 0.3 }}
-                    style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-                  >
-                    <div style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '8px',
-                      background: 'rgba(201,168,76,0.1)',
-                      border: '1px solid rgba(201,168,76,0.2)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#C9A84C',
-                      flexShrink: 0,
-                    }}>{item.icon}</div>
-                    <span style={{ color: '#F5F0E8', fontSize: '0.9rem' }}>{item.text}</span>
-                  </motion.div>
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-gold-dim border border-gold/20 flex items-center justify-center text-gold shrink-0">
+                      {item.icon}
+                    </div>
+                    <span className="text-foreground text-sm">{item.text}</span>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Visual Panel */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-            >
-              <div className="glass-card-gold" style={{ padding: '2.5rem', position: 'relative', overflow: 'hidden' }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '200px',
-                  height: '200px',
-                  borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%)',
-                  pointerEvents: 'none',
-                }} />
-                <div style={{ fontFamily: 'var(--font-playfair)', fontSize: '3.5rem', fontWeight: 700, color: '#C9A84C', marginBottom: '0.5rem' }}>
-                  12
-                </div>
-                <div style={{ color: '#F5F0E8', fontSize: '1rem', fontWeight: 600, marginBottom: '0.5rem' }}>Years of Official Exams</div>
-                <div style={{ color: '#8B8FA8', fontSize: '0.875rem', marginBottom: '2rem' }}>2014 → 2025 fully covered</div>
+            <div>
+              <div className="glass-card-gold p-10 relative overflow-hidden">
+                <div className="font-display text-[3.5rem] font-bold text-gold mb-2">12</div>
+                <div className="text-foreground text-base font-semibold mb-2">Years of Official Exams</div>
+                <div className="text-muted text-sm mb-8">2014 → 2025 fully covered</div>
 
-                <div style={{ height: '1px', background: 'rgba(201,168,76,0.15)', marginBottom: '2rem' }} />
+                <div className="h-px bg-gold/15 mb-8" />
 
                 {[
-                  { label: 'Real Exam Papers', pct: 100, color: '#C9A84C' },
-                  { label: 'Tips & Tricks', pct: 85, color: '#4CADE8' },
-                  { label: 'Revision Series', pct: 92, color: '#7C4CE8' },
                   { label: 'Course Recaps', pct: 78, color: '#4CE87C' },
+                  { label: 'Revision Series', pct: 92, color: '#9066EE' },
+                  { label: 'Tips & Tricks', pct: 85, color: '#4CADE8' },
+                  { label: 'Real Exam Papers', pct: 100, color: '#C9A84C' },
                 ].map((bar, i) => (
-                  <div key={i} style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <span style={{ fontSize: '0.8rem', color: '#F5F0E8' }}>{bar.label}</span>
-                      <span style={{ fontSize: '0.75rem', color: bar.color, fontWeight: 700 }}>{bar.pct}%</span>
+                  <div key={i} className="mb-4">
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-xs text-foreground">{bar.label}</span>
+                      <span className="text-[0.75rem] font-bold" style={{ color: bar.color }}>{bar.pct}%</span>
                     </div>
-                    <div style={{ height: '5px', borderRadius: '3px', background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                    <div className="h-[5px] rounded-sm bg-white/6 overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${bar.pct}%` }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1, delay: i * 0.15 + 0.3, ease: 'easeOut' }}
-                        style={{ height: '100%', borderRadius: '3px', background: bar.color }}
+                        transition={{ duration: 1, delay: i * 0.15, ease: 'easeOut' }}
+                        className="h-full rounded-sm"
+                        style={{ background: bar.color }}
                       />
                     </div>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,131 +1,188 @@
 'use client'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { AlertTriangle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { AlertTriangle, BookOpen, Lightbulb, Ruler } from 'lucide-react'
 import MathRenderer from './MathRenderer'
+import InlineMath from './InlineMath'
 import type { RecapTopic } from '@/lib/content-2024'
 
-function FormulaCard({ f, color, i }: { f: { label: string; latex: string }; color: string; i: number }) {
+// ── Formula Row ──────────────────────────────────────────────
+function FormulaRow({ f, color, index }: { f: { label: string; latex: string; description?: string }; color: string; index: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: i * 0.05 }}
-      style={{
-        padding: '0.85rem 1.1rem',
-        borderRadius: '10px',
-        background: 'rgba(13,18,32,0.5)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        display: 'flex', alignItems: 'center', gap: '0.75rem',
-        transition: 'border-color 0.2s',
-      }}
-      onMouseEnter={e => (e.currentTarget.style.borderColor = `${color}35`)}
-      onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)')}
+    <div
+      className="group rounded-xl px-4 py-3.5 border border-white/[0.04] bg-surface/45 hover:border-[var(--accent-color)] transition-colors duration-200"
+      style={{ '--accent-color': `${color}35` } as React.CSSProperties}
     >
-      <span style={{
-        color: color, fontSize: '0.7rem', fontWeight: 700,
-        minWidth: '100px', flexShrink: 0, letterSpacing: '0.02em',
-      }}>{f.label}</span>
-      <div style={{ flex: 1, overflow: 'auto' }}>
-        <MathRenderer latex={f.latex} />
+      <div className="flex items-center gap-4">
+        {/* Number pill */}
+        <div
+          className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold shrink-0"
+          style={{ background: `${color}15`, color, border: `1px solid ${color}25` }}
+        >
+          {index + 1}
+        </div>
+
+        {/* Label */}
+        <span className="text-xs font-semibold shrink-0 min-w-[100px]" style={{ color }}>
+          {f.label}
+        </span>
+
+        {/* Formula */}
+        <div className="flex-1 overflow-auto">
+          <MathRenderer latex={f.latex} />
+        </div>
       </div>
-    </motion.div>
+
+      {/* Description */}
+      {f.description && (
+        <p className="text-xs text-text-dim mt-2 ml-11 leading-relaxed">
+          <InlineMath text={f.description} />
+        </p>
+      )}
+    </div>
   )
 }
 
+// ── Theorem Card ─────────────────────────────────────────────
+function TheoremCard({ th, index }: { th: { name: string; statement: string; keyIdea: string }; index: number }) {
+  return (
+    <div className="rounded-xl overflow-hidden border border-blue-accent/15">
+      {/* Header */}
+      <div className="flex items-center gap-2.5 px-5 py-3 bg-blue-accent/6 border-b border-blue-accent/10">
+        <BookOpen size={14} className="text-blue-accent shrink-0" />
+        <span className="text-blue-accent font-bold text-sm">{th.name}</span>
+      </div>
+
+      {/* Body */}
+      <div className="px-5 py-4 bg-surface/30 space-y-3">
+        <div className="overflow-auto">
+          <MathRenderer latex={th.statement} block className="text-text-secondary" />
+        </div>
+
+        <div className="flex items-start gap-2 pt-2 border-t border-white/[0.04]">
+          <Lightbulb size={13} className="text-gold-light shrink-0 mt-0.5" />
+          <p className="text-xs text-muted leading-relaxed italic">
+            {th.keyIdea}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main RecapViewer ─────────────────────────────────────────
 export default function RecapViewer({ topics }: { topics: RecapTopic[] }) {
   const [activeTab, setActiveTab] = useState(0)
   const topic = topics[activeTab]
 
   return (
     <div>
-      {/* Tabs */}
-      <div style={{
-        display: 'flex', gap: '4px', marginBottom: '2rem',
-        background: 'rgba(13,18,32,0.5)',
-        borderRadius: '12px', padding: '4px',
-        border: '1px solid rgba(255,255,255,0.05)',
-        overflow: 'auto',
-      }}>
-        {topics.map((t, i) => (
-          <button
-            key={t.id}
-            onClick={() => setActiveTab(i)}
-            style={{
-              flex: 1, padding: '0.7rem 1rem',
-              borderRadius: '8px', cursor: 'pointer',
-              background: i === activeTab ? `${t.color}18` : 'transparent',
-              border: i === activeTab ? `1px solid ${t.color}35` : '1px solid transparent',
-              color: i === activeTab ? t.color : '#8B8FA8',
-              fontSize: '0.82rem', fontWeight: i === activeTab ? 700 : 500,
-              fontFamily: 'var(--font-body)', transition: 'all 0.2s',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {t.icon} {t.title}
-          </button>
-        ))}
+      {/* ── Topic Tabs ── */}
+      <div className="flex gap-1 mb-8 p-1 rounded-2xl bg-surface/50 border border-white/[0.04] overflow-auto" role="tablist">
+        {topics.map((t, i) => {
+          const active = i === activeTab
+          return (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(i)}
+              role="tab"
+              aria-selected={i === activeTab}
+              className="flex-1 relative px-4 py-2.5 rounded-xl cursor-pointer text-sm font-body whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none"
+              style={{
+                background: active ? `${t.color}15` : 'transparent',
+                border: active ? `1px solid ${t.color}30` : '1px solid transparent',
+                color: active ? t.color : 'var(--color-muted)',
+                fontWeight: active ? 700 : 500,
+              }}
+            >
+              {t.title}
+            </button>
+          )
+        })}
       </div>
 
-      {/* Content */}
-      <motion.div key={topic.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-        {/* Formulas Grid */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{
-            color: topic.color, fontSize: '0.72rem', fontWeight: 700,
-            letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem',
-          }}>📐 Essential formulas</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {topic.formulas.map((f, i) => (
-              <FormulaCard key={i} f={f} color={topic.color} i={i} />
-            ))}
+      {/* ── Content ── */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={topic.id}
+          role="tabpanel"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-10"
+        >
+          {/* ── Introduction ── */}
+          <div
+            className="rounded-2xl p-6 border"
+            style={{
+              background: `${topic.color}06`,
+              borderColor: `${topic.color}18`,
+            }}
+          >
+            <h2 className="text-foreground text-xl font-bold mb-3">{topic.title}</h2>
+            <p className="text-muted text-sm leading-relaxed">
+              {topic.summary}
+            </p>
           </div>
-        </div>
 
-        {/* Theorems */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{
-            color: '#4CADE8', fontSize: '0.72rem', fontWeight: 700,
-            letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem',
-          }}>📖 Key theorems</div>
-          {topic.theorems.map((th, i) => (
-            <div key={i} style={{
-              padding: '1rem 1.25rem', borderRadius: '10px',
-              background: 'rgba(76,173,232,0.05)',
-              border: '1px solid rgba(76,173,232,0.15)',
-              marginBottom: '0.6rem',
-            }}>
-              <div style={{
-                color: '#4CADE8', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem',
-              }}>{th.name}</div>
-              <MathRenderer latex={th.statement} style={{ color: '#C8C4BE', fontSize: '0.9rem' }} />
+          {/* ── Essential Formulas ── */}
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <Ruler size={15} style={{ color: topic.color }} />
+              <h3 className="text-xs font-bold tracking-widest uppercase" style={{ color: topic.color }}>
+                Essential Formulas
+              </h3>
+              <span className="text-xs text-muted ml-1">({topic.formulas.length})</span>
             </div>
-          ))}
-        </div>
+            <div className="flex flex-col gap-2">
+              {topic.formulas.map((f, i) => (
+                <FormulaRow key={i} f={f} color={topic.color} index={i} />
+              ))}
+            </div>
+          </section>
 
-        {/* Pitfalls */}
-        <div>
-          <div style={{
-            color: '#E84C4C', fontSize: '0.72rem', fontWeight: 700,
-            letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem',
-            display: 'flex', alignItems: 'center', gap: '6px',
-          }}><AlertTriangle size={13} /> Common Pitfalls</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {topic.pitfalls.map((p, i) => (
-              <div key={i} style={{
-                padding: '0.75rem 1rem', borderRadius: '8px',
-                background: 'rgba(232,76,76,0.05)',
-                border: '1px solid rgba(232,76,76,0.15)',
-                color: '#C8C4BE', fontSize: '0.82rem', lineHeight: 1.6,
-                display: 'flex', alignItems: 'flex-start', gap: '8px',
-              }}>
-                <span style={{ color: '#E84C4C', fontWeight: 700, flexShrink: 0 }}>⚠</span>
-                {p}
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
+          {/* ── Key Theorems ── */}
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <BookOpen size={15} className="text-blue-accent" />
+              <h3 className="text-xs font-bold tracking-widest uppercase text-blue-accent">
+                Key Theorems
+              </h3>
+              <span className="text-xs text-muted ml-1">({topic.theorems.length})</span>
+            </div>
+            <div className="flex flex-col gap-3">
+              {topic.theorems.map((th, i) => (
+                <TheoremCard key={i} th={th} index={i} />
+              ))}
+            </div>
+          </section>
+
+          {/* ── Common Pitfalls ── */}
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle size={15} className="text-danger" />
+              <h3 className="text-xs font-bold tracking-widest uppercase text-danger">
+                Common Pitfalls
+              </h3>
+              <span className="text-xs text-muted ml-1">({topic.pitfalls.length})</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              {topic.pitfalls.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 rounded-xl px-4 py-3 bg-danger/4 border border-danger/12"
+                >
+                  <AlertTriangle size={14} className="text-danger shrink-0 mt-0.5" />
+                  <span className="text-text-secondary text-sm leading-relaxed">
+                    <InlineMath text={p} />
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }

@@ -34,7 +34,7 @@ export default function MathRenderer({ latex, block = false, className, style }:
   }, [latex, block])
 
   if (block) {
-    return <div ref={ref as React.RefObject<HTMLDivElement>} className={className} style={style} />
+    return <div ref={ref as React.RefObject<HTMLDivElement>} className={className} style={{ lineHeight: 2, ...style }} />
   }
-  return <span ref={ref as React.RefObject<HTMLSpanElement>} className={className} style={style} />
+  return <span ref={ref as React.RefObject<HTMLSpanElement>} className={className} style={{ lineHeight: 1.8, verticalAlign: 'middle', ...style }} />
 }

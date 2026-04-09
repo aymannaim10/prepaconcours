@@ -19,7 +19,7 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: 'Prof. Yasmine | Medical Entrance Prep – UM6SS Morocco',
   description:
-    'Expert medical entrance exam preparation by Professor Yasmine at UM6SS. Access 12 years of official exams, tips, revision series and course recaps to ace the concours médecine.',
+    'Expert medical entrance exam preparation by Professor Yasmine at UM6SS. Access course recaps, revision series, tips & tricks and 12 years of official exams to ace the concours médecine.',
   keywords: ['concours medecine', 'UM6SS', 'Maroc', 'médecine', 'préparation concours', 'Yasmine', 'mathématiques médicales'],
   openGraph: {
     title: 'Prof. Yasmine – Medical Concours Platform | UM6SS Morocco',

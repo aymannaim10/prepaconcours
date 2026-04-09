@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import { CATEGORIES, getCategoryById } from '@/lib/data'
 import { getExamData } from '@/lib/exam-data'
@@ -12,6 +11,62 @@ import RecapViewer from '@/components/ui/RecapViewer'
 
 interface Props { year: number; categoryId: string }
 
+/* ── Step navigation between categories ── */
+function StepNavigation({ year, categoryId }: Props) {
+  const catIdx = CATEGORIES.findIndex(c => c.id === categoryId)
+  const prevCat = catIdx > 0 ? CATEGORIES[catIdx - 1] : null
+  const nextCat = catIdx < CATEGORIES.length - 1 ? CATEGORIES[catIdx + 1] : null
+
+  if (!prevCat && !nextCat) return null
+
+  return (
+    <div className="mt-10 flex items-center justify-between gap-4 py-5 px-6 rounded-xl bg-surface/60 border border-white/[0.06]">
+      {prevCat ? (
+        <Link
+          href={`/concours/${year}/${prevCat.id}`}
+          aria-label={`${prevCat.stepLabel} — ${prevCat.label}`}
+          className="no-underline flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none rounded"
+        >
+          <ChevronRight size={14} className="rotate-180" />
+          <div>
+            <div className="text-[0.65rem] font-bold tracking-widest uppercase" style={{ color: prevCat.color }}>
+              {prevCat.stepLabel}
+            </div>
+            <div className="font-semibold">{prevCat.label}</div>
+          </div>
+        </Link>
+      ) : <div />}
+      {nextCat ? (
+        <Link
+          href={`/concours/${year}/${nextCat.id}`}
+          aria-label={`${nextCat.stepLabel} — ${nextCat.label}`}
+          className="no-underline flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors text-right focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none rounded"
+        >
+          <div>
+            <div className="text-[0.65rem] font-bold tracking-widest uppercase" style={{ color: nextCat.color }}>
+              {nextCat.stepLabel}
+            </div>
+            <div className="font-semibold">{nextCat.label}</div>
+          </div>
+          <ChevronRight size={14} />
+        </Link>
+      ) : <div />}
+    </div>
+  )
+}
+
+/* ── Small badge for content stats ── */
+function StatBadge({ children, color, bg, border }: { children: React.ReactNode; color: string; bg: string; border: string }) {
+  return (
+    <div
+      className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full text-xs font-bold"
+      style={{ background: bg, border: `1px solid ${border}`, color }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function CategoryPageClient({ year, categoryId }: Props) {
   const category = getCategoryById(categoryId)!
   const examData = getExamData(year, categoryId)
@@ -22,23 +77,12 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
   const hasContent = examData || tipsData || recapData || revisionData
 
   return (
-    <div style={{ paddingTop: '80px', minHeight: '100vh' }}>
-      {/* Header */}
-      <div
-        className="grid-bg"
-        style={{
-          padding: '4rem 0',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
-          position: 'relative', overflow: 'hidden',
-        }}
-      >
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: `radial-gradient(ellipse at 60% 50%, ${category.bgGlow} 0%, transparent 65%)`,
-          pointerEvents: 'none',
-        }} />
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', position: 'relative' }}>
-          <nav className="breadcrumb" style={{ marginBottom: '2rem' }}>
+    <div className="pt-20 min-h-screen">
+      {/* ── Header ── */}
+      <div className="grid-bg relative overflow-hidden py-16 border-b border-white/5">
+        <div className="relative max-w-[1200px] mx-auto px-8">
+          {/* Breadcrumb */}
+          <nav className="breadcrumb mb-8">
             <Link href="/">Home</Link>
             <span className="breadcrumb-sep">›</span>
             <Link href="/concours">Exam Library</Link>
@@ -47,93 +91,73 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
             <span className="breadcrumb-sep">›</span>
             <span style={{ color: category.color }}>{category.label}</span>
           </nav>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              style={{
-                width: '72px', height: '72px', borderRadius: '18px',
-                background: category.bgGlow,
-                border: `1px solid ${category.color}30`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '2.25rem', flexShrink: 0,
-              }}
-            >{category.icon}</motion.div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-              <div style={{
-                display: 'inline-flex', padding: '3px 12px', borderRadius: '20px',
-                background: category.bgGlow, border: `1px solid ${category.color}30`,
-                color: category.color, fontSize: '0.72rem',
-                letterSpacing: '0.1em', textTransform: 'uppercase',
-                fontWeight: 700, marginBottom: '0.75rem',
-              }}>{year} Concours</div>
-              <h1 style={{ color: '#F5F0E8', marginBottom: '0.6rem', fontSize: 'clamp(1.6rem, 4vw, 2.5rem)' }}>
+
+          <div className="flex items-start gap-6 flex-wrap">
+            {/* Icon */}
+            <div
+              className="w-[72px] h-[72px] rounded-2xl flex items-center justify-center text-4xl shrink-0"
+              style={{ background: category.bgGlow, border: `1px solid ${category.color}30` }}
+            >
+              {category.icon}
+            </div>
+
+            {/* Text */}
+            <div>
+              <div
+                className="inline-flex px-3 py-0.5 rounded-full text-xs tracking-widest uppercase font-bold mb-3"
+                style={{ background: category.bgGlow, border: `1px solid ${category.color}30`, color: category.color }}
+              >
+                {year} Concours
+              </div>
+
+              <h1 className="text-foreground mb-2 text-[clamp(1.6rem,4vw,2.5rem)] leading-snug">
                 {category.label}
               </h1>
-              <p style={{ color: '#8B8FA8', fontSize: '0.95rem', lineHeight: 1.65, maxWidth: '520px' }}>
+
+              <p className="text-muted text-sm leading-relaxed max-w-[520px]">
                 {category.description}
               </p>
+
               {examData && (
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '6px',
-                  marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
-                  background: 'rgba(76,232,124,0.1)', border: '1px solid rgba(76,232,124,0.25)',
-                  color: '#4CE87C', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ Interactive Exam — {examData.questions.length} questions · {examData.duration} min</div>
+                <StatBadge color="var(--color-green-accent)" bg="rgba(76,232,124,0.1)" border="rgba(76,232,124,0.25)">
+                  ✦ Interactive Exam — {examData.questions.length} questions · {examData.duration} min
+                </StatBadge>
               )}
               {revisionData && (
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '6px',
-                  marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
-                  background: 'rgba(124,76,232,0.1)', border: '1px solid rgba(124,76,232,0.25)',
-                  color: '#7C4CE8', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ {revisionData.questions.length} practice exercises · {revisionData.duration} min</div>
+                <StatBadge color="var(--color-purple-accent)" bg="rgba(124,76,232,0.1)" border="rgba(124,76,232,0.25)">
+                  ✦ {revisionData.questions.length} practice exercises · {revisionData.duration} min
+                </StatBadge>
               )}
               {tipsData && (
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '6px',
-                  marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
-                  background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)',
-                  color: '#C9A84C', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ {tipsData.length} strategic tips</div>
+                <StatBadge color="var(--color-gold)" bg="rgba(201,168,76,0.1)" border="rgba(201,168,76,0.25)">
+                  ✦ {tipsData.length} strategic tips
+                </StatBadge>
               )}
               {recapData && (
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '6px',
-                  marginTop: '0.75rem', padding: '4px 12px', borderRadius: '20px',
-                  background: 'rgba(76,232,124,0.1)', border: '1px solid rgba(76,232,124,0.25)',
-                  color: '#4CE87C', fontSize: '0.75rem', fontWeight: 700,
-                }}>✦ {recapData.length} chapters with formulas and theorems</div>
+                <StatBadge color="var(--color-green-accent)" bg="rgba(76,232,124,0.1)" border="rgba(76,232,124,0.25)">
+                  ✦ {recapData.length} chapters with formulas and theorems
+                </StatBadge>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '4rem 2rem 6rem' }}>
+      {/* ── Content ── */}
+      <div className="max-w-[1000px] mx-auto px-8 pt-16 pb-24">
 
         {/* REAL EXAM */}
         {examData && (
           <>
-            <div style={{
-              padding: '1.25rem 1.5rem', borderRadius: '12px',
-              background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.15)',
-              marginBottom: '2.5rem',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              flexWrap: 'wrap', gap: '1rem',
-            }}>
+            <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-5 rounded-xl mb-10 info-panel-gold">
               <div>
-                <div style={{ color: '#F5F0E8', fontWeight: 700, fontSize: '0.95rem', marginBottom: '4px' }}>{examData.title}</div>
-                <div style={{ color: '#8B8FA8', fontSize: '0.8rem' }}>{examData.date} · Mathematics Paper · Duration {examData.duration} min</div>
+                <div className="text-foreground font-bold text-sm mb-1">{examData.title}</div>
+                <div className="text-muted text-xs">{examData.date} · Mathematics Paper · Duration {examData.duration} min</div>
               </div>
             </div>
-            <div style={{
-              padding: '1rem 1.25rem', borderRadius: '10px',
-              background: 'rgba(76,173,232,0.06)', border: '1px solid rgba(76,173,232,0.15)',
-              marginBottom: '2.5rem', color: '#8B8FA8', fontSize: '0.85rem', lineHeight: 1.65, fontStyle: 'italic',
-            }}>{examData.instructions}</div>
+            <div className="px-5 py-4 rounded-lg mb-10 info-panel-blue text-muted text-sm leading-relaxed italic">
+              {examData.instructions}
+            </div>
             <ExamViewer exam={examData} />
           </>
         )}
@@ -141,13 +165,9 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
         {/* REVISION SERIES */}
         {revisionData && (
           <>
-            <div style={{
-              padding: '1.25rem 1.5rem', borderRadius: '12px',
-              background: 'rgba(124,76,232,0.06)', border: '1px solid rgba(124,76,232,0.15)',
-              marginBottom: '2.5rem',
-            }}>
-              <div style={{ color: '#F5F0E8', fontWeight: 700, fontSize: '0.95rem', marginBottom: '4px' }}>{revisionData.title}</div>
-              <div style={{ color: '#8B8FA8', fontSize: '0.8rem' }}>{revisionData.instructions}</div>
+            <div className="px-6 py-5 rounded-xl mb-10 info-panel-purple">
+              <div className="text-foreground font-bold text-sm mb-1">{revisionData.title}</div>
+              <div className="text-muted text-xs">{revisionData.instructions}</div>
             </div>
             <ExamViewer exam={revisionData} />
           </>
@@ -160,28 +180,27 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
         {recapData && <RecapViewer topics={recapData} />}
 
         {/* No content fallback */}
-        {!hasContent && (
-          <div style={{
-            padding: '4rem 2rem', textAlign: 'center',
-            borderRadius: '16px', background: 'rgba(13,18,32,0.4)',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{category.icon}</div>
-            <h2 style={{ color: '#F5F0E8', marginBottom: '0.5rem' }}>Content in preparation</h2>
-            <p style={{ color: '#8B8FA8', fontSize: '0.9rem' }}>
+        {!hasContent ? (
+          <div className="py-16 px-8 text-center rounded-2xl bg-surface/40 border border-white/[0.06]">
+            <div className="text-5xl mb-4">{category.icon}</div>
+            <h2 className="text-foreground mb-2">Content in preparation</h2>
+            <p className="text-muted text-sm">
               The content for this section in {year} will be available soon.
             </p>
           </div>
-        )}
+        ) : null}
 
-        <div style={{ marginTop: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link href={`/concours/${year}`} className="btn-outline" style={{ fontSize: '0.875rem' }}>
+        {/* Step Navigation */}
+        <StepNavigation year={year} categoryId={categoryId} />
+
+        {/* Back links */}
+        <div className="mt-6 flex items-center gap-4">
+          <Link href={`/concours/${year}`} className="btn-outline text-sm focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none">
             ← Back to {year} Categories
           </Link>
-          <Link href="/concours" style={{
-            color: '#8B8FA8', textDecoration: 'none', fontSize: '0.875rem',
-            display: 'flex', alignItems: 'center', gap: '4px',
-          }}>Browse All Years <ChevronRight size={14} /></Link>
+          <Link href="/concours" className="text-muted no-underline text-sm flex items-center gap-1 hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none rounded">
+            Browse All Years <ChevronRight size={14} />
+          </Link>
         </div>
       </div>
     </div>

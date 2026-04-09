@@ -15,44 +15,59 @@ export interface Category {
   color: string
   accentColor: string
   bgGlow: string
+  step?: number
+  stepLabel?: string
+  cta?: string
 }
 
 export const CATEGORIES: Category[] = [
   {
-    id: 'real-exam',
-    label: 'The Real Exam',
-    description: 'Official entrance examination papers with full marking scheme and model answers',
-    icon: '📋',
-    color: '#C9A84C',
-    accentColor: '#E8C96A',
-    bgGlow: 'rgba(201, 168, 76, 0.15)',
-  },
-  {
-    id: 'tips-tricks',
-    label: 'Tips & Tricks',
-    description: 'Strategic insights, mnemonics and proven techniques to maximize your score',
-    icon: '💡',
-    color: '#4CADE8',
-    accentColor: '#6AC9E8',
-    bgGlow: 'rgba(76, 173, 232, 0.15)',
-  },
-  {
-    id: 'revision-series',
-    label: 'Revision Series',
-    description: 'Curated practice sets and topic-specific exercises for deep mastery',
-    icon: '📚',
-    color: '#7C4CE8',
-    accentColor: '#A06AE8',
-    bgGlow: 'rgba(124, 76, 232, 0.15)',
-  },
-  {
     id: 'course-recap',
     label: 'Course Recap',
-    description: 'Concise summaries of key mathematical concepts required for the exam',
+    description: 'Start here. Review all formulas, theorems, and common pitfalls — every tip and exam question builds on this material.',
     icon: '📖',
     color: '#4CE87C',
     accentColor: '#6AE89A',
     bgGlow: 'rgba(76, 232, 124, 0.15)',
+    step: 1,
+    stepLabel: 'Step 1 — Learn',
+    cta: 'Start Learning',
+  },
+  {
+    id: 'tips-tricks',
+    label: 'Tips & Tricks',
+    description: 'Learn exam shortcuts before you practice. Each tip targets a specific question type and shows you how to solve it efficiently.',
+    icon: '💡',
+    color: '#4CADE8',
+    accentColor: '#6AC9E8',
+    bgGlow: 'rgba(76, 173, 232, 0.15)',
+    step: 2,
+    stepLabel: 'Step 2 — Strategize',
+    cta: 'Learn Shortcuts',
+  },
+  {
+    id: 'revision-series',
+    label: 'Revision Series',
+    description: 'Apply your knowledge with 8 exam-style questions at a guided pace. Use the detailed solutions to fill any remaining gaps.',
+    icon: '📚',
+    color: '#9066EE',
+    accentColor: '#A06AE8',
+    bgGlow: 'rgba(124, 76, 232, 0.15)',
+    step: 3,
+    stepLabel: 'Step 3 — Practice',
+    cta: 'Begin Practice',
+  },
+  {
+    id: 'real-exam',
+    label: 'The Real Exam',
+    description: 'Your final benchmark. Take the official July 2024 exam under real conditions: 10 questions, 30 minutes, no calculator.',
+    icon: '📋',
+    color: '#C9A84C',
+    accentColor: '#E8C96A',
+    bgGlow: 'rgba(201, 168, 76, 0.15)',
+    step: 4,
+    stepLabel: 'Step 4 — Test',
+    cta: 'Take the Exam',
   },
 ]
 

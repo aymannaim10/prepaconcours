@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Mail, MapPin, Phone, Send, CheckCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
+import SectionBadge from '@/components/ui/SectionBadge'
 
 export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'sent'>('idle')
@@ -10,51 +10,31 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Simulate send
     setTimeout(() => setStatus('sent'), 600)
   }
 
-  const inputStyle = {
-    width: '100%',
-    padding: '0.85rem 1rem',
-    borderRadius: '10px',
-    background: 'rgba(13,18,32,0.6)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    color: '#F5F0E8',
-    fontSize: '0.9rem',
-    fontFamily: 'var(--font-body)',
-    outline: 'none',
-    transition: 'border-color 0.2s',
-  } as React.CSSProperties
+  const inputClass = 'w-full py-3.5 px-4 rounded-lg bg-surface/60 border border-white/8 text-foreground text-sm font-body outline-none transition-colors focus:border-gold/50 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none'
 
   return (
-    <div style={{ paddingTop: '80px', minHeight: '100vh' }}>
-      <div className="grid-bg" style={{ padding: '5rem 0', position: 'relative', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.05) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 2rem', position: 'relative' }}>
-          <nav className="breadcrumb" style={{ marginBottom: '2rem' }}>
+    <div className="pt-20 min-h-screen">
+      <div className="grid-bg py-20 relative overflow-hidden">
+        <div className="max-w-[1100px] mx-auto px-8 relative">
+          <nav className="breadcrumb mb-8">
             <Link href="/">Home</Link>
             <span className="breadcrumb-sep">›</span>
-            <span style={{ color: '#C9A84C' }}>Contact</span>
+            <span className="text-gold">Contact</span>
           </nav>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '4rem', alignItems: 'start' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             {/* Left Info */}
             <div>
-              <div style={{
-                display: 'inline-flex', padding: '4px 14px', borderRadius: '20px',
-                background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)',
-                color: '#C9A84C', fontSize: '0.75rem', letterSpacing: '0.1em',
-                textTransform: 'uppercase', fontWeight: 700, marginBottom: '1rem',
-              }}>Get in Touch</div>
-              <h1 style={{ color: '#F5F0E8', marginBottom: '1rem' }}>
+              <div className="mb-4">
+                <SectionBadge>Get in Touch</SectionBadge>
+              </div>
+              <h1 className="text-foreground mb-4">
                 Contact <span className="gradient-gold">Prof. Yasmine</span>
               </h1>
-              <p style={{ color: '#8B8FA8', fontSize: '0.95rem', lineHeight: 1.8, marginBottom: '2.5rem' }}>
+              <p className="text-muted text-[0.95rem] leading-relaxed mb-10">
                 Have questions about the platform, resources, or your preparation strategy?
                 Prof. Yasmine is happy to help guide you on your journey to medical school.
               </p>
@@ -64,105 +44,84 @@ export default function ContactPage() {
                 { icon: <MapPin size={18} />, label: 'Location', value: 'UM6SS, Casablanca, Morocco' },
                 { icon: <Phone size={18} />, label: 'Inquiries', value: 'Via email preferred' },
               ].map((item, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'flex-start', gap: '1rem',
-                  marginBottom: '1.5rem',
-                }}>
-                  <div style={{
-                    width: '44px', height: '44px', borderRadius: '10px',
-                    background: 'rgba(201,168,76,0.1)',
-                    border: '1px solid rgba(201,168,76,0.2)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#C9A84C', flexShrink: 0,
-                  }}>{item.icon}</div>
+                <div key={i} className="flex items-start gap-4 mb-6">
+                  <div className="w-11 h-11 rounded-[10px] bg-gold-dim border border-gold/20 flex items-center justify-center text-gold shrink-0">
+                    {item.icon}
+                  </div>
                   <div>
-                    <div style={{ color: '#8B8FA8', fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '2px' }}>{item.label}</div>
-                    <div style={{ color: '#F5F0E8', fontSize: '0.9rem', fontWeight: 500 }}>{item.value}</div>
+                    <div className="text-muted text-[0.75rem] tracking-widest uppercase mb-0.5">{item.label}</div>
+                    <div className="text-foreground text-[0.9rem] font-medium">{item.value}</div>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Form */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="glass-card-gold"
-              style={{ padding: '2.5rem' }}
-            >
+            <div className="glass-card-gold p-10">
               {status === 'sent' ? (
-                <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                  <CheckCircle size={48} color="#4CE87C" style={{ marginBottom: '1rem' }} />
-                  <h3 style={{ color: '#F5F0E8', marginBottom: '0.5rem' }}>Message Sent!</h3>
-                  <p style={{ color: '#8B8FA8', fontSize: '0.9rem' }}>
+                <div className="text-center py-8">
+                  <CheckCircle size={48} color="#4CE87C" className="mb-4 mx-auto" />
+                  <h3 className="text-foreground mb-2">Message Sent!</h3>
+                  <p className="text-muted text-[0.9rem]">
                     Prof. Yasmine will get back to you soon. In the meantime, start exploring the exam library.
                   </p>
-                  <Link href="/concours" className="btn-gold" style={{ marginTop: '1.5rem', display: 'inline-flex' }}>
+                  <Link href="/concours" className="btn-gold mt-6 inline-flex">
                     Explore Exams
                   </Link>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                  <h3 style={{ color: '#F5F0E8', marginBottom: '0.5rem' }}>Send a Message</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                  <h3 className="text-foreground mb-2">Send a Message</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label style={{ color: '#8B8FA8', fontSize: '0.8rem', display: 'block', marginBottom: '6px' }}>Full Name</label>
+                      <label className="text-muted text-[0.8rem] block mb-1.5">Full Name</label>
                       <input
                         required
-                        style={inputStyle}
+                        className={inputClass}
                         placeholder="Your name"
                         value={form.name}
                         onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
-                        onFocus={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.5)'}
-                        onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
                       />
                     </div>
                     <div>
-                      <label style={{ color: '#8B8FA8', fontSize: '0.8rem', display: 'block', marginBottom: '6px' }}>Email</label>
+                      <label className="text-muted text-[0.8rem] block mb-1.5">Email</label>
                       <input
                         type="email"
                         required
-                        style={inputStyle}
+                        className={inputClass}
                         placeholder="your@email.com"
                         value={form.email}
                         onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
-                        onFocus={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.5)'}
-                        onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
                       />
                     </div>
                   </div>
                   <div>
-                    <label style={{ color: '#8B8FA8', fontSize: '0.8rem', display: 'block', marginBottom: '6px' }}>Subject</label>
+                    <label className="text-muted text-[0.8rem] block mb-1.5">Subject</label>
                     <input
                       required
-                      style={inputStyle}
+                      className={inputClass}
                       placeholder="How can Prof. Yasmine help?"
                       value={form.subject}
                       onChange={(e) => setForm(f => ({ ...f, subject: e.target.value }))}
-                      onFocus={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.5)'}
-                      onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
                     />
                   </div>
                   <div>
-                    <label style={{ color: '#8B8FA8', fontSize: '0.8rem', display: 'block', marginBottom: '6px' }}>Message</label>
+                    <label className="text-muted text-[0.8rem] block mb-1.5">Message</label>
                     <textarea
                       required
                       rows={5}
-                      style={{ ...inputStyle, resize: 'vertical' }}
+                      className={`${inputClass} resize-y`}
                       placeholder="Tell us about your preparation goals, questions about specific exam years, or any other inquiry..."
                       value={form.message}
                       onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))}
-                      onFocus={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.5)'}
-                      onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
                     />
                   </div>
-                  <button type="submit" className="btn-gold" style={{ justifyContent: 'center', marginTop: '0.5rem' }}>
+                  <button type="submit" className="btn-gold justify-center mt-2">
                     <Send size={16} /> Send Message
                   </button>
                 </form>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

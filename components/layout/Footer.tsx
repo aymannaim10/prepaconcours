@@ -1,6 +1,5 @@
-'use client'
 import Link from 'next/link'
-import { GraduationCap, MapPin, Mail, Phone, ExternalLink } from 'lucide-react'
+import { MapPin, Mail } from 'lucide-react'
 
 const footerLinks = {
   Platform: [
@@ -10,67 +9,44 @@ const footerLinks = {
     { label: '2023 Exams', href: '/concours/2023' },
   ],
   Resources: [
-    { label: 'Real Exams', href: '/concours' },
-    { label: 'Tips & Tricks', href: '/concours' },
-    { label: 'Revision Series', href: '/concours' },
     { label: 'Course Recap', href: '/concours' },
+    { label: 'Revision Series', href: '/concours' },
+    { label: 'Tips & Tricks', href: '/concours' },
+    { label: 'Real Exams', href: '/concours' },
   ],
   About: [
     { label: 'Prof. Yasmine', href: '/about' },
-    { label: 'UM6SS', href: 'https://um6ss.ma', },
+    { label: 'UM6SS', href: 'https://um6ss.ma' },
     { label: 'Contact', href: '/contact' },
   ],
 }
 
 export default function Footer() {
   return (
-    <footer style={{
-      borderTop: '1px solid rgba(201,168,76,0.12)',
-      background: 'linear-gradient(180deg, var(--color-background) 0%, #050810 100%)',
-      padding: '4rem 0 2rem',
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '3rem',
-          marginBottom: '3rem',
-        }}>
+    <footer className="border-t border-gold/12 bg-gradient-to-b from-background to-[#050810] pt-16 pb-8">
+      <div className="container-main">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-12 mb-12">
           {/* Brand */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: 'linear-gradient(135deg, #C9A84C, #A8872A)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'var(--font-playfair)',
-                fontWeight: 800,
-                fontSize: '1rem',
-                color: '#070B14',
-              }}>YM</div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-[10px] bg-gradient-to-br from-gold to-[#A8872A] flex items-center justify-center font-display font-extrabold text-base text-background">
+                YM
+              </div>
               <div>
-                <div style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700, color: '#F5F0E8', fontSize: '1rem' }}>
-                  Prof. Yasmine
-                </div>
-                <div style={{ fontSize: '0.65rem', color: '#C9A84C', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                  Medical Prep · UM6SS
-                </div>
+                <div className="font-display font-bold text-foreground text-base">Prof. Yasmine</div>
+                <div className="text-[0.65rem] text-gold tracking-widest uppercase">Medical Prep · UM6SS</div>
               </div>
             </div>
-            <p style={{ color: '#8B8FA8', fontSize: '0.85rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+            <p className="text-muted text-sm leading-relaxed mb-6">
               Premium medical entrance examination preparation platform at the Université Mohammed VI des Sciences de la Santé, Morocco.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div className="flex flex-col gap-2">
               {[
                 { icon: <MapPin size={14} />, text: 'Mohammed VI University, Casablanca, Morocco' },
                 { icon: <Mail size={14} />, text: 'yasmine@um6ss.ma' },
               ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: '#8B8FA8', fontSize: '0.8rem' }}>
-                  <span style={{ color: '#C9A84C', marginTop: '2px', flexShrink: 0 }}>{item.icon}</span>
+                <div key={i} className="flex items-start gap-2 text-muted text-xs">
+                  <span className="text-gold mt-0.5 shrink-0">{item.icon}</span>
                   {item.text}
                 </div>
               ))}
@@ -80,29 +56,13 @@ export default function Footer() {
           {/* Link Columns */}
           {Object.entries(footerLinks).map(([section, links]) => (
             <div key={section}>
-              <h4 style={{
-                fontSize: '0.8rem',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: '#C9A84C',
-                fontFamily: 'var(--font-body)',
-                fontWeight: 700,
-                marginBottom: '1.25rem',
-              }}>{section}</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <p className="text-xs tracking-[0.12em] uppercase text-gold font-body font-bold mb-5">
+                {section}
+              </p>
+              <ul className="flex flex-col gap-2.5">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      style={{
-                        color: '#8B8FA8',
-                        textDecoration: 'none',
-                        fontSize: '0.875rem',
-                        transition: 'color 0.2s',
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.color = '#F5F0E8' }}
-                      onMouseLeave={(e) => { e.currentTarget.style.color = '#8B8FA8' }}
-                    >
+                    <Link href={link.href} className="link-muted text-sm">
                       {link.label}
                     </Link>
                   </li>
@@ -113,19 +73,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div style={{
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-          paddingTop: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1rem',
-        }}>
-          <p style={{ fontSize: '0.8rem', color: '#8B8FA8' }}>
+        <div className="border-t border-white/6 pt-6 flex items-center justify-between flex-wrap gap-4">
+          <p className="text-xs text-muted">
             © {new Date().getFullYear()} Professor Yasmine – UM6SS Medical Concours Platform. All rights reserved.
           </p>
-          <p style={{ fontSize: '0.75rem', color: '#4A4E62' }}>
+          <p className="text-xs text-[#4A4E62]">
             English Track · Université Mohammed VI des Sciences de la Santé
           </p>
         </div>

@@ -1,6 +1,8 @@
+import dynamic from 'next/dynamic'
 import HeroSection from '@/components/ui/HeroSection'
-import FeaturesSection from '@/components/ui/FeaturesSection'
-import TestimonialsSection from '@/components/ui/TestimonialsSection'
+
+const FeaturesSection = dynamic(() => import('@/components/ui/FeaturesSection'))
+const TestimonialsSection = dynamic(() => import('@/components/ui/TestimonialsSection'))
 
 export default function HomePage() {
   return (

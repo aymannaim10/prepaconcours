@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { GraduationCap, Award, BookOpen, Users, MapPin, Mail, ArrowRight } from 'lucide-react'
+import { GraduationCap, Award, Users, MapPin, Mail, ArrowRight } from 'lucide-react'
+import SectionBadge from '@/components/ui/SectionBadge'
 
 export const metadata: Metadata = {
   title: 'About Prof. Yasmine | UM6SS Medical Concours Platform',
@@ -25,57 +26,37 @@ const expertise = [
 
 export default function AboutPage() {
   return (
-    <div style={{ paddingTop: '80px', minHeight: '100vh' }}>
+    <div className="pt-20 min-h-screen">
       {/* Hero */}
-      <div className="grid-bg" style={{ padding: '5rem 0', borderBottom: '1px solid rgba(201,168,76,0.08)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.05) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', position: 'relative' }}>
-          <nav className="breadcrumb" style={{ marginBottom: '2rem' }}>
+      <div className="grid-bg py-20 border-b border-gold/8 relative overflow-hidden">
+        <div className="container-main relative">
+          <nav className="breadcrumb mb-8">
             <Link href="/">Home</Link>
             <span className="breadcrumb-sep">›</span>
-            <span style={{ color: '#C9A84C' }}>About</span>
+            <span className="text-gold">About</span>
           </nav>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '4rem',
-            alignItems: 'center',
-          }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Text */}
             <div>
-              <div style={{
-                display: 'inline-flex',
-                padding: '4px 14px',
-                borderRadius: '20px',
-                background: 'rgba(201,168,76,0.1)',
-                border: '1px solid rgba(201,168,76,0.25)',
-                color: '#C9A84C',
-                fontSize: '0.75rem',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: 700,
-                marginBottom: '1rem',
-              }}>UM6SS · English Track</div>
-              <h1 style={{ color: '#F5F0E8', marginBottom: '1rem' }}>
+              <div className="mb-4">
+                <SectionBadge>UM6SS · English Track</SectionBadge>
+              </div>
+              <h1 className="text-foreground mb-4">
                 Professor <span className="gradient-gold">Yasmine</span>
               </h1>
-              <p style={{ color: '#8B8FA8', fontSize: '1rem', lineHeight: 1.8, marginBottom: '1.5rem' }}>
+              <p className="text-muted text-base leading-relaxed mb-6">
                 A distinguished mathematics professor at the Université Mohammed VI des Sciences de la Santé
                 (UM6SS) in Casablanca, Morocco. With over a decade of experience guiding students through
                 the rigorous medical entrance concours, Prof. Yasmine has established herself as the
                 foremost authority on UM6SS exam preparation.
               </p>
-              <p style={{ color: '#8B8FA8', fontSize: '1rem', lineHeight: 1.8, marginBottom: '2rem' }}>
+              <p className="text-muted text-base leading-relaxed mb-8">
                 Her platform is the only resource specifically tailored to the English-track concours
                 structure at UM6SS, combining official exam archives with expert pedagogical insights
                 developed over 13 years of dedicated teaching.
               </p>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="flex gap-4 flex-wrap">
                 <Link href="/concours" className="btn-gold">
                   Explore Platform <ArrowRight size={16} />
                 </Link>
@@ -86,30 +67,16 @@ export default function AboutPage() {
             </div>
 
             {/* Profile Card */}
-            <div className="glass-card-gold" style={{ padding: '2.5rem', position: 'relative', overflow: 'hidden' }}>
-              <div style={{
-                position: 'absolute', top: 0, right: 0,
-                width: '200px', height: '200px',
-                background: 'radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }} />
-
+            <div className="glass-card-gold p-10 relative overflow-hidden">
               {/* Avatar */}
-              <div style={{
-                width: '90px', height: '90px', borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.1))',
-                border: '2px solid rgba(201,168,76,0.4)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: 'var(--font-playfair)', fontSize: '2rem', fontWeight: 700,
-                color: '#C9A84C', marginBottom: '1.25rem',
-              }}>Y</div>
+              <div className="w-[90px] h-[90px] rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border-2 border-gold/40 flex items-center justify-center font-display text-[2rem] font-bold text-gold mb-5">
+                Y
+              </div>
 
-              <h3 style={{ color: '#F5F0E8', marginBottom: '0.25rem' }}>Prof. Yasmine</h3>
-              <p style={{ color: '#C9A84C', fontSize: '0.85rem', marginBottom: '1.5rem', fontWeight: 600 }}>
-                Mathematics · UM6SS
-              </p>
+              <h3 className="text-foreground mb-1">Prof. Yasmine</h3>
+              <p className="text-gold text-[0.85rem] mb-6 font-semibold">Mathematics · UM6SS</p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.75rem' }}>
+              <div className="flex flex-col gap-3 mb-7">
                 {[
                   { icon: <GraduationCap size={15} />, text: 'PhD in Applied Mathematics' },
                   { icon: <Award size={15} />, text: '13 years at UM6SS' },
@@ -117,23 +84,26 @@ export default function AboutPage() {
                   { icon: <MapPin size={15} />, text: 'Casablanca, Morocco' },
                   { icon: <Mail size={15} />, text: 'yasmine@um6ss.ma' },
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#8B8FA8', fontSize: '0.85rem' }}>
-                    <span style={{ color: '#C9A84C' }}>{item.icon}</span>
+                  <div key={i} className="flex items-center gap-2.5 text-muted text-[0.85rem]">
+                    <span className="text-gold">{item.icon}</span>
                     {item.text}
                   </div>
                 ))}
               </div>
 
               {/* Expertise Bars */}
-              <div style={{ height: '1px', background: 'rgba(201,168,76,0.15)', marginBottom: '1.5rem' }} />
+              <div className="h-px bg-gold/15 mb-6" />
               {expertise.map((item, i) => (
-                <div key={i} style={{ marginBottom: '0.85rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                    <span style={{ fontSize: '0.75rem', color: '#F5F0E8' }}>{item.label}</span>
-                    <span style={{ fontSize: '0.7rem', color: '#C9A84C', fontWeight: 700 }}>{item.pct}%</span>
+                <div key={i} className="mb-3.5">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-[0.75rem] text-foreground">{item.label}</span>
+                    <span className="text-[0.7rem] text-gold font-bold">{item.pct}%</span>
                   </div>
-                  <div style={{ height: '4px', borderRadius: '2px', background: 'rgba(255,255,255,0.06)' }}>
-                    <div style={{ width: `${item.pct}%`, height: '100%', background: 'linear-gradient(90deg, #C9A84C, #E8C96A)', borderRadius: '2px' }} />
+                  <div className="h-1 rounded-sm bg-white/6">
+                    <div
+                      className="h-full bg-gradient-to-r from-gold to-gold-light rounded-sm"
+                      style={{ width: `${item.pct}%` }}
+                    />
                   </div>
                 </div>
               ))}
@@ -143,36 +113,27 @@ export default function AboutPage() {
       </div>
 
       {/* Timeline */}
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '5rem 2rem 6rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 style={{ color: '#F5F0E8', marginBottom: '0.75rem' }}>
+      <div className="max-w-[900px] mx-auto px-8 py-20 pb-24">
+        <div className="text-center mb-14">
+          <h2 className="text-foreground mb-3">
             An Academic <span className="gradient-gold">Journey</span>
           </h2>
-          <p style={{ color: '#8B8FA8', fontSize: '0.95rem' }}>13 years building the definitive UM6SS preparation resource</p>
+          <p className="text-muted text-[0.95rem]">13 years building the definitive UM6SS preparation resource</p>
         </div>
 
-        <div style={{ position: 'relative', paddingLeft: '2rem' }}>
+        <div className="relative pl-8">
           {/* Vertical line */}
-          <div style={{
-            position: 'absolute', left: '0', top: '8px', bottom: '8px',
-            width: '1px',
-            background: 'linear-gradient(180deg, transparent, rgba(201,168,76,0.4) 10%, rgba(201,168,76,0.4) 90%, transparent)',
-          }} />
+          <div className="absolute left-0 top-2 bottom-2 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
 
           {timeline.map((item, i) => (
-            <div key={i} style={{ position: 'relative', paddingLeft: '2rem', paddingBottom: '2.5rem' }}>
+            <div key={i} className="relative pl-8 pb-10">
               {/* Dot */}
-              <div style={{
-                position: 'absolute', left: '-5px', top: '4px',
-                width: '10px', height: '10px', borderRadius: '50%',
-                background: '#C9A84C',
-                boxShadow: '0 0 12px rgba(201,168,76,0.5)',
-              }} />
-              <div style={{ fontSize: '0.78rem', color: '#C9A84C', fontWeight: 700, letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
+              <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_12px_rgba(201,168,76,0.5)]" />
+              <div className="text-[0.78rem] text-gold font-bold tracking-[0.06em] mb-1.5">
                 {item.year}
               </div>
-              <h3 style={{ color: '#F5F0E8', fontSize: '1.05rem', marginBottom: '0.4rem' }}>{item.title}</h3>
-              <p style={{ color: '#8B8FA8', fontSize: '0.875rem', lineHeight: 1.65 }}>{item.desc}</p>
+              <h3 className="text-foreground text-[1.05rem] mb-1.5">{item.title}</h3>
+              <p className="text-muted text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>

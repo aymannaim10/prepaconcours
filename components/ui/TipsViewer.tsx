@@ -1,61 +1,84 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Lightbulb, Sparkles } from 'lucide-react'
+import { ChevronDown, Lightbulb, Sparkles, Target, HelpCircle, ListOrdered, Orbit, Sigma, TrendingUp, ArrowUpRight } from 'lucide-react'
 import MathRenderer from './MathRenderer'
+import InlineMath from './InlineMath'
 import type { Tip } from '@/lib/content-2024'
 
+// ── Formula Row inside a Tip ────────────────────────────────
+function TipFormulaRow({ f, color, index }: { f: { label: string; latex: string; description: string }; color: string; index: number }) {
+  return (
+    <div className="rounded-xl px-4 py-3.5 border border-white/[0.04] bg-surface/50">
+      <div className="flex items-center gap-3">
+        <div
+          className="w-6 h-6 rounded-md flex items-center justify-center text-[0.65rem] font-extrabold shrink-0"
+          style={{ background: `${color}12`, color, border: `1px solid ${color}20` }}
+        >
+          {index + 1}
+        </div>
+        <span className="text-xs font-semibold shrink-0 min-w-[80px]" style={{ color }}>
+          {f.label}
+        </span>
+        <div className="flex-1 overflow-auto">
+          <MathRenderer latex={f.latex} />
+        </div>
+      </div>
+      {f.description && (
+        <p className="text-xs text-muted mt-2 ml-9 leading-relaxed">
+          <InlineMath text={f.description} />
+        </p>
+      )}
+    </div>
+  )
+}
+
+// ── Tip Card ────────────────────────────────────────────────
 function TipCard({ tip, index }: { tip: Tip; index: number }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.08, duration: 0.4 }}
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ border: `1px solid ${open ? tip.color + '30' : 'rgba(255,255,255,0.05)'}` }}
     >
-      {/* Header - always visible */}
+      {/* Header — always visible */}
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="w-full text-left cursor-pointer flex items-center gap-4 px-5 py-4 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none rounded-2xl"
         style={{
-          width: '100%', textAlign: 'left', cursor: 'pointer',
-          padding: '1.25rem 1.5rem',
-          borderRadius: open ? '14px 14px 0 0' : '14px',
-          background: 'rgba(13,18,32,0.6)',
-          border: `1px solid ${open ? tip.color + '40' : 'rgba(255,255,255,0.06)'}`,
-          borderBottom: open ? 'none' : undefined,
-          transition: 'all 0.3s',
-          display: 'flex', alignItems: 'center', gap: '1rem',
-          fontFamily: 'var(--font-body)',
+          background: open ? `${tip.color}08` : 'rgba(13,18,32,0.6)',
         }}
       >
         {/* Icon */}
-        <div style={{
-          width: '48px', height: '48px', borderRadius: '12px',
-          background: `${tip.color}15`,
-          border: `1px solid ${tip.color}30`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.5rem', flexShrink: 0,
-        }}>{tip.icon}</div>
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: `${tip.color}12`, border: `1px solid ${tip.color}25`, color: tip.color }}
+        >
+          {tipIconMap[tip.topic] || <Sparkles size={22} />}
+        </div>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '4px', flexWrap: 'wrap' }}>
-            <span style={{
-              padding: '2px 8px', borderRadius: '4px',
-              background: `${tip.color}15`, color: tip.color,
-              fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-            }}>{tip.topic}</span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span
+              className="text-[0.65rem] font-bold tracking-widest uppercase px-2 py-0.5 rounded"
+              style={{ background: `${tip.color}12`, color: tip.color }}
+            >
+              {tip.topic}
+            </span>
           </div>
-          <div style={{ color: '#F5F0E8', fontWeight: 700, fontSize: '1rem', marginBottom: '3px' }}>
+          <div className="text-foreground font-bold text-sm mb-1">
             {tip.title}
           </div>
-          <div style={{ color: '#8B8FA8', fontSize: '0.8rem', lineHeight: 1.5 }}>
-            {tip.summary}
+          <div className="text-muted text-xs leading-relaxed">
+            <InlineMath text={tip.summary} />
           </div>
         </div>
 
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <ChevronDown size={20} color="#8B8FA8" />
+          <ChevronDown size={20} className="text-muted shrink-0" />
         </motion.div>
       </button>
 
@@ -67,87 +90,156 @@ function TipCard({ tip, index }: { tip: Tip; index: number }) {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35 }}
-            style={{ overflow: 'hidden' }}
+            className="overflow-hidden"
           >
-            <div style={{
-              padding: '1.5rem',
-              background: 'rgba(13,18,32,0.4)',
-              border: `1px solid ${tip.color}40`,
-              borderTop: 'none',
-              borderRadius: '0 0 14px 14px',
-            }}>
-              {/* Formulas */}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: '6px',
-                  color: tip.color, fontSize: '0.72rem', fontWeight: 700,
-                  letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '1rem',
-                }}>
-                  <Sparkles size={13} /> Key formulas
+            <div
+              className="px-5 pb-5 space-y-5 bg-surface/35"
+            >
+              {/* ── Why this matters ── */}
+              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3.5 bg-gold-dim/40 border border-gold/15">
+                <HelpCircle size={15} className="text-gold shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-[0.65rem] font-bold tracking-widest uppercase text-gold block mb-1">
+                    Why this matters
+                  </span>
+                  <p className="text-xs text-muted leading-relaxed">
+                    <InlineMath text={tip.why} />
+                  </p>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              </div>
+
+              {/* ── Key Formulas ── */}
+              <section>
+                <div className="flex items-center gap-1.5 mb-3">
+                  <Sparkles size={13} style={{ color: tip.color }} />
+                  <span
+                    className="text-xs font-bold tracking-widest uppercase"
+                    style={{ color: tip.color }}
+                  >
+                    Key Formulas
+                  </span>
+                  <span className="text-[0.65rem] text-muted ml-1">({tip.formulas.length})</span>
+                </div>
+                <div className="flex flex-col gap-2.5">
                   {tip.formulas.map((f, i) => (
-                    <div key={i} style={{
-                      padding: '0.75rem 1rem',
-                      borderRadius: '8px',
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.04)',
-                      display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    }}>
-                      <span style={{
-                        color: '#8B8FA8', fontSize: '0.72rem', fontWeight: 600,
-                        minWidth: '90px', flexShrink: 0,
-                      }}>{f.label}</span>
-                      <div style={{ flex: 1, overflow: 'auto' }}>
-                        <MathRenderer latex={f.latex} />
-                      </div>
-                    </div>
+                    <TipFormulaRow key={i} f={f} color={tip.color} index={i} />
                   ))}
                 </div>
+              </section>
+
+              {/* ── Worked Example ── */}
+              <section
+                className="rounded-xl overflow-hidden"
+                style={{ border: `1px solid ${tip.color}20` }}
+              >
+                <div
+                  className="flex items-center gap-2 px-4 py-2.5"
+                  style={{ background: `${tip.color}08`, borderBottom: `1px solid ${tip.color}15` }}
+                >
+                  <Target size={13} style={{ color: tip.color }} />
+                  <span
+                    className="text-xs font-bold tracking-widest uppercase"
+                    style={{ color: tip.color }}
+                  >
+                    Worked Example
+                  </span>
+                </div>
+                <div className="px-4 py-4 bg-surface/30 space-y-3">
+                  {/* Question */}
+                  <div>
+                    <span className="text-[0.65rem] font-bold tracking-widest uppercase text-muted mb-1.5 block">
+                      Question
+                    </span>
+                    <div className="overflow-auto">
+                      <MathRenderer latex={tip.example.question} block />
+                    </div>
+                  </div>
+
+                  {/* Solution */}
+                  <div className="pt-2 border-t border-white/[0.04]">
+                    <span className="text-[0.65rem] font-bold tracking-widest uppercase text-muted mb-1.5 block">
+                      Solution
+                    </span>
+                    <div
+                      className="pl-4 overflow-auto"
+                      style={{ borderLeft: `3px solid ${tip.color}40` }}
+                    >
+                      <MathRenderer latex={tip.example.solution} block className="text-text-secondary" />
+                    </div>
+                  </div>
+
+                  {/* Step-by-step explanation */}
+                  <div className="pt-3 border-t border-white/[0.04]">
+                    <span className="text-[0.65rem] font-bold tracking-widest uppercase text-muted mb-1.5 block">
+                      Step-by-step explanation
+                    </span>
+                    <p className="text-xs text-muted leading-relaxed">
+                      <InlineMath text={tip.example.explanation} />
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* ── Pro Tip ── */}
+              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3.5 bg-green-accent/5 border border-green-accent/18">
+                <Lightbulb size={15} className="text-green-accent shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-[0.65rem] font-bold tracking-widest uppercase text-green-accent block mb-1">
+                    Pro Tip
+                  </span>
+                  <p className="text-xs text-green-accent/90 leading-relaxed">
+                    <InlineMath text={tip.proTip} />
+                  </p>
+                </div>
               </div>
 
-              {/* Worked example */}
-              <div style={{
-                padding: '1rem 1.25rem', borderRadius: '10px',
-                background: `${tip.color}08`,
-                border: `1px solid ${tip.color}20`,
-                marginBottom: '1rem',
-              }}>
-                <div style={{
-                  fontSize: '0.72rem', fontWeight: 700, color: tip.color,
-                  letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem',
-                }}>💡 Worked example</div>
-                <div style={{ marginBottom: '0.6rem' }}>
-                  <MathRenderer latex={tip.example.question} block />
+              {/* ── See in Action (cross-references) ── */}
+              {tip.examRefs && tip.examRefs.length > 0 && (
+                <div className="flex items-center gap-2 flex-wrap pt-1">
+                  <span className="text-[0.65rem] font-bold tracking-widest uppercase text-muted">
+                    Apply this:
+                  </span>
+                  {tip.examRefs.map((ref, i) => (
+                    <Link
+                      key={i}
+                      href={`/concours/2024/${ref.section}`}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[0.65rem] font-semibold no-underline transition-colors hover:opacity-80"
+                      style={{
+                        background: ref.section === 'real-exam' ? 'rgba(201,168,76,0.1)' : 'rgba(124,76,232,0.1)',
+                        border: `1px solid ${ref.section === 'real-exam' ? 'rgba(201,168,76,0.25)' : 'rgba(124,76,232,0.25)'}`,
+                        color: ref.section === 'real-exam' ? 'var(--color-gold)' : 'var(--color-purple-accent)',
+                      }}
+                    >
+                      {ref.label}
+                      <ArrowUpRight size={11} />
+                    </Link>
+                  ))}
                 </div>
-                <div style={{
-                  borderLeft: `3px solid ${tip.color}50`, paddingLeft: '1rem',
-                  marginTop: '0.75rem',
-                }}>
-                  <MathRenderer latex={tip.example.solution} block style={{ color: '#C8C4BE', fontSize: '0.9rem' }} />
-                </div>
-              </div>
-
-              {/* Pro Tip */}
-              <div style={{
-                padding: '0.75rem 1rem', borderRadius: '8px',
-                background: 'rgba(76,232,124,0.06)',
-                border: '1px solid rgba(76,232,124,0.2)',
-                display: 'flex', alignItems: 'flex-start', gap: '8px',
-              }}>
-                <Lightbulb size={16} color="#4CE87C" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ color: '#4CE87C', fontSize: '0.82rem', lineHeight: 1.5 }}>
-                  <strong>Pro Tip :</strong> {tip.proTip}
-                </span>
-              </div>
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   )
 }
 
+// ── Topic icon mapping ─────────────────────────────────────
+const tipIconMap: Record<string, React.ReactNode> = {
+  'Sequences': <ListOrdered size={22} />,
+  'Complex Numbers': <Orbit size={22} />,
+  'Integrals': <Sigma size={22} />,
+  'Function Analysis': <TrendingUp size={22} />,
+}
+
+const topicFilterIcons: Record<string, React.ReactNode> = {
+  'Sequences': <ListOrdered size={14} />,
+  'Complex Numbers': <Orbit size={14} />,
+  'Integrals': <Sigma size={14} />,
+  'Function Analysis': <TrendingUp size={14} />,
+}
+
+// ── Main TipsViewer ─────────────────────────────────────────
 export default function TipsViewer({ tips }: { tips: Tip[] }) {
   const topics = [...new Set(tips.map(t => t.topic))]
   const [activeTopic, setActiveTopic] = useState<string | null>(null)
@@ -157,38 +249,66 @@ export default function TipsViewer({ tips }: { tips: Tip[] }) {
 
   return (
     <div>
-      {/* Topic filter */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-        <button
-          onClick={() => setActiveTopic(null)}
-          style={{
-            padding: '0.45rem 1rem', borderRadius: '20px',
-            background: !activeTopic ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.04)',
-            border: `1px solid ${!activeTopic ? 'rgba(201,168,76,0.4)' : 'rgba(255,255,255,0.06)'}`,
-            color: !activeTopic ? '#C9A84C' : '#8B8FA8',
-            fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
-            fontFamily: 'var(--font-body)', transition: 'all 0.2s',
-          }}
-        >All ({tips.length})</button>
-        {topics.map(topic => (
-          <button
-            key={topic}
-            onClick={() => setActiveTopic(activeTopic === topic ? null : topic)}
-            style={{
-              padding: '0.45rem 1rem', borderRadius: '20px',
-              background: activeTopic === topic ? `${topicColors[topic]}15` : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${activeTopic === topic ? topicColors[topic] + '40' : 'rgba(255,255,255,0.06)'}`,
-              color: activeTopic === topic ? topicColors[topic] : '#8B8FA8',
-              fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
-              fontFamily: 'var(--font-body)', transition: 'all 0.2s',
-            }}
-          >{topic}</button>
-        ))}
+      {/* ── Intro Card ── */}
+      <div className="rounded-2xl p-6 mb-8 bg-gold-dim/40 border border-gold/15">
+        <div className="flex items-center gap-3 mb-3">
+          <Lightbulb size={28} className="text-gold" />
+          <h2 className="text-foreground text-xl font-bold">Tips & Tricks</h2>
+        </div>
+        <p className="text-muted text-sm leading-relaxed max-w-[680px]">
+          Strategic shortcuts and exam techniques curated by Prof. Yasmine. Each tip targets a specific concours question type with detailed explanations — understand the &quot;why&quot; behind every formula, study the worked example step by step, then apply it on exam day.
+        </p>
       </div>
 
-      {/* Cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {filtered.map((tip, i) => <TipCard key={tip.id} tip={tip} index={i} />)}
+      {/* ── Topic Filter ── */}
+      <div className="flex gap-2 mb-6 flex-wrap" role="radiogroup" aria-label="Filter by topic">
+        <button
+          onClick={() => setActiveTopic(null)}
+          role="radio"
+          aria-checked={!activeTopic}
+          className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
+          style={{
+            background: !activeTopic ? 'rgba(201,168,76,0.12)' : 'rgba(13,18,32,0.5)',
+            border: `1px solid ${!activeTopic ? 'rgba(201,168,76,0.35)' : 'rgba(255,255,255,0.05)'}`,
+            color: !activeTopic ? 'var(--color-gold)' : 'var(--color-muted)',
+          }}
+        >
+          All tips ({tips.length})
+        </button>
+        {topics.map(topic => {
+          const active = activeTopic === topic
+          const color = topicColors[topic]
+          return (
+            <button
+              key={topic}
+              onClick={() => setActiveTopic(active ? null : topic)}
+              role="radio"
+              aria-checked={active}
+              className="px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
+              style={{
+                background: active ? `${color}12` : 'rgba(13,18,32,0.5)',
+                border: `1px solid ${active ? color + '35' : 'rgba(255,255,255,0.05)'}`,
+                color: active ? color : 'var(--color-muted)',
+              }}
+            >
+              {topicFilterIcons[topic]}
+              {topic}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* ── Results count ── */}
+      <p className="text-muted text-xs mb-4">
+        Showing <span className="text-foreground font-semibold">{filtered.length}</span> tip{filtered.length !== 1 ? 's' : ''}
+        {activeTopic && <> in <span style={{ color: topicColors[activeTopic] }}>{activeTopic}</span></>}
+      </p>
+
+      {/* ── Cards ── */}
+      <div className="flex flex-col gap-3">
+        {filtered.map((tip, i) => (
+          <TipCard key={tip.id} tip={tip} index={i} />
+        ))}
       </div>
     </div>
   )

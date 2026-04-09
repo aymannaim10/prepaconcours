@@ -9,6 +9,11 @@ export interface Choice {
   isCorrect: boolean
 }
 
+export interface SolutionStep {
+  label: string   // plain-text description shown to the reader ("what we do in this step")
+  latex: string   // the actual math computation in LaTeX
+}
+
 export interface ExamQuestion {
   number: number
   exercise: number
@@ -16,9 +21,10 @@ export interface ExamQuestion {
   statement: string
   question: string
   choices: Choice[]
-  solution: string[]
+  solution: SolutionStep[]
   difficulty: 'easy' | 'medium' | 'hard'
   tags: string[]
+  relatedTips?: string[]
 }
 
 export interface ExamData {
@@ -46,7 +52,7 @@ export const EXAM_2024_REAL: ExamData = {
       exercise: 1,
       topic: 'Sequences',
       statement: `\\text{Consider the numerical sequence } (u_n) \\text{ defined by:}`,
-      question: `u_n = \\dfrac{1 + 5 + 5^2 + \\cdots + 5^n}{1 - 5^n} \\;,\\quad \\forall n \\in \\mathbb{N}^*`,
+      question: `u_n = \\dfrac{1 + 5 + 5^{2} + \\cdots + 5^{n}}{1 - 5^{n}} \\;,\\quad \\forall n \\in \\mathbb{N}^*`,
       choices: [
         { id: 'A', latex: `\\lim u_n = -1`, isCorrect: false },
         { id: 'B', latex: `\\lim u_n = -\\dfrac{25}{4}`, isCorrect: false },
@@ -54,13 +60,22 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `\\lim u_n = -\\dfrac{1}{4}`, isCorrect: false },
       ],
       solution: [
-        `\\text{The numerator is a geometric series with ratio 5:}`,
-        `1+5+\\cdots+5^n = \\dfrac{5^{n+1}-1}{5-1} = \\dfrac{5^{n+1}-1}{4}`,
-        `u_n = \\dfrac{5^{n+1}-1}{4(1-5^n)} = \\dfrac{5 \\cdot 5^n - 1}{4(1 - 5^n)}`,
-        `\\text{Divide by } 5^n : \\quad u_n = \\dfrac{5 - 5^{-n}}{4(5^{-n} - 1)} \\xrightarrow[n\\to+\\infty]{} \\dfrac{5}{-4} = \\boxed{-\\dfrac{5}{4}}`,
+        {
+          label: `Identify the geometric series in the numerator: ratio $q = 5$, first term $1$, total of $n+1$ terms — apply the finite sum formula`,
+          latex: `1+5+\\cdots+5^{n} = \\dfrac{5^{n+1}-1}{5-1} = \\dfrac{5^{n+1}-1}{4}`,
+        },
+        {
+          label: `Substitute back into $u_n$ to get an explicit fraction in terms of $5^{n}$`,
+          latex: `u_n = \\dfrac{5^{n+1}-1}{4(1-5^{n})} = \\dfrac{5 \\cdot 5^{n} - 1}{4(1 - 5^{n})}`,
+        },
+        {
+          label: `Divide numerator and denominator by $5^{n}$ (the dominant power) so that $5^{-n} \\to 0$ and the limit appears`,
+          latex: `u_n = \\dfrac{5 - 5^{-n}}{4(5^{-n} - 1)} \\xrightarrow[n\\to+\\infty]{} \\dfrac{5 - 0}{4(0 - 1)} = \\boxed{-\\dfrac{5}{4}}`,
+        },
       ],
       difficulty: 'medium',
       tags: ['sequences', 'limit', 'geometric'],
+      relatedTips: ['geometric-sum'],
     },
 
     // ── EXERCISE 2 ──────────────────────────────────────────
@@ -69,7 +84,7 @@ export const EXAM_2024_REAL: ExamData = {
       exercise: 2,
       topic: 'Sequences',
       statement: `(v_n) \\text{ is a sequence with positive nonzero terms defined by:}`,
-      question: `\\ln(5^n \\times v_n) = \\dfrac{1}{2}\\,n \\;,\\quad \\forall n \\in \\mathbb{N}`,
+      question: `\\ln(5^{n} \\times v_n) = \\dfrac{1}{2}\\,n \\;,\\quad \\forall n \\in \\mathbb{N}`,
       choices: [
         { id: 'A', latex: `(v_n) \\text{ is arithmetic with ratio } \\dfrac{e}{5}`, isCorrect: false },
         { id: 'B', latex: `(v_n) \\text{ is geometric with ratio } \\dfrac{e}{5}`, isCorrect: false },
@@ -77,13 +92,26 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `(v_n) \\text{ is geometric with ratio } \\dfrac{\\sqrt{e}}{5}`, isCorrect: true },
       ],
       solution: [
-        `\\ln(5^n \\cdot v_n) = \\tfrac{n}{2} \\implies n\\ln 5 + \\ln v_n = \\tfrac{n}{2}`,
-        `\\ln v_n = \\tfrac{n}{2} - n\\ln 5 = n\\!\\left(\\tfrac{1}{2} - \\ln 5\\right)`,
-        `v_n = e^{n(\\frac{1}{2}-\\ln 5)} = \\left(e^{\\frac{1}{2}-\\ln 5}\\right)^n = \\left(\\dfrac{\\sqrt{e}}{5}\\right)^{\\!n}`,
-        `\\boxed{\\text{Geometric sequence with ratio } \\dfrac{\\sqrt{e}}{5}}`,
+        {
+          label: `Expand the log of a product using $\\ln(ab) = \\ln a + \\ln b$, then isolate $\\ln(v_n)$`,
+          latex: `\\ln(5^{n} \\cdot v_n) = \\tfrac{n}{2} \\implies n\\ln 5 + \\ln v_n = \\tfrac{n}{2}`,
+        },
+        {
+          label: `Isolate $\\ln(v_n)$ and factor out $n$ to reveal the linear-in-$n$ structure`,
+          latex: `\\ln v_n = \\tfrac{n}{2} - n\\ln 5 = n\\!\\left(\\tfrac{1}{2} - \\ln 5\\right)`,
+        },
+        {
+          label: `Exponentiate both sides: $\\ln(v_n) = na$ implies $v_n = (e^a)^n$, which is a geometric sequence`,
+          latex: `v_n = e^{n(\\frac{1}{2}-\\ln 5)} = \\left(e^{\\frac{1}{2}-\\ln 5}\\right)^n = \\left(\\dfrac{\\sqrt{e}}{5}\\right)^{\\!n}`,
+        },
+        {
+          label: `Conclude: geometric sequence with ratio $\\frac{\\sqrt{e}}{5}$. Verify: $v_0 = 1$ and $\\frac{v_{n+1}}{v_n} = \\frac{\\sqrt{e}}{5}$ = constant`,
+          latex: `\\boxed{(v_n) \\text{ is geometric with ratio } \\dfrac{\\sqrt{e}}{5}}`,
+        },
       ],
       difficulty: 'medium',
       tags: ['sequences', 'logarithm', 'geometric', 'arithmetic'],
+      relatedTips: ['suite-type'],
     },
 
     // ── EXERCISE 3 ──────────────────────────────────────────
@@ -100,14 +128,30 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `\\arg(z') \\equiv \\dfrac{7\\pi}{6} \\pmod{2\\pi}`, isCorrect: false },
       ],
       solution: [
-        `z = -e^{i\\frac{5\\pi}{12}} \\implies \\bar{z} = -e^{-i\\frac{5\\pi}{12}}`,
-        `1+i = \\sqrt{2}\\,e^{i\\frac{\\pi}{4}}`,
-        `z' = \\sqrt{2}\\,e^{i\\frac{\\pi}{4}} \\cdot (-e^{-i\\frac{5\\pi}{12}}) = -\\sqrt{2}\\,e^{i(\\frac{\\pi}{4}-\\frac{5\\pi}{12})}`,
-        `= -\\sqrt{2}\\,e^{-i\\frac{\\pi}{6}} = \\sqrt{2}\\,e^{i(\\pi - \\frac{\\pi}{6})} = \\sqrt{2}\\,e^{i\\frac{5\\pi}{6}}`,
-        `\\boxed{\\arg(z') = \\tfrac{5\\pi}{6} \\equiv -\\tfrac{7\\pi}{6} \\pmod{2\\pi}}`,
+        {
+          label: `Take the conjugate of $z$: $\\arg(\\bar{z}) = -\\arg(z)$, so flip the sign of the imaginary exponent`,
+          latex: `z = -e^{i\\frac{5\\pi}{12}} \\implies \\bar{z} = -e^{-i\\frac{5\\pi}{12}}`,
+        },
+        {
+          label: `Write $1+i$ in exponential form: modulus $\\sqrt{2}$, argument $\\frac{\\pi}{4}$`,
+          latex: `1+i = \\sqrt{2}\\,e^{i\\frac{\\pi}{4}}`,
+        },
+        {
+          label: `Compute $z' = (1+i)\\cdot\\bar{z}$ by multiplying exponential forms: moduli multiply, arguments add`,
+          latex: `z' = \\sqrt{2}\\,e^{i\\frac{\\pi}{4}} \\cdot \\left(-e^{-i\\frac{5\\pi}{12}}\\right) = -\\sqrt{2}\\,e^{i\\left(\\frac{\\pi}{4}-\\frac{5\\pi}{12}\\right)} = -\\sqrt{2}\\,e^{-i\\frac{\\pi}{6}}`,
+        },
+        {
+          label: `Absorb the minus sign: $-e^{i\\theta} = e^{i(\\theta+\\pi)}$, then simplify the argument`,
+          latex: `-\\sqrt{2}\\,e^{-i\\frac{\\pi}{6}} = \\sqrt{2}\\,e^{i\\left(\\pi - \\frac{\\pi}{6}\\right)} = \\sqrt{2}\\,e^{i\\frac{5\\pi}{6}}`,
+        },
+        {
+          label: `Read off the argument: $\\frac{5\\pi}{6}$ is already in $(-\\pi, \\pi]$; its equivalent modulo $2\\pi$ is $-\\frac{7\\pi}{6}$`,
+          latex: `\\boxed{\\arg(z') = \\tfrac{5\\pi}{6} \\equiv -\\tfrac{7\\pi}{6} \\pmod{2\\pi}}`,
+        },
       ],
       difficulty: 'hard',
       tags: ['complex numbers', 'argument', 'conjugate', 'trigonometry'],
+      relatedTips: ['complex-arg'],
     },
 
     // ── EXERCISE 4 ──────────────────────────────────────────
@@ -124,14 +168,30 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `z_{A'} = -2 + 3i`, isCorrect: true },
       ],
       solution: [
-        `z_B = e^{-i\\frac{\\pi}{2}} = -i`,
-        `z_{A'} - z_B = e^{i\\frac{\\pi}{2}}(z_A - z_B)`,
-        `z_A - z_B = (4+i)-(-i) = 4+2i`,
-        `e^{i\\frac{\\pi}{2}} = i \\implies i(4+2i) = 4i+2i^2 = -2+4i`,
-        `\\boxed{z_{A'} = z_B + (-2+4i) = -i-2+4i = -2+3i}`,
+        {
+          label: `Find the affix of the rotation center $B$ by converting from exponential form`,
+          latex: `z_B = e^{-i\\frac{\\pi}{2}} = \\cos\\!\\left(-\\tfrac{\\pi}{2}\\right)+i\\sin\\!\\left(-\\tfrac{\\pi}{2}\\right) = -i`,
+        },
+        {
+          label: `Write the rotation formula: $z_{A'} - z_B = e^{i\\theta}(z_A - z_B)$, here $\\theta = \\frac{\\pi}{2}$`,
+          latex: `z_{A'} - z_B = e^{i\\frac{\\pi}{2}}\\cdot(z_A - z_B)`,
+        },
+        {
+          label: `Compute the vector $z_A - z_B$ — always subtract the center $B$ from $A$ before multiplying`,
+          latex: `z_A - z_B = (4+i)-(-i) = 4+2i`,
+        },
+        {
+          label: `Multiply by $e^{i\\pi/2} = i$ and expand using $i^2 = -1$`,
+          latex: `i\\cdot(4+2i) = 4i + 2i^2 = 4i - 2 = -2+4i`,
+        },
+        {
+          label: `Add back the center $z_B$ to recover $z_{A'}$ — don't forget to re-add it after the rotation`,
+          latex: `\\boxed{z_{A'} = z_B + (-2+4i) = -i + (-2+4i) = -2+3i}`,
+        },
       ],
       difficulty: 'medium',
       tags: ['complex numbers', 'rotation', 'geometry'],
+      relatedTips: ['rotation'],
     },
 
     // ── EXERCISE 5 – PART 1 ──────────────────────────────────
@@ -148,13 +208,22 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `I = 2\\ln(3)`, isCorrect: false },
       ],
       solution: [
-        `I = \\int_{\\pi/6}^{\\pi/3} \\frac{\\sin x}{\\cos x}\\,dx = \\Big[-\\ln|\\cos x|\\Big]_{\\pi/6}^{\\pi/3}`,
-        `= -\\ln\\!\\left(\\tfrac{1}{2}\\right) + \\ln\\!\\left(\\tfrac{\\sqrt{3}}{2}\\right)`,
-        `= \\ln 2 + \\ln\\tfrac{\\sqrt{3}}{2} = \\ln\\!\\left(2 \\cdot \\tfrac{\\sqrt{3}}{2}\\right)`,
-        `\\boxed{I = \\ln\\sqrt{3}}`,
+        {
+          label: `Write $\\tan(x) = \\frac{\\sin x}{\\cos x}$ to recognize a $\\frac{u'}{u}$ integral ($u = \\cos x$, $u' = -\\sin x$), antiderivative is $-\\ln|\\cos x|$`,
+          latex: `I = \\int_{\\pi/6}^{\\pi/3} \\frac{\\sin x}{\\cos x}\\,dx = \\Big[-\\ln|\\cos x|\\Big]_{\\pi/6}^{\\pi/3}`,
+        },
+        {
+          label: `Plug in the bounds: $\\cos(\\pi/3) = \\frac{1}{2}$ and $\\cos(\\pi/6) = \\frac{\\sqrt{3}}{2}$`,
+          latex: `-\\ln\\!\\left(\\tfrac{1}{2}\\right) + \\ln\\!\\left(\\tfrac{\\sqrt{3}}{2}\\right) = \\ln 2 + \\ln\\tfrac{\\sqrt{3}}{2}`,
+        },
+        {
+          label: `Combine using $\\ln(a) + \\ln(b) = \\ln(ab)$ and simplify`,
+          latex: `= \\ln\\!\\left(2 \\cdot \\tfrac{\\sqrt{3}}{2}\\right) = \\boxed{\\ln\\sqrt{3}}`,
+        },
       ],
       difficulty: 'medium',
       tags: ['integrals', 'trigonometry', 'logarithm'],
+      relatedTips: ['trig-integrals'],
     },
 
     // ── EXERCISE 5 – PART 2 ──────────────────────────────────
@@ -171,12 +240,22 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `I + J = \\ln(\\sqrt{3})`, isCorrect: false },
       ],
       solution: [
-        `J = \\int_{\\pi/6}^{\\pi/3} \\cot x\\,dx = \\Big[\\ln|\\sin x|\\Big]_{\\pi/6}^{\\pi/3}`,
-        `= \\ln\\tfrac{\\sqrt{3}}{2} - \\ln\\tfrac{1}{2} = \\ln\\!\\left(\\tfrac{\\sqrt{3}/2}{1/2}\\right) = \\ln\\sqrt{3}`,
-        `\\boxed{I = J = \\ln\\sqrt{3}}`,
+        {
+          label: `Write $\\cot(x) = \\frac{\\cos x}{\\sin x}$ — this is $\\frac{u'}{u}$ with $u = \\sin x$, so the antiderivative is $\\ln|\\sin x|$`,
+          latex: `J = \\int_{\\pi/6}^{\\pi/3} \\cot x\\,dx = \\Big[\\ln|\\sin x|\\Big]_{\\pi/6}^{\\pi/3}`,
+        },
+        {
+          label: `Plug in the bounds: $\\sin(\\pi/3) = \\frac{\\sqrt{3}}{2}$, $\\sin(\\pi/6) = \\frac{1}{2}$, then use $\\ln(a) - \\ln(b) = \\ln(a/b)$`,
+          latex: `= \\ln\\tfrac{\\sqrt{3}}{2} - \\ln\\tfrac{1}{2} = \\ln\\!\\left(\\tfrac{\\sqrt{3}/2}{1/2}\\right) = \\ln\\sqrt{3}`,
+        },
+        {
+          label: `Compare with $I$: both equal $\\ln(\\sqrt{3})$, so $I = J$. Their sum $I+J = 2\\ln(\\sqrt{3}) = \\ln 3$. The symmetry of $[\\pi/6, \\pi/3]$ around $\\pi/4$ explains why $I = J$`,
+          latex: `\\boxed{I = J = \\ln\\sqrt{3} \\implies I + J = \\ln 3}`,
+        },
       ],
       difficulty: 'medium',
       tags: ['integrals', 'trigonometry'],
+      relatedTips: ['complementary-substitution', 'trig-integrals'],
     },
 
     // ── EXERCISE 6 ──────────────────────────────────────────
@@ -193,12 +272,22 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `\\lim_{\\lambda \\to 0^+} I(\\lambda) = -2 - \\ln 4`, isCorrect: false },
       ],
       solution: [
-        `I(\\lambda) = \\Big[x\\ln x - x\\Big]_{\\lambda}^{2} = (2\\ln 2 - 2)-(\\lambda\\ln\\lambda - \\lambda)`,
-        `\\lim_{\\lambda\\to 0^+}\\lambda\\ln\\lambda = 0 \\quad \\text{and} \\quad \\lim_{\\lambda\\to 0^+}\\lambda = 0`,
-        `\\boxed{\\lim_{\\lambda\\to 0^+} I(\\lambda) = 2\\ln 2 - 2 = \\ln 4 - 2}`,
+        {
+          label: `Apply the antiderivative of $\\ln(x)$: $\\int\\ln(x)\\,dx = x\\ln(x) - x + C$ (derive by parts: $u=\\ln x$, $v'=1$)`,
+          latex: `I(\\lambda) = \\Big[x\\ln x - x\\Big]_{\\lambda}^{2} = (2\\ln 2 - 2)-(\\lambda\\ln\\lambda - \\lambda)`,
+        },
+        {
+          label: `Take the limit of each term as $\\lambda \\to 0^+$: $\\lambda\\ln(\\lambda) \\to 0$ by growth comparison, and $\\lambda \\to 0$`,
+          latex: `\\lim_{\\lambda\\to 0^+}\\lambda\\ln\\lambda = 0 \\quad \\text{and} \\quad \\lim_{\\lambda\\to 0^+}\\lambda = 0`,
+        },
+        {
+          label: `Conclude: the $\\lambda$-terms vanish, leaving only the value at $2$. Rewrite $2\\ln(2)$ as $\\ln(4)$`,
+          latex: `\\boxed{\\lim_{\\lambda\\to 0^+} I(\\lambda) = 2\\ln 2 - 2 = \\ln 4 - 2}`,
+        },
       ],
       difficulty: 'hard',
       tags: ['integrals', 'improper integral', 'logarithm', 'limit'],
+      relatedTips: ['improper-integral'],
     },
 
     // ── EXERCISE 7 – PART 1 ──────────────────────────────────
@@ -215,13 +304,26 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `(C_f) \\text{ has a parabolic branch in the direction of } Oy`, isCorrect: true },
       ],
       solution: [
-        `\\lim_{x\\to +\\infty} f(x) = +\\infty \\quad \\text{(no horizontal asymptote)}`,
-        `f \\text{ is continuous at } 0,\\; f(0)=1 \\quad \\text{(no vertical asymptote)}`,
-        `\\dfrac{f(x)}{x} = \\dfrac{e^x}{x} + \\ln x - e -1 \\xrightarrow[x\\to+\\infty]{} +\\infty`,
-        `\\boxed{(C_f) \\text{ has a parabolic branch in the direction of } Oy}`,
+        {
+          label: `Test for a horizontal asymptote: compute $\\lim_{x\\to+\\infty} f(x)$. If finite $\\ell$ → asymptote $y=\\ell$; if infinite → none`,
+          latex: `\\lim_{x\\to +\\infty} f(x) = +\\infty \\implies \\text{no horizontal asymptote}`,
+        },
+        {
+          label: `Test for a vertical asymptote: $f$ is continuous at $0$ with $f(0)=1$ finite → no vertical asymptote`,
+          latex: `f(0) = 1 \\in \\mathbb{R} \\implies \\text{no vertical asymptote}`,
+        },
+        {
+          label: `Test for a parabolic branch: compute $\\lim \\frac{f(x)}{x}$. Result $0$ → direction $Ox$; $\\pm\\infty$ → direction $Oy$; finite $a\\neq 0$ → oblique asymptote`,
+          latex: `\\dfrac{f(x)}{x} = \\dfrac{e^x}{x} + \\ln x - e -1 \\xrightarrow[x\\to+\\infty]{} +\\infty`,
+        },
+        {
+          label: `Conclude: $\\lim f(x)/x = +\\infty$ → parabolic branch in the direction of $Oy$. The $e^x$ term drives this result`,
+          latex: `\\boxed{(C_f) \\text{ has a parabolic branch in the direction of } Oy}`,
+        },
       ],
       difficulty: 'hard',
       tags: ['functions', 'asymptote', 'parabolic branch'],
+      relatedTips: ['parabolic-branch'],
     },
 
     // ── EXERCISE 7 – PART 2 ──────────────────────────────────
@@ -233,19 +335,31 @@ export const EXAM_2024_REAL: ExamData = {
       question: `\\text{Half-tangent on the right of } 0 \\text{ for } (C_f) \\text{:}`,
       choices: [
         { id: 'A', latex: `\\text{Horizontal half-tangent}`, isCorrect: false },
-        { id: 'B', latex: `\\text{Vertical half-tangent pointing downward}`, isCorrect: false },
-        { id: 'C', latex: `\\text{Vertical half-tangent pointing upward}`, isCorrect: true },
+        { id: 'B', latex: `\\text{Vertical half-tangent pointing downward}`, isCorrect: true },
+        { id: 'C', latex: `\\text{Vertical half-tangent pointing upward}`, isCorrect: false },
         { id: 'D', latex: `\\text{The point } x=1 \\text{ is an inflection point}`, isCorrect: false },
       ],
       solution: [
-        `\\lim_{x\\to 0^+} \\dfrac{f(x)-f(0)}{x} = \\lim_{x\\to 0^+} \\dfrac{e^x-1}{x} + \\ln x - e - 1`,
-        `= 1 + (-\\infty) - e - 1 = -\\infty`,
-        `\\text{The slope tends to } -\\infty \\text{, so it is a vertical tangent.}`,
-        `\\text{Since } f(x) \\to f(0)=1 \\text{ from values > 1 near } 0^+`,
-        `\\boxed{\\text{The curve has a vertical half-tangent pointing upward}}`,
+        {
+          label: `Compute the difference quotient at $0^+$ to determine the nature of the tangent (vertical, horizontal, or oblique)`,
+          latex: `\\lim_{x\\to 0^+} \\dfrac{f(x)-f(0)}{x} = \\lim_{x\\to 0^+} \\left(\\dfrac{e^x-1}{x} + \\ln x - e - 1\\right)`,
+        },
+        {
+          label: `Evaluate each term: $(e^x-1)/x \\to 1$; $\\ln(x) \\to -\\infty$; the constants $-e-1$ are negligible compared to $-\\infty$`,
+          latex: `= 1 + (-\\infty) - e - 1 = -\\infty`,
+        },
+        {
+          label: `Interpret: difference quotient $\\to -\\infty$ means a vertical half-tangent. The sign $-\\infty$ gives the direction: DOWNWARD`,
+          latex: `f'(0^+) = -\\infty \\implies \\text{vertical half-tangent pointing } \\mathbf{downward}`,
+        },
+        {
+          label: `Rule without exception: $f'(a^+) \\to +\\infty$ ⟹ upward; $f'(a^+) \\to -\\infty$ ⟹ downward. Correct answer: B`,
+          latex: `\\boxed{\\text{Vertical half-tangent pointing downward at } x=0}`,
+        },
       ],
       difficulty: 'hard',
       tags: ['functions', 'derivative', 'tangent'],
+      relatedTips: ['half-tangent', 'product-derivative'],
     },
 
     // ── EXERCISE 7 – PART 3 ──────────────────────────────────
@@ -262,14 +376,30 @@ export const EXAM_2024_REAL: ExamData = {
         { id: 'D', latex: `f([0,+\\infty[) = ]-1,+\\infty[`, isCorrect: false },
       ],
       solution: [
-        `f''(x) = e^x + \\dfrac{1}{x} > 0 \\;\\forall x>0 \\implies f \\text{ is convex (A is false)}`,
-        `f'(1) = e + 0 - e = 0 \\quad \\text{and} \\quad f''(1) = e+1>0 \\implies x=1 \\text{ is a minimum}`,
-        `f(1) = e + 1\\cdot[\\ln 1 - e - 1] = e + (0-e-1) = -1`,
-        `f(0) = 1,\\; f(1)=-1,\\; \\lim_{x\\to+\\infty} f(x)=+\\infty`,
-        `\\boxed{f([0,+\\infty[) = [-1,+\\infty[}`,
+        {
+          label: `Compute $f''(x)$ to study convexity: differentiate $f'(x) = e^x + \\ln(x) - e$ term by term`,
+          latex: `f''(x) = e^x + \\dfrac{1}{x} > 0 \\quad \\forall x>0 \\implies f \\text{ is strictly convex on } ]0,+\\infty[\\text{ — choice A is false}`,
+        },
+        {
+          label: `Find the minimum: $f'(1) = e + \\ln(1) - e = 0$ and $f''(1) = e+1 > 0$ confirm a global minimum at $x=1$`,
+          latex: `f'(1) = e + 0 - e = 0 \\quad \\text{and} \\quad f''(1) = e+1 > 0 \\implies x=1 \\text{ is a global minimum}`,
+        },
+        {
+          label: `Evaluate $f(1)$ to find the minimum value: expand $x[\\ln(x)-e-1]$ at $x=1$`,
+          latex: `f(1) = e + 1\\cdot[\\ln 1 - e - 1] = e + (0-e-1) = -1`,
+        },
+        {
+          label: `Check boundary values: $f(0)=1$ (given), global min $f(1)=-1$, $f(x)\\to+\\infty$. By continuity and IVT, $f$ takes all values $\\geq -1$`,
+          latex: `f(0) = 1,\\quad f(1) = -1\\text{ (global min)},\\quad \\lim_{x\\to+\\infty} f(x) = +\\infty`,
+        },
+        {
+          label: `Conclude the range: global minimum is $-1$, $f$ is continuous and unbounded above → the image is exactly $[-1, +\\infty[$`,
+          latex: `\\boxed{f([0,+\\infty[) = [-1,+\\infty[}`,
+        },
       ],
       difficulty: 'hard',
       tags: ['functions', 'convexity', 'range', 'minimum'],
+      relatedTips: ['function-range', 'convexity-no-inflection'],
     },
   ],
 }

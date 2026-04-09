@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year } = await params
   return {
     title: `${year} Concours Médecine | Prof. Yasmine – UM6SS`,
-    description: `Access the ${year} UM6SS medical entrance exam resources: official paper, expert tips, revision series and course recap — curated by Prof. Yasmine.`,
+    description: `Access the ${year} UM6SS medical entrance exam resources: course recap, revision series, tips & tricks and official exam paper — curated by Prof. Yasmine.`,
   }
 }
 
@@ -29,125 +29,72 @@ export default async function YearPage({ params }: Props) {
   if (!YEARS.includes(year)) notFound()
 
   const meta = getYearMeta(year)
-
-  // Neighbour years for navigation
   const idx = YEARS.indexOf(year)
   const prev = YEARS[idx + 1]
   const next = YEARS[idx - 1]
 
   return (
-    <div style={{ paddingTop: '80px', minHeight: '100vh' }}>
+    <div className="pt-20 min-h-screen">
       {/* Header */}
-      <div
-        className="grid-bg"
-        style={{
-          padding: '4rem 0',
-          borderBottom: '1px solid rgba(201,168,76,0.08)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%,-50%)',
-          width: '600px',
-          height: '300px',
-          background: 'radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-
-        {/* Big year watermark */}
-        <div style={{
-          position: 'absolute',
-          bottom: '-20px',
-          right: '5%',
-          fontFamily: 'var(--font-playfair)',
-          fontSize: 'clamp(6rem, 16vw, 12rem)',
-          fontWeight: 900,
-          color: 'rgba(201,168,76,0.04)',
-          pointerEvents: 'none',
-          lineHeight: 1,
-          userSelect: 'none',
-        }}>{year}</div>
-
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', position: 'relative' }}>
-          {/* Breadcrumb */}
-          <nav className="breadcrumb" style={{ marginBottom: '2rem' }}>
+      <div className="grid-bg py-16 border-b border-gold/8 relative overflow-hidden">
+        <div className="container-main relative">
+          <nav className="breadcrumb mb-8">
             <Link href="/">Home</Link>
             <span className="breadcrumb-sep">›</span>
             <Link href="/concours">Exam Library</Link>
             <span className="breadcrumb-sep">›</span>
-            <span style={{ color: '#C9A84C' }}>{year}</span>
+            <span className="text-gold">{year}</span>
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div className="flex items-start justify-between flex-wrap gap-6">
             <div>
               {meta.badge && (
-                <span className={`badge badge-${meta.badge}`} style={{ marginBottom: '1rem', display: 'inline-flex' }}>
+                <span className={`badge badge-${meta.badge} mb-4 inline-flex`}>
                   {meta.badge === 'new' ? '✦ New' : '★ Popular'}
                 </span>
               )}
-              <h1 style={{ color: '#F5F0E8', marginBottom: '0.75rem' }}>
+              <h1 className="text-foreground mb-3">
                 Concours <span className="gradient-gold">{year}</span>
               </h1>
-              <p style={{ color: '#8B8FA8', fontSize: '0.95rem', maxWidth: '520px', lineHeight: 1.7 }}>
+              <p className="text-muted text-sm max-w-[520px] leading-relaxed">
                 Complete resource pack for the {year} UM6SS medical entrance exam.
                 Choose a category below to start your preparation.
               </p>
-              <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#8B8FA8', fontSize: '0.8rem' }}>
-                  <Calendar size={14} style={{ color: '#C9A84C' }} />
+              <div className="flex gap-6 mt-5 flex-wrap">
+                <div className="flex items-center gap-1.5 text-muted text-xs">
+                  <Calendar size={14} className="text-gold" />
                   Academic Year {year}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#8B8FA8', fontSize: '0.8rem' }}>
-                  <BookOpen size={14} style={{ color: '#C9A84C' }} />
+                <div className="flex items-center gap-1.5 text-muted text-xs">
+                  <BookOpen size={14} className="text-gold" />
                   {meta.totalDocs} documents
                 </div>
-                <div style={{
-                  fontSize: '0.75rem',
-                  padding: '3px 10px',
-                  borderRadius: '6px',
-                  background: meta.difficulty === 'expert'
-                    ? 'rgba(201,168,76,0.1)'
+                <div className={`text-[0.75rem] px-2.5 py-0.5 rounded-md font-bold capitalize ${
+                  meta.difficulty === 'expert'
+                    ? 'bg-gold-dim text-gold'
                     : meta.difficulty === 'advanced'
-                    ? 'rgba(76,173,232,0.1)'
-                    : 'rgba(76,232,124,0.1)',
-                  color: meta.difficulty === 'expert'
-                    ? '#C9A84C'
-                    : meta.difficulty === 'advanced'
-                    ? '#4CADE8'
-                    : '#4CE87C',
-                  fontWeight: 700,
-                  textTransform: 'capitalize',
-                }}>
+                    ? 'bg-blue-accent/10 text-blue-accent'
+                    : 'bg-green-accent/10 text-green-accent'
+                }`}>
                   {meta.difficulty} Level
                 </div>
               </div>
             </div>
 
-            {/* Year nav */}
             <YearNavLinks prev={prev} next={next} />
           </div>
         </div>
       </div>
 
       {/* 4 Category Cards */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem 6rem' }}>
-        <h2 style={{ color: '#F5F0E8', marginBottom: '0.75rem', fontSize: '1.3rem' }}>
-          Select a Resource Category
-        </h2>
-        <p style={{ color: '#8B8FA8', fontSize: '0.875rem', marginBottom: '2.5rem' }}>
-          4 comprehensive resource types available for the {year} concours
+      <div className="container-main py-16 pb-24">
+        <h2 className="text-foreground mb-3 text-xl">Your Preparation Path</h2>
+        <p className="text-muted text-sm mb-10 max-w-[560px] leading-relaxed">
+          Follow the 4 steps in order for the best preparation. Each step builds on the previous one — from theory to exam day.
         </p>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '1.25rem',
-        }}>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
           {CATEGORIES.map((cat, i) => (
-            <CategoryCard key={cat.id} category={cat} year={year} index={i} />
+            <CategoryCard key={cat.id} category={cat} year={year} />
           ))}
         </div>
       </div>
