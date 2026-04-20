@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { Clock, ChevronLeft, ChevronRight, CheckCircle, XCircle, Eye, BookOpen, Target, Award, RotateCcw, Lightbulb } from 'lucide-react'
 import MathRenderer from './MathRenderer'
 import InlineMath from './InlineMath'
+import QuestionVisualization from './visualizations/QuestionVisualization'
 import type { ExamData, ExamQuestion } from '@/lib/exam-data'
-import { TIPS_2024 } from '@/lib/content-2024'
+import { TIPS_2024, getTipsData } from '@/lib/content-2024'
 
 // ── Timer ────────────────────────────────────────────────────
 function Timer({ totalSeconds }: { totalSeconds: number }) {
@@ -60,8 +61,9 @@ function ProgressBar({ answered, total }: { answered: number; total: number }) {
 }
 
 // ── Related Tips ──────────────────────────────────────────────
-function RelatedTips({ tipIds }: { tipIds: string[] }) {
-  const tips = tipIds.map(id => TIPS_2024.find(t => t.id === id)).filter(Boolean)
+function RelatedTips({ tipIds, year }: { tipIds: string[]; year: number }) {
+  const allTips = getTipsData(year) ?? TIPS_2024
+  const tips = tipIds.map(id => allTips.find(t => t.id === id)).filter(Boolean)
   if (tips.length === 0) return null
   return (
     <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center gap-2 flex-wrap">
@@ -72,7 +74,7 @@ function RelatedTips({ tipIds }: { tipIds: string[] }) {
       {tips.map(tip => (
         <Link
           key={tip!.id}
-          href="/concours/2024/tips-tricks"
+          href={`/concours/${year}/tips-tricks`}
           className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[0.65rem] font-semibold no-underline transition-colors bg-blue-accent/10 border border-blue-accent/25 text-blue-accent hover:bg-blue-accent/15"
         >
           {tip!.title}
@@ -85,6 +87,7 @@ function RelatedTips({ tipIds }: { tipIds: string[] }) {
 // ── Question Card ─────────────────────────────────────────────
 interface QCardProps {
   q: ExamQuestion
+  year: number
   selected: string | null
   revealed: boolean
   onSelect: (id: string) => void
@@ -96,7 +99,7 @@ const CHOICE_COLORS: Record<string, string> = {
   A: '#C9A84C', B: '#4CADE8', C: '#9066EE', D: '#4CE87C',
 }
 
-function QuestionCard({ q, selected, revealed, onSelect, onReveal }: QCardProps) {
+function QuestionCard({ q, year, selected, revealed, onSelect, onReveal }: QCardProps) {
   const correctId = q.choices.find(c => c.isCorrect)?.id
   const isCorrect = revealed && selected === correctId
 
@@ -369,9 +372,16 @@ function QuestionCard({ q, selected, revealed, onSelect, onReveal }: QCardProps)
                   )
                 })}
 
+                {/* Interactive Visualization */}
+                {q.visualization ? (
+                  <div className="mt-6">
+                    <QuestionVisualization viz={q.visualization} />
+                  </div>
+                ) : null}
+
                 {/* Related Tips */}
                 {q.relatedTips && q.relatedTips.length > 0 ? (
-                  <RelatedTips tipIds={q.relatedTips} />
+                  <RelatedTips tipIds={q.relatedTips} year={year} />
                 ) : null}
               </div>
             </div>
@@ -417,8 +427,8 @@ function Results({ exam, answers, onRestart }: {
         <button onClick={onRestart} className="btn-gold flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:outline-none">
           <RotateCcw size={16} /> Restart Exam
         </button>
-        <Link href="/concours/2024" className="btn-outline focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none">
-          ← Back to 2024
+        <Link href={`/concours/${exam.year}`} className="btn-outline focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none">
+          ← Back to {exam.year}
         </Link>
       </div>
     </motion.div>
@@ -522,6 +532,7 @@ export default function ExamViewer({ exam }: Props) {
           <QuestionCard
             key={q.number}
             q={q}
+            year={exam.year}
             selected={answers[q.number] ?? null}
             revealed={!!revealed[q.number]}
             onSelect={handleSelect}

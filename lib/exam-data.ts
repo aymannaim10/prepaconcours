@@ -14,6 +14,17 @@ export interface SolutionStep {
   latex: string   // the actual math computation in LaTeX
 }
 
+export type QuestionVisualization =
+  | {
+      type: 'affine-recurrence'
+      a: number
+      b: number
+      u0: number
+      steps?: number
+      title?: string
+      description?: string
+    }
+
 export interface ExamQuestion {
   number: number
   exercise: number
@@ -25,6 +36,7 @@ export interface ExamQuestion {
   difficulty: 'easy' | 'medium' | 'hard'
   tags: string[]
   relatedTips?: string[]
+  visualization?: QuestionVisualization
 }
 
 export interface ExamData {
@@ -404,8 +416,11 @@ export const EXAM_2024_REAL: ExamData = {
   ],
 }
 
+import { EXAM_2025_REAL } from './exam-2025'
+
 export const EXAM_DATA_MAP: Record<string, ExamData> = {
   '2024-real-exam': EXAM_2024_REAL,
+  '2025-real-exam': EXAM_2025_REAL,
 }
 
 export function getExamData(year: number, categoryId: string): ExamData | undefined {
