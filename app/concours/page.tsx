@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import YearCard from '@/components/ui/YearCard'
+import LocalOnly from '@/components/ui/LocalOnly'
 import { YEARS } from '@/lib/data'
 import SectionBadge from '@/components/ui/SectionBadge'
+
+const PUBLIC_YEAR_THRESHOLD = 2018
+const PUBLIC_YEARS = YEARS.filter((y) => y >= PUBLIC_YEAR_THRESHOLD)
+const LOCAL_ONLY_YEARS = YEARS.filter((y) => y < PUBLIC_YEAR_THRESHOLD)
 
 export const metadata: Metadata = {
   title: 'Exam Library 2014–2025 | Prof. Yasmine – UM6SS',
@@ -51,7 +56,7 @@ export default function ConcoursPage() {
       <div className="container-main py-16 pb-24">
         <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
           <p className="text-muted text-sm">
-            Showing <span className="text-foreground font-semibold">12 years</span> of exam resources
+            Showing <span className="text-foreground font-semibold">{PUBLIC_YEARS.length} years</span> of exam resources
           </p>
           <div className="flex gap-2">
             <span className="badge badge-new">✦ New</span>
@@ -60,9 +65,14 @@ export default function ConcoursPage() {
         </div>
 
         <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-5">
-          {YEARS.map((year, i) => (
+          {PUBLIC_YEARS.map((year) => (
             <YearCard key={year} year={year} />
           ))}
+          <LocalOnly>
+            {LOCAL_ONLY_YEARS.map((year) => (
+              <YearCard key={year} year={year} />
+            ))}
+          </LocalOnly>
         </div>
       </div>
     </div>
