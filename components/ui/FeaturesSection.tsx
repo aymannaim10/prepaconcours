@@ -95,14 +95,9 @@ export default function FeaturesSection() {
               <div className="mb-5">
                 <SectionBadge>Why Choose Prof. Yasmine</SectionBadge>
               </div>
-              <h2 className="text-foreground mb-5">
+              <h2 className="text-foreground mb-8">
                 Guided by an Expert Who <span className="gradient-gold">Knows the System</span>
               </h2>
-              <p className="text-muted leading-relaxed mb-8 text-sm">
-                Professor Yasmine has spent over a decade at UM6SS, decoding the exact patterns
-                and expectations of the medical entrance concours. Her platform isn&apos;t generic —
-                every resource is specifically calibrated to the UM6SS English track format.
-              </p>
               <div className="flex flex-col gap-3.5">
                 {whyYasmine.map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
