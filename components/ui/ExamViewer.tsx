@@ -180,6 +180,9 @@ function QuestionCard({ q, year, selected, revealed, examLocked, onSelect, onRev
     )
   }, [])
   const isLocked = lockedSetting && !isLocalDev
+  // On deployed site, hide the "Check answer" button for exam years 2018-2023
+  // (forces visitors to use 2024/2025 free content); locally everything stays interactive.
+  const hideCheckAnswer = !isLocalDev && year >= 2018 && year <= 2023
 
   return (
     <motion.div
@@ -304,7 +307,7 @@ function QuestionCard({ q, year, selected, revealed, examLocked, onSelect, onRev
       {/* Action buttons */}
       <div className="flex gap-3 flex-wrap items-center">
         <AnimatePresence>
-          {!revealed && (
+          {!revealed && !hideCheckAnswer && (
             <motion.button
               key="verify-btn"
               initial={{ opacity: 1, scale: 1 }}
