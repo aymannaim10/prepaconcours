@@ -449,8 +449,12 @@ import { EXAM_2023_REAL } from './exam-2023'
 import { EXAM_2022_REAL } from './exam-2022'
 import { EXAM_2021_REAL } from './exam-2021'
 import { EXAM_2020_REAL } from './exam-2020'
+import { EXAM_2019_REAL } from './exam-2019'
+import { EXAM_2018_REAL } from './exam-2018'
 
 export const EXAM_DATA_MAP: Record<string, ExamData> = {
+  '2018-real-exam': EXAM_2018_REAL,
+  '2019-real-exam': EXAM_2019_REAL,
   '2020-real-exam': EXAM_2020_REAL,
   '2021-real-exam': EXAM_2021_REAL,
   '2022-real-exam': EXAM_2022_REAL,
