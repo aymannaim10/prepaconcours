@@ -161,6 +161,7 @@ export const REVISION_2024: ExamData = {
     },
     {
       number: 6, exercise: 6, topic: 'Integrals', difficulty: 'hard',
+      correctionLocked: true,
       tags: ['integrals', 'improper'],
       relatedTips: ['improper-integral'],
       statement: `\\text{For } \\mu \\in\\,]0,1[\\, \\text{ we define:}`,
@@ -192,6 +193,7 @@ export const REVISION_2024: ExamData = {
     },
     {
       number: 7, exercise: 7, topic: 'Function Analysis', difficulty: 'hard',
+      correctionLocked: true,
       tags: ['functions', 'derivative', 'tangent'],
       relatedTips: ['half-tangent', 'product-derivative'],
       statement: `\\text{Let } h \\text{ be the function defined on } ]0,+\\infty[ \\text{ by } h(x) = e^x + x\\bigl(2\\ln(x) - e - 2\\bigr),\\\\ \\text{and extended by continuity with } h(0)=1.`,
@@ -227,6 +229,7 @@ export const REVISION_2024: ExamData = {
     },
     {
       number: 8, exercise: 8, topic: 'Function Analysis', difficulty: 'hard',
+      correctionLocked: true,
       tags: ['functions', 'convexity', 'range', 'minimum'],
       relatedTips: ['function-range', 'convexity-no-inflection'],
       statement: `\\text{Same function } h(x) = e^x + x\\bigl(2\\ln(x) - e - 2\\bigr) \\text{ on } [0,+\\infty[ \\text{ (with } h(0)=1\\text{).}`,

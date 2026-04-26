@@ -11,6 +11,7 @@ export const EXAM_2023_REAL: ExamData = {
   date: 'July 2023',
   duration: 30,
   categoryId: 'real-exam',
+  correctionLocked: true,
   title: `Common Entrance Exam for Faculties of General Medicine, Dental Medicine, Pharmacy — Academic Year 2023-2024`,
   instructions: `The questionnaire has 10 questions, each question has a unique correct answer. For each question, choose among the four proposed answers the unique correct answer by indicating on the answer sheet the letter corresponding to your answer. The use of calculators is strictly forbidden.`,
   questions: [

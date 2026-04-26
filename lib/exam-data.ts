@@ -51,6 +51,8 @@ export interface ExamQuestion {
   tags: string[]
   relatedTips?: string[]
   visualization?: QuestionVisualization
+  /** When true, the detailed correction is hidden behind a premium gate. Overrides ExamData.correctionLocked when set. */
+  correctionLocked?: boolean
 }
 
 export interface ExamData {
@@ -61,6 +63,8 @@ export interface ExamData {
   title: string
   instructions: string
   questions: ExamQuestion[]
+  /** When true, the detailed correction of every question in this exam is hidden behind a premium gate. Per-question `correctionLocked` overrides this. */
+  correctionLocked?: boolean
 }
 
 // ─────────────────────────────────────────────────────────────

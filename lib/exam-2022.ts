@@ -10,6 +10,7 @@ export const EXAM_2022_REAL: ExamData = {
   date: 'Summer 2022 — Academic Year 2022-2023',
   duration: 45,
   categoryId: 'real-exam',
+  correctionLocked: true,
   title: `Common Entrance Exam for Faculties of General Medicine, Dental Medicine, Pharmacy — Academic Year 2022-2023`,
   instructions: `The mathematics paper contains 15 multiple-choice questions (Q66 through Q80), each offering 5 options (A through E) with a single correct answer. Indicate on the answer sheet the letter corresponding to your choice. The use of calculators is strictly forbidden.`,
   questions: [

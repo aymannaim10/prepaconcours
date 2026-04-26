@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { Clock, ChevronLeft, ChevronRight, CheckCircle, XCircle, Eye, BookOpen, Target, Award, RotateCcw, Lightbulb } from 'lucide-react'
+import { Clock, ChevronLeft, ChevronRight, CheckCircle, XCircle, Eye, BookOpen, Target, Award, RotateCcw, Lightbulb, Lock, Sparkles } from 'lucide-react'
 import MathRenderer from './MathRenderer'
 import InlineMath from './InlineMath'
 import QuestionVisualization from './visualizations/QuestionVisualization'
@@ -84,12 +84,75 @@ function RelatedTips({ tipIds, year }: { tipIds: string[]; year: number }) {
   )
 }
 
+// ── Locked Correction Placeholder ─────────────────────────────
+function LockedCorrection({ correctId }: { correctId: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="mt-6 rounded-2xl overflow-hidden border border-gold/25 relative"
+    >
+      {/* ambient gold gradient backdrop */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-70"
+        style={{
+          background:
+            'linear-gradient(135deg, rgba(201,168,76,0.10), transparent 45%, rgba(229,199,107,0.06) 90%)',
+        }}
+      />
+      <div className="relative bg-gradient-to-br from-[#0d0b08] via-[#100e0a] to-[#0a0807] px-7 py-8">
+        <div className="flex items-start gap-4">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border"
+            style={{
+              background: 'linear-gradient(135deg, rgba(201,168,76,0.22), rgba(201,168,76,0.04))',
+              borderColor: 'rgba(201,168,76,0.45)',
+              boxShadow: '0 0 22px rgba(201,168,76,0.18)',
+            }}
+          >
+            <Lock size={20} className="text-gold" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Sparkles size={12} className="text-gold" />
+              <span className="text-[0.66rem] font-extrabold tracking-[0.18em] uppercase text-gold">
+                Premium Correction
+              </span>
+            </div>
+            <h4 className="text-foreground font-display font-bold text-base leading-tight mb-1.5">
+              The detailed correction is locked
+            </h4>
+            <p className="text-[0.82rem] leading-relaxed text-text-secondary mb-4">
+              The correct answer is{' '}
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-green-accent/15 border border-green-accent/35 text-green-accent font-extrabold text-xs align-middle">
+                {correctId}
+              </span>
+              . The full step-by-step walkthrough — including the table of variations, geometric reasoning,
+              and shortcut tips — is reserved for premium access.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide bg-gold/15 border border-gold/40 text-gold hover:bg-gold/22 transition-colors"
+            >
+              <Lock size={12} />
+              Unlock the full correction
+            </Link>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
 // ── Question Card ─────────────────────────────────────────────
 interface QCardProps {
   q: ExamQuestion
   year: number
   selected: string | null
   revealed: boolean
+  examLocked: boolean
   onSelect: (id: string) => void
   onReveal: () => void
 }
@@ -99,9 +162,10 @@ const CHOICE_COLORS: Record<string, string> = {
   A: '#C9A84C', B: '#4CADE8', C: '#9066EE', D: '#4CE87C', E: '#E89A4C',
 }
 
-function QuestionCard({ q, year, selected, revealed, onSelect, onReveal }: QCardProps) {
+function QuestionCard({ q, year, selected, revealed, examLocked, onSelect, onReveal }: QCardProps) {
   const correctId = q.choices.find(c => c.isCorrect)?.id
   const isCorrect = revealed && selected === correctId
+  const isLocked = q.correctionLocked ?? examLocked
 
   return (
     <motion.div
@@ -317,6 +381,9 @@ function QuestionCard({ q, year, selected, revealed, onSelect, onReveal }: QCard
             transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
+            {isLocked ? (
+              <LockedCorrection correctId={correctId ?? '?'} />
+            ) : (
             <div className="mt-6 rounded-2xl overflow-hidden panel-blue">
               {/* Panel Header */}
               <div className="px-6 py-4 panel-blue-header flex items-center gap-2">
@@ -385,6 +452,7 @@ function QuestionCard({ q, year, selected, revealed, onSelect, onReveal }: QCard
                 ) : null}
               </div>
             </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -535,6 +603,7 @@ export default function ExamViewer({ exam }: Props) {
             year={exam.year}
             selected={answers[q.number] ?? null}
             revealed={!!revealed[q.number]}
+            examLocked={!!exam.correctionLocked}
             onSelect={handleSelect}
             onReveal={handleReveal}
           />

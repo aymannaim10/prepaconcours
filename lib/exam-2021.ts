@@ -10,6 +10,7 @@ export const EXAM_2021_REAL: ExamData = {
   date: 'Summer 2021 — Academic Year 2021-2022',
   duration: 60,
   categoryId: 'real-exam',
+  correctionLocked: true,
   title: `Common Entrance Exam for Faculties of General Medicine, Dental Medicine, Pharmacy — Academic Year 2021-2022`,
   instructions: `The mathematics paper contains 20 multiple-choice questions, each offering 5 options (A through E) with a single correct answer. Indicate on the answer sheet the letter corresponding to your choice. The use of calculators is strictly forbidden.`,
   questions: [
