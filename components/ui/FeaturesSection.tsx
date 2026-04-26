@@ -1,6 +1,6 @@
 'use client'
 import { motion } from 'framer-motion'
-import { ClipboardList, Lightbulb, BookOpenCheck, BookMarked, Target, TrendingUp, Users, Award } from 'lucide-react'
+import { ClipboardList, Lightbulb, BookOpenCheck, BookMarked, Target, TrendingUp, Users } from 'lucide-react'
 import PageHeader from './PageHeader'
 import SectionBadge from './SectionBadge'
 
@@ -50,10 +50,9 @@ const features = [
 ]
 
 const whyYasmine = [
-  { icon: <Award size={20} />, text: '10+ years teaching mathematics at UM6SS' },
   { icon: <Users size={20} />, text: '500+ students guided to successful admission' },
   { icon: <TrendingUp size={20} />, text: '98% first-attempt success rate' },
-  { icon: <Target size={20} />, text: 'Expert in the UM6SS exam format and expectations' },
+  { icon: <Target size={20} />, text: 'Expert in math & info' },
 ]
 
 export default function FeaturesSection() {

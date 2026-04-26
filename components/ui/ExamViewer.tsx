@@ -96,7 +96,7 @@ interface QCardProps {
 
 // Matches @theme tokens: gold, blue-accent, purple-accent, green-accent
 const CHOICE_COLORS: Record<string, string> = {
-  A: '#C9A84C', B: '#4CADE8', C: '#9066EE', D: '#4CE87C',
+  A: '#C9A84C', B: '#4CADE8', C: '#9066EE', D: '#4CE87C', E: '#E89A4C',
 }
 
 function QuestionCard({ q, year, selected, revealed, onSelect, onReveal }: QCardProps) {

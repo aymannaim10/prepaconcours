@@ -40,7 +40,7 @@ export default function ContactPage() {
               </p>
 
               {[
-                { icon: <Mail size={18} />, label: 'Email', value: 'yasmine@um6ss.ma' },
+                { icon: <Mail size={18} />, label: 'Email', value: 'prof.univ.yasmine@gmail.com' },
                 { icon: <MapPin size={18} />, label: 'Location', value: 'UM6SS, Casablanca, Morocco' },
                 { icon: <Phone size={18} />, label: 'Inquiries', value: 'Via email preferred' },
               ].map((item, i) => (

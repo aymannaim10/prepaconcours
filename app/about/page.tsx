@@ -5,21 +5,22 @@ import SectionBadge from '@/components/ui/SectionBadge'
 
 export const metadata: Metadata = {
   title: 'About Prof. Yasmine | UM6SS Medical Concours Platform',
-  description: 'Learn about Professor Yasmine, mathematics professor at UM6SS and creator of Morocco\'s leading English-track medical entrance exam preparation platform.',
+  description: 'Learn about Professor Yasmine, PhD in Mathematics and Computer Science, and creator of the leading preparation platform covering the medical entrance exams of every Moroccan faculty — UM6SS, FMPC, FMPR, FMPM and more.',
 }
 
 const timeline = [
-  { year: '2012', title: 'Joined UM6SS', desc: 'Appointed as Mathematics Professor at Université Mohammed VI des Sciences de la Santé, Casablanca.' },
-  { year: '2015', title: 'Launched First Prep Program', desc: 'Created her first structured concours preparation series, helping 40 students succeed in their first year.' },
-  { year: '2018', title: '100 Students Milestone', desc: 'Surpassed 100 admitted students with a remarkable 95% first-attempt success rate.' },
-  { year: '2020', title: 'Digital Platform Launch', desc: 'Moved resources online, creating a centralized hub for all exam years and categories.' },
-  { year: '2023', title: '400+ Admitted Students', desc: 'Platform scaled to serve over 400 admitted students, now covering all years from 2014 to present.' },
-  { year: '2025', title: 'Full English Track Coverage', desc: 'Launched comprehensive English-track curriculum, fully aligned with UM6SS option anglaise format.' },
+  { year: '2012', title: 'PhD Completed', desc: 'Awarded a PhD in Mathematics and Computer Science, with research at the intersection of applied analysis and algorithms.' },
+  { year: '2013', title: 'Started Teaching', desc: 'Began her teaching career as an independent educator, focusing on ambitious students preparing for competitive scientific and medical entrance exams.' },
+  { year: '2015', title: 'First Concours Prep Program', desc: 'Created her first structured preparation series covering the medical concours of the leading Moroccan faculties, helping 40 students succeed on their first attempt.' },
+  { year: '2018', title: '100 Students Milestone', desc: 'Surpassed 100 admitted students across UM6SS, FMPC, FMPR and FMPM with a remarkable 95% first-attempt success rate.' },
+  { year: '2020', title: 'Digital Platform Launch', desc: 'Moved resources online, creating a centralized hub covering every medical faculty concours, all exam years, and all preparation categories.' },
+  { year: '2023', title: '400+ Admitted Students', desc: 'Platform scaled to serve over 400 admitted students across every Moroccan medical faculty.' },
+  { year: '2025', title: 'Full English Track Coverage', desc: 'Added a comprehensive English-track curriculum, aligned with the option anglaise format used by UM6SS and other institutions.' },
 ]
 
 const expertise = [
   { label: 'Mathematical Analysis', pct: 98 },
-  { label: 'Linear Algebra', pct: 95 },
+  { label: 'Algorithms & Computer Science', pct: 96 },
   { label: 'Probability & Statistics', pct: 97 },
   { label: 'Exam Strategy & Pedagogy', pct: 100 },
 ]
@@ -40,21 +41,22 @@ export default function AboutPage() {
             {/* Text */}
             <div>
               <div className="mb-4">
-                <SectionBadge>UM6SS · English Track</SectionBadge>
+                <SectionBadge>All Moroccan Medical Concours · Prep</SectionBadge>
               </div>
               <h1 className="text-foreground mb-4">
                 Professor <span className="gradient-gold">Yasmine</span>
               </h1>
               <p className="text-muted text-base leading-relaxed mb-6">
-                A distinguished mathematics professor at the Université Mohammed VI des Sciences de la Santé
-                (UM6SS) in Casablanca, Morocco. With over a decade of experience guiding students through
-                the rigorous medical entrance concours, Prof. Yasmine has established herself as the
-                foremost authority on UM6SS exam preparation.
+                An independent educator holding a PhD in Mathematics and Computer Science.
+                With over a decade of experience coaching students through the medical
+                entrance concours of every Moroccan institution — UM6SS, FMPC, FMPR,
+                FMPM, UIASS, UM6P and beyond — Prof. Yasmine has become a reference for
+                anyone preparing these highly competitive exams.
               </p>
               <p className="text-muted text-base leading-relaxed mb-8">
-                Her platform is the only resource specifically tailored to the English-track concours
-                structure at UM6SS, combining official exam archives with expert pedagogical insights
-                developed over 13 years of dedicated teaching.
+                Her platform brings together official exam archives from all major medical
+                faculties with the pedagogical insights she has refined over 13 years of
+                dedicated one-on-one and group teaching, in both French and English tracks.
               </p>
               <div className="flex gap-4 flex-wrap">
                 <Link href="/concours" className="btn-gold">
@@ -74,15 +76,15 @@ export default function AboutPage() {
               </div>
 
               <h3 className="text-foreground mb-1">Prof. Yasmine</h3>
-              <p className="text-gold text-[0.85rem] mb-6 font-semibold">Mathematics · UM6SS</p>
+              <p className="text-gold text-[0.85rem] mb-6 font-semibold">Mathematics &amp; Computer Science</p>
 
               <div className="flex flex-col gap-3 mb-7">
                 {[
-                  { icon: <GraduationCap size={15} />, text: 'PhD in Applied Mathematics' },
-                  { icon: <Award size={15} />, text: '13 years at UM6SS' },
+                  { icon: <GraduationCap size={15} />, text: 'PhD in Mathematics & Computer Science' },
+                  { icon: <Award size={15} />, text: '13 years of teaching experience' },
                   { icon: <Users size={15} />, text: '500+ students admitted' },
                   { icon: <MapPin size={15} />, text: 'Casablanca, Morocco' },
-                  { icon: <Mail size={15} />, text: 'yasmine@um6ss.ma' },
+                  { icon: <Mail size={15} />, text: 'prof.univ.yasmine@gmail.com' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-muted text-[0.85rem]">
                     <span className="text-gold">{item.icon}</span>
@@ -118,7 +120,7 @@ export default function AboutPage() {
           <h2 className="text-foreground mb-3">
             An Academic <span className="gradient-gold">Journey</span>
           </h2>
-          <p className="text-muted text-[0.95rem]">13 years building the definitive UM6SS preparation resource</p>
+          <p className="text-muted text-[0.95rem]">13 years building the definitive preparation resource for every Moroccan medical concours</p>
         </div>
 
         <div className="relative pl-8">

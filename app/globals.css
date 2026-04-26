@@ -384,3 +384,19 @@ p { font-family: var(--font-body); line-height: 1.7; }
   transition: color 0.2s ease;
 }
 .link-muted:hover { color: var(--color-foreground); }
+
+/* ─── Takeaway math — normalize KaTeX to match surrounding copy so
+   inline formulas don't push words to a new line prematurely. ─── */
+.takeaway-math .katex {
+  font-size: 1em;
+  line-height: inherit;
+}
+.takeaway-math .katex .mord,
+.takeaway-math .katex .mrel,
+.takeaway-math .katex .mbin,
+.takeaway-math .katex .mpunct {
+  word-spacing: normal;
+}
+.takeaway-math > span {
+  display: inline;
+}

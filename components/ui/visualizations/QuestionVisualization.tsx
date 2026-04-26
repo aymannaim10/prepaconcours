@@ -2,6 +2,9 @@
 
 import type { QuestionVisualization as Viz } from '@/lib/exam-data'
 import AffineRecurrenceChart from './AffineRecurrenceChart'
+import FunctionPlot2024Ex7 from './FunctionPlot2024Ex7'
+import LocusPlot2023Ex6 from './LocusPlot2023Ex6'
+import HyperbolaPlot2023Ex7 from './HyperbolaPlot2023Ex7'
 
 export default function QuestionVisualization({ viz }: { viz: Viz }) {
   if (viz.type === 'affine-recurrence') {
@@ -15,6 +18,15 @@ export default function QuestionVisualization({ viz }: { viz: Viz }) {
         description={viz.description}
       />
     )
+  }
+  if (viz.type === 'function-plot' && viz.preset === 'f-2024-ex7') {
+    return <FunctionPlot2024Ex7 title={viz.title} description={viz.description} />
+  }
+  if (viz.type === 'locus-2d' && viz.preset === 'lines-2023-ex6') {
+    return <LocusPlot2023Ex6 title={viz.title} description={viz.description} />
+  }
+  if (viz.type === 'locus-2d' && viz.preset === 'hyperbola-2023-ex7') {
+    return <HyperbolaPlot2023Ex7 title={viz.title} description={viz.description} />
   }
   return null
 }

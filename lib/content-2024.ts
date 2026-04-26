@@ -32,6 +32,8 @@ export interface RecapTopic {
   formulas: { label: string; latex: string; description: string }[]
   theorems: { name: string; statement: string; keyIdea: string }[]
   pitfalls: string[]
+  /** Optional id of a dedicated visual diagram to render for this topic */
+  diagram?: 'asymptotic-tree'
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -426,6 +428,61 @@ export const RECAP_2024: RecapTopic[] = [
       `$e^x$ dominates every polynomial and logarithm at infinity → parabolic branch direction $Oy$.`,
       `Demi-tangente verticale : slope $\\to +\\infty$ ⟹ HAUT ; slope $\\to -\\infty$ ⟹ BAS. Règle sans exception.`,
       `$f''(x)>0$ everywhere ⟹ CONVEX (not concave). Mnemonic: "convex = smile".`,
+    ],
+  },
+  {
+    id: 'asymptotic-behavior',
+    title: 'Asymptotic Behavior',
+    icon: '📉',
+    color: '#F5A623',
+    diagram: 'asymptotic-tree',
+    summary: `Asymptotic behavior describes how a function behaves "at the edges" of its domain — typically as $x\\to\\pm\\infty$ or near a point where the function explodes. In Exercise 7 of the 2024 concours, this is the core skill: given $f(x) = e^x + x[\\ln(x) - e - 1]$, determine whether the graph $(C_f)$ has a horizontal asymptote, an oblique asymptote, or a parabolic branch at $+\\infty$. Mastering the two-step decision tree below turns a conceptual question into a mechanical 30-second calculation.`,
+    formulas: [
+      { label: 'Horizontal asymptote', latex: `\\lim_{x\\to+\\infty} f(x) = \\ell \\in \\mathbb{R} \\implies (C_f)\\text{ admits } y=\\ell \\text{ as H.A.}`, description: 'The simplest case: if $f(x)$ tends to a finite real number, the curve flattens onto the horizontal line $y=\\ell$. Always test this FIRST — if the limit is finite, stop.' },
+      { label: 'Oblique asymptote', latex: `\\lim \\dfrac{f(x)}{x} = a\\neq 0 \\;\\text{ and }\\; \\lim[f(x)-ax] = b \\implies y=ax+b`, description: 'Two-step test: (1) the slope $a = \\lim f(x)/x$ must be a finite, nonzero real; (2) then $b = \\lim [f(x)-ax]$ must also be finite. Both conditions are required.' },
+      { label: 'Parabolic branch — $Ox$', latex: `\\lim_{x\\to+\\infty} f(x) = \\pm\\infty \\;\\text{ and }\\; \\lim \\dfrac{f(x)}{x} = 0 \\implies \\text{PB direction } Ox`, description: 'The curve escapes to infinity but grows SLOWER than any line — it bends toward the x-axis. Classic example: $f(x)=\\sqrt{x}$ or $f(x)=\\ln(x)$.' },
+      { label: 'Parabolic branch — $Oy$', latex: `\\lim_{x\\to+\\infty} f(x) = \\pm\\infty \\;\\text{ and }\\; \\lim \\dfrac{f(x)}{x} = \\pm\\infty \\implies \\text{PB direction } Oy`, description: 'The curve shoots up FASTER than any line — it becomes nearly vertical. Hallmark of exponentials: whenever $e^x$ is in $f$, this is almost always the verdict.' },
+      { label: 'Growth hierarchy', latex: `\\ln(x) \\;\\ll\\; x^\\alpha \\;\\ll\\; e^x \\quad (\\text{as } x\\to+\\infty,\\ \\alpha>0)`, description: 'The golden chain of comparative growth: logarithms grow slower than any power, and any power grows slower than the exponential. Use it to resolve indeterminate forms at infinity in one line.' },
+      { label: 'Vertical asymptote', latex: `\\lim_{x\\to a} f(x) = \\pm\\infty \\implies x=a \\text{ is a V.A.}`, description: 'At a point $a$ where $f$ explodes (e.g., $\\ln(x)$ at $0$, or $1/(x-a)$), the curve hugs the vertical line $x=a$. Check both sides: $x\\to a^-$ and $x\\to a^+$.' },
+    ],
+    theorems: [
+      { name: 'Decision tree at $+\\infty$', statement: `\\text{(1) } \\lim f = \\ell \\Rightarrow y=\\ell.\\; \\text{(2) Else compute } \\lim f/x: \\begin{cases} 0 & \\Rightarrow \\text{PB } Ox \\\\ \\pm\\infty & \\Rightarrow \\text{PB } Oy \\\\ a\\in\\mathbb{R}^* & \\Rightarrow \\text{try oblique} \\end{cases}`, keyIdea: 'A 2-step mechanical test. Never guess — always compute $\\lim f$ first, then $\\lim f/x$ if needed. Every concours question on asymptotic behavior resolves with this tree.' },
+      { name: 'Exponential dominance', statement: `\\lim_{x\\to+\\infty} \\dfrac{e^x}{x^n} = +\\infty \\quad \\forall n\\in\\mathbb{N}`, keyIdea: 'The exponential beats every polynomial. So any $f$ containing $e^x$ as a leading term has $f(x)/x \\to +\\infty$ → parabolic branch $Oy$.' },
+      { name: 'Logarithmic slowness', statement: `\\lim_{x\\to+\\infty} \\dfrac{\\ln(x)}{x^\\alpha} = 0 \\quad \\forall\\alpha>0`, keyIdea: 'Logarithms are "slower than any power." So $\\ln(x)$ contributions vanish when compared with $x$ or higher powers. Key when proving $\\lim f/x = 0$.' },
+      { name: 'Limit at a boundary — $x\\ln x$', statement: `\\lim_{x\\to 0^+} x\\ln(x) = 0`, keyIdea: 'At the left boundary $x=0^+$, the factor $x\\to 0$ crushes $\\ln(x)\\to -\\infty$. Indispensable for improper integrals AND for studying $f$ near $0$ in Exercise 7.' },
+    ],
+    pitfalls: [
+      `Don't stop after computing $\\lim f = +\\infty$: that only rules OUT a horizontal asymptote. You still must compute $\\lim f(x)/x$ to know between oblique and parabolic branch.`,
+      `If $\\lim f(x)/x = a\\in\\mathbb{R}^*$, an oblique asymptote is only a CANDIDATE — you must then verify $\\lim [f(x)-ax]$ is finite. If this second limit is $\\pm\\infty$, there is NO oblique asymptote (it's still a parabolic branch).`,
+      `"Parabolic branch" does NOT mean the curve is a parabola — it just means no asymptote exists. Don't write $y = x^2$ as an answer!`,
+      `For Exercise 7's $f(x)=e^x+x[\\ln x - e - 1]$: $f(x)/x = e^x/x + \\ln x - e - 1 \\to +\\infty$ because $e^x/x\\to+\\infty$. Verdict: parabolic branch direction $Oy$.`,
+      `Always check the SIDE: $\\lim_{x\\to+\\infty}$ and $\\lim_{x\\to-\\infty}$ can give different behaviors. The concours often asks only about $+\\infty$, but read the question carefully.`,
+    ],
+  },
+  {
+    id: 'half-tangents',
+    title: 'Half-Tangents at a Boundary',
+    icon: '↕️',
+    color: '#9A7BFF',
+    summary: `A "half-tangent" is the tangent-line behavior of a curve at an endpoint of its domain — typically at a point where $f$ is continuous but not differentiable. In Exercise 7 of the 2024 concours, $f(x)=e^x+x[\\ln(x)-e-1]$ is extended by continuity with $f(0)=1$; since $\\ln(x)\\to-\\infty$ as $x\\to 0^+$, the right-derivative blows up and the curve arrives at $(0,1)$ with a VERTICAL tangent. The direction (up or down) is read directly from the SIGN of the infinite limit. Master this one-line rule and any half-tangent MCQ is a 30-second computation.`,
+    formulas: [
+      { label: 'Difference quotient at $a^+$', latex: `\\tau(x) = \\dfrac{f(x)-f(a)}{x-a} \\;,\\; x\\to a^+`, description: 'This is the slope of the secant line between $(a,f(a))$ and $(x,f(x))$. Its limit as $x\\to a^+$ is the RIGHT derivative $f\'_d(a)$ — the slope of the right half-tangent.' },
+      { label: 'Finite limit $\\Rightarrow$ oblique/horizontal', latex: `\\lim_{x\\to a^+} \\tau(x) = m \\in \\mathbb{R} \\implies \\text{half-tangent of slope } m`, description: 'If the difference quotient has a finite limit, the curve enters the point with a regular tangent of that slope. Special case $m=0$: HORIZONTAL half-tangent.' },
+      { label: 'Limit $=+\\infty$ $\\Rightarrow$ vertical UP', latex: `\\lim_{x\\to a^+} \\tau(x) = +\\infty \\implies \\text{vertical half-tangent pointing UPWARD}`, description: 'The slope explodes to $+\\infty$ — the secant becomes vertical, and since values are increasing toward the boundary, the half-tangent points UP. Sign $+$ = up.' },
+      { label: 'Limit $=-\\infty$ $\\Rightarrow$ vertical DOWN', latex: `\\lim_{x\\to a^+} \\tau(x) = -\\infty \\implies \\text{vertical half-tangent pointing DOWNWARD}`, description: 'The slope explodes to $-\\infty$ — again vertical, but now the curve plunges. Sign $-$ = down. This is the verdict for Exercise 7 at $x=0^+$.' },
+      { label: 'Sign $\\leftrightarrow$ direction (mnemonic)', latex: `\\boxed{\\;+\\infty \\to \\uparrow \\;\\text{HAUT}\\;,\\quad -\\infty \\to \\downarrow \\;\\text{BAS}\\;}`, description: 'The rule has NO exception: read the sign of the infinite limit and translate it directly into up/down. Do not try to visualize — trust the sign.' },
+    ],
+    theorems: [
+      { name: 'Half-tangent classification', statement: `\\lim_{x\\to a^+}\\dfrac{f(x)-f(a)}{x-a} = \\begin{cases} m\\in\\mathbb{R} & \\Rightarrow \\text{slope } m \\text{ (horizontal if } m=0\\text{)} \\\\ +\\infty & \\Rightarrow \\text{vertical, UP} \\\\ -\\infty & \\Rightarrow \\text{vertical, DOWN} \\end{cases}`, keyIdea: 'One limit, three cases, one answer. This IS the decision procedure — no geometry required. Every MCQ option in the style of "horizontal / vertical up / vertical down" comes from this table.' },
+      { name: 'When to expect a vertical half-tangent', statement: `f \\text{ extended by continuity at } a \\text{ AND } \\lim_{x\\to a^+} f'(x) = \\pm\\infty \\implies (C_f) \\text{ has a vertical half-tangent at } a`, keyIdea: 'In practice: if $f$ was defined by a formula on an open interval and you glued the endpoint by continuity, check whether $f\'$ blows up at the boundary. The usual culprits are $\\ln(x)$ at $0$, $\\sqrt{x}$ at $0$, or $1/x$-style factors.' },
+      { name: 'Recognizing the setup in Ex. 7', statement: `\\tau(x) = \\dfrac{e^x-1}{x} + \\ln(x) - e - 1 \\;,\\; x\\to 0^+`, keyIdea: 'Split the difference quotient into pieces you already know: $(e^x-1)/x \\to 1$ is a classical limit; $\\ln(x)\\to -\\infty$ dominates every constant. Result: $1-\\infty-e-1 = -\\infty \\Rightarrow$ vertical, DOWN.' },
+    ],
+    pitfalls: [
+      `Don't confuse "HORIZONTAL half-tangent" with "vertical half-tangent pointing right/left" — a horizontal half-tangent simply means slope $0$, a regular (finite) tangent. Vertical half-tangents only exist when the limit is $\\pm\\infty$.`,
+      `The sign rule $+\\infty \\to$ UP, $-\\infty \\to$ DOWN is absolute. Students often swap them by "intuition" — don't. Trust the sign.`,
+      `Always compute on the correct SIDE. A right half-tangent uses $x\\to a^+$; a left half-tangent uses $x\\to a^-$. In Exercise 7, $f$ is only defined on $[0,+\\infty[$, so only the right side makes sense at $a=0$.`,
+      `You CANNOT answer this question by computing $f'(0)$ directly — $f'$ isn't defined at the boundary. You must go back to the DIFFERENCE QUOTIENT $\\tau(x) = (f(x)-f(a))/(x-a)$ and take its limit.`,
+      `If the difference quotient has a FINITE limit but you were expecting a vertical half-tangent, re-check: you probably forgot that a finite $m$ (including $m=0$) gives a regular tangent, NOT a vertical one.`,
     ],
   },
 ]

@@ -4,7 +4,7 @@
 // ============================================================
 
 export interface Choice {
-  id: 'A' | 'B' | 'C' | 'D'
+  id: 'A' | 'B' | 'C' | 'D' | 'E'
   latex: string
   isCorrect: boolean
 }
@@ -21,6 +21,20 @@ export type QuestionVisualization =
       b: number
       u0: number
       steps?: number
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'function-plot'
+      /** Plot preset — each one is a hand-tuned chart for a specific exam function */
+      preset: 'f-2024-ex7'
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'locus-2d'
+      /** Locus preset — a hand-tuned 2D geometric figure for a specific exam question */
+      preset: 'lines-2023-ex6' | 'hyperbola-2023-ex7'
       title?: string
       description?: string
     }
@@ -171,7 +185,7 @@ export const EXAM_2024_REAL: ExamData = {
       number: 4,
       exercise: 4,
       topic: 'Complex Numbers',
-      statement: `z_A = 4+i \\;,\\; z_B = e^{-i\\frac{\\pi}{2}} = -i \\;,\\; A' = R\\!\\left(B,\\tfrac{\\pi}{2}\\right)(A)`,
+      statement: `\\text{Let } A \\text{ and } B \\text{ be the points with affixes } z_A = 4+i \\text{ and } z_B = e^{-i\\frac{\\pi}{2}} = -i.\\\\ \\text{Let } A' \\text{ be the image of } A \\text{ by the rotation with center } B \\text{ and angle } \\tfrac{\\pi}{2}.`,
       question: `z_{A'} = \\;?`,
       choices: [
         { id: 'A', latex: `z_{A'} = 2 - 3i`, isCorrect: false },
@@ -343,17 +357,21 @@ export const EXAM_2024_REAL: ExamData = {
       number: 9,
       exercise: 7,
       topic: 'Function Analysis',
-      statement: `\\text{Given that } f'(x) = e^x + \\ln(x) - e \\;,\\; \\forall x > 0`,
-      question: `\\text{Half-tangent on the right of } 0 \\text{ for } (C_f) \\text{:}`,
+      statement: ``,
+      question: `\\text{(Continuation of Question 8)}`,
       choices: [
-        { id: 'A', latex: `\\text{Horizontal half-tangent}`, isCorrect: false },
-        { id: 'B', latex: `\\text{Vertical half-tangent pointing downward}`, isCorrect: true },
-        { id: 'C', latex: `\\text{Vertical half-tangent pointing upward}`, isCorrect: false },
-        { id: 'D', latex: `\\text{The point } x=1 \\text{ is an inflection point}`, isCorrect: false },
+        { id: 'A', latex: `f'(x) = e^x + \\ln(x) + e \\;,\\; \\forall x > 0`, isCorrect: false },
+        { id: 'B', latex: `(C_f) \\text{ admits a horizontal half-tangent on the right of } 0`, isCorrect: false },
+        { id: 'C', latex: `(C_f) \\text{ admits a vertical half-tangent on the right of } 0 \\text{ pointing downward}`, isCorrect: true },
+        { id: 'D', latex: `(C_f) \\text{ admits a vertical half-tangent on the right of } 0 \\text{ pointing upward}`, isCorrect: false },
       ],
       solution: [
         {
-          label: `Compute the difference quotient at $0^+$ to determine the nature of the tangent (vertical, horizontal, or oblique)`,
+          label: `First check option A by computing $f'(x)$. Differentiate $f(x)=e^x + x[\\ln(x)-e-1]$ using the product rule on the second term`,
+          latex: `f'(x) = e^x + [\\ln(x)-e-1] + x\\cdot\\tfrac{1}{x} = e^x + \\ln(x) - e \\quad(\\text{not } +e) \\implies \\text{A is false}`,
+        },
+        {
+          label: `Compute the difference quotient at $0^+$ to determine the nature of the right half-tangent`,
           latex: `\\lim_{x\\to 0^+} \\dfrac{f(x)-f(0)}{x} = \\lim_{x\\to 0^+} \\left(\\dfrac{e^x-1}{x} + \\ln x - e - 1\\right)`,
         },
         {
@@ -365,7 +383,7 @@ export const EXAM_2024_REAL: ExamData = {
           latex: `f'(0^+) = -\\infty \\implies \\text{vertical half-tangent pointing } \\mathbf{downward}`,
         },
         {
-          label: `Rule without exception: $f'(a^+) \\to +\\infty$ ⟹ upward; $f'(a^+) \\to -\\infty$ ⟹ downward. Correct answer: B`,
+          label: `Rule without exception: $f'(a^+) \\to +\\infty$ ⟹ upward; $f'(a^+) \\to -\\infty$ ⟹ downward. Correct answer: C`,
           latex: `\\boxed{\\text{Vertical half-tangent pointing downward at } x=0}`,
         },
       ],
@@ -379,18 +397,22 @@ export const EXAM_2024_REAL: ExamData = {
       number: 10,
       exercise: 7,
       topic: 'Function Analysis',
-      statement: `\\text{(Continuation of Exercise 7)}`,
-      question: `\\text{Determine the properties of } f \\text{:}`,
+      statement: ``,
+      question: `\\text{(Continuation of Question 8)}`,
       choices: [
-        { id: 'A', latex: `f \\text{ is concave on } [0,1] \\text{ and convex on } [1,+\\infty[`, isCorrect: false },
-        { id: 'B', latex: `f([0,+\\infty[) = [-1,+\\infty[`, isCorrect: true },
-        { id: 'C', latex: `f([0,+\\infty[) = [1,+\\infty[`, isCorrect: false },
-        { id: 'D', latex: `f([0,+\\infty[) = ]-1,+\\infty[`, isCorrect: false },
+        { id: 'A', latex: `\\text{Le point d'abscisse } 1 \\text{ est un point d'inflexion pour la courbe } (C_f)`, isCorrect: false },
+        { id: 'B', latex: `f \\text{ est concave sur } [0\\,;1] \\text{ et convexe sur } [1\\,;+\\infty[`, isCorrect: false },
+        { id: 'C', latex: `f([0\\,;+\\infty[) = [-1\\,;+\\infty[`, isCorrect: true },
+        { id: 'D', latex: `f([0\\,;+\\infty[) = [1\\,;+\\infty[`, isCorrect: false },
       ],
       solution: [
         {
           label: `Compute $f''(x)$ to study convexity: differentiate $f'(x) = e^x + \\ln(x) - e$ term by term`,
-          latex: `f''(x) = e^x + \\dfrac{1}{x} > 0 \\quad \\forall x>0 \\implies f \\text{ is strictly convex on } ]0,+\\infty[\\text{ — choice A is false}`,
+          latex: `f''(x) = e^x + \\dfrac{1}{x} > 0 \\quad \\forall x>0 \\implies f \\text{ is strictly convex on } ]0,+\\infty[`,
+        },
+        {
+          label: `Since $f''>0$ everywhere on $]0,+\\infty[$, there is no sign change — so no inflection point (A false) and $f$ is not concave on $[0,1]$ (B false)`,
+          latex: `f''(x)>0 \\;\\forall x>0 \\implies \\text{no inflection point, } f \\text{ is convex on the whole domain}`,
         },
         {
           label: `Find the minimum: $f'(1) = e + \\ln(1) - e = 0$ and $f''(1) = e+1 > 0$ confirm a global minimum at $x=1$`,
@@ -401,24 +423,32 @@ export const EXAM_2024_REAL: ExamData = {
           latex: `f(1) = e + 1\\cdot[\\ln 1 - e - 1] = e + (0-e-1) = -1`,
         },
         {
-          label: `Check boundary values: $f(0)=1$ (given), global min $f(1)=-1$, $f(x)\\to+\\infty$. By continuity and IVT, $f$ takes all values $\\geq -1$`,
-          latex: `f(0) = 1,\\quad f(1) = -1\\text{ (global min)},\\quad \\lim_{x\\to+\\infty} f(x) = +\\infty`,
-        },
-        {
-          label: `Conclude the range: global minimum is $-1$, $f$ is continuous and unbounded above → the image is exactly $[-1, +\\infty[$`,
+          label: `Check boundary values: $f(0)=1$ (given), global min $f(1)=-1$, $\\lim_{x\\to+\\infty} f(x) = +\\infty$. By continuity, $f$ takes all values $\\geq -1$`,
           latex: `\\boxed{f([0,+\\infty[) = [-1,+\\infty[}`,
         },
       ],
       difficulty: 'hard',
       tags: ['functions', 'convexity', 'range', 'minimum'],
       relatedTips: ['function-range', 'convexity-no-inflection'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'f-2024-ex7',
+        title: 'Graph of f(x) = eˣ + x(ln x − e − 1)',
+        description: 'Interactive plot — hover to read values, toggle derivatives, and watch the minimum appear at x = 1.',
+      },
     },
   ],
 }
 
 import { EXAM_2025_REAL } from './exam-2025'
+import { EXAM_2023_REAL } from './exam-2023'
+import { EXAM_2022_REAL } from './exam-2022'
+import { EXAM_2021_REAL } from './exam-2021'
 
 export const EXAM_DATA_MAP: Record<string, ExamData> = {
+  '2021-real-exam': EXAM_2021_REAL,
+  '2022-real-exam': EXAM_2022_REAL,
+  '2023-real-exam': EXAM_2023_REAL,
   '2024-real-exam': EXAM_2024_REAL,
   '2025-real-exam': EXAM_2025_REAL,
 }

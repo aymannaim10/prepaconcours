@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, BookOpen, Lightbulb, Ruler } from 'lucide-react'
 import MathRenderer from './MathRenderer'
 import InlineMath from './InlineMath'
+import AsymptoticTree from './AsymptoticTree'
 import type { RecapTopic } from '@/lib/content-2024'
 
 // ── Formula Row ──────────────────────────────────────────────
@@ -125,6 +126,19 @@ export default function RecapViewer({ topics }: { topics: RecapTopic[] }) {
               {topic.summary}
             </p>
           </div>
+
+          {/* ── Optional diagram (e.g. asymptotic decision tree) ── */}
+          {topic.diagram === 'asymptotic-tree' && (
+            <section>
+              <div className="flex items-center gap-2 mb-4">
+                <Ruler size={15} style={{ color: topic.color }} />
+                <h3 className="text-xs font-bold tracking-widest uppercase" style={{ color: topic.color }}>
+                  Decision Tree
+                </h3>
+              </div>
+              <AsymptoticTree />
+            </section>
+          )}
 
           {/* ── Essential Formulas ── */}
           <section>

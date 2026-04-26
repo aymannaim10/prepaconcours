@@ -54,26 +54,26 @@ export const EXAM_2025_REAL: ExamData = {
       number: 2,
       exercise: 2,
       topic: 'Complex Numbers',
-      statement: `\\text{Let } r \\text{ be the rotation with center } O \\text{ and angle } \\theta = \\frac{2\\pi}{3}.\\quad A \\text{ has affix } z_A = -i.\\quad B = r(A).`,
+      statement: `\\text{Let } r \\text{ be the rotation with center } O \\text{ and angle } \\theta = \\frac{\\pi}{3}.\\quad A \\text{ has affix } z_A = -i.\\quad B = r(A).`,
       question: `\\text{Find } (z_B)^3.`,
       choices: [
-        { id: 'A', latex: `(z_B)^3 = i`, isCorrect: true },
+        { id: 'A', latex: `(z_B)^3 = i`, isCorrect: false },
         { id: 'B', latex: `(z_B)^3 = 1 - i`, isCorrect: false },
         { id: 'C', latex: `(z_B)^3 = 1 + i`, isCorrect: false },
-        { id: 'D', latex: `(z_B)^3 = -i`, isCorrect: false },
+        { id: 'D', latex: `(z_B)^3 = -i`, isCorrect: true },
       ],
       solution: [
         {
           label: `A rotation of angle $\\theta$ centered at $O$ maps $z_A$ to $z_B = e^{i\\theta} \\cdot z_A$`,
-          latex: `z_B = e^{i\\frac{2\\pi}{3}} \\cdot (-i)`,
+          latex: `z_B = e^{i\\frac{\\pi}{3}} \\cdot (-i)`,
         },
         {
           label: `Compute $(z_B)^3$ using the exponent laws: $(ab)^3 = a^3 b^3$`,
-          latex: `(z_B)^3 = \\left(e^{i\\frac{2\\pi}{3}}\\right)^{\\!3} \\cdot (-i)^3 = e^{i \\cdot 2\\pi} \\cdot (-i)^3`,
+          latex: `(z_B)^3 = \\left(e^{i\\frac{\\pi}{3}}\\right)^{\\!3} \\cdot (-i)^3 = e^{i\\pi} \\cdot (-i)^3`,
         },
         {
-          label: `Simplify: $e^{i2\\pi} = 1$ and $(-i)^3 = (-i)^2 \\cdot (-i) = (-1)\\cdot(-i) = i$`,
-          latex: `(z_B)^3 = 1 \\cdot i = \\boxed{i \\implies \\text{Answer: A}}`,
+          label: `Simplify: $e^{i\\pi} = -1$ and $(-i)^3 = (-i)^2 \\cdot (-i) = (-1)\\cdot(-i) = i$`,
+          latex: `(z_B)^3 = (-1) \\cdot i = \\boxed{-i \\implies \\text{Answer: D}}`,
         },
       ],
       difficulty: 'medium',

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, Mail } from 'lucide-react'
+import { Mail } from 'lucide-react'
 
 const footerLinks = {
   Platform: [
@@ -42,8 +42,7 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-2">
               {[
-                { icon: <MapPin size={14} />, text: 'Mohammed VI University, Casablanca, Morocco' },
-                { icon: <Mail size={14} />, text: 'yasmine@um6ss.ma' },
+                { icon: <Mail size={14} />, text: 'prof.univ.yasmine@gmail.com' },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-2 text-muted text-xs">
                   <span className="text-gold mt-0.5 shrink-0">{item.icon}</span>
