@@ -33,7 +33,7 @@ export interface RecapTopic {
   theorems: { name: string; statement: string; keyIdea: string }[]
   pitfalls: string[]
   /** Optional id of a dedicated visual diagram to render for this topic */
-  diagram?: 'asymptotic-tree'
+  diagram?: 'asymptotic-tree' | 'diff-eq-tree'
 }
 
 // ─────────────────────────────────────────────────────────────

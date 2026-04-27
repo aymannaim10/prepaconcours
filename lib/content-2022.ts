@@ -275,7 +275,8 @@ export const RECAP_2022: RecapTopic[] = [
     title: 'Differential Equations — First & Second Order',
     icon: '📐',
     color: '#9066EE',
-    summary: `First-order linear: $y' = ay + b$ has solutions $y = Ce^{ax} - b/a$. Second-order homogeneous $y'' + by' + cy = 0$: solve characteristic equation $r^{2} + br + c = 0$. Three cases based on discriminant: two real roots (sum of two exponentials), double root (multiplied by $x$), complex conjugate roots (oscillating exponentials).`,
+    diagram: 'diff-eq-tree',
+    summary: `First-order linear: $y' = ay + b$ has solutions $y = Ce^{ax} - b/a$. Second-order homogeneous $y'' + ay' + by = 0$: solve characteristic equation $r^{2} + ar + b = 0$. Three cases based on discriminant $\\Delta = a^{2} - 4b$: two real roots (sum of two exponentials), double root (multiplied by $x$), complex conjugate roots (oscillating exponentials). The decision tree below shows all three cases at a glance.`,
     formulas: [
       { label: 'First-order linear', latex: `y' = ay + b \\implies y(x) = C e^{ax} - \\dfrac{b}{a} \\;\\text{(}a \\neq 0\\text{)}`, description: 'Find a particular constant solution $y_{p} = -b/a$, add the homogeneous $y_{h} = Ce^{ax}$.' },
       { label: 'Characteristic equation', latex: `y'' + a y' + b y = 0 \\implies r^{2} + a r + b = 0`, description: `Replace $y'' \\to r^{2}$, $y' \\to r$, $y \\to 1$.` },
