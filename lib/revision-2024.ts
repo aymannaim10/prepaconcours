@@ -272,8 +272,10 @@ export const REVISION_2024: ExamData = {
 
 import { REVISION_2025 } from './revision-2025'
 import { REVISION_2023 } from './revision-2023'
+import { REVISION_2022 } from './revision-2022'
 
 export function getRevisionData(year: number): ExamData | undefined {
+  if (year === 2022) return REVISION_2022
   if (year === 2023) return REVISION_2023
   if (year === 2024) return REVISION_2024
   if (year === 2025) return REVISION_2025

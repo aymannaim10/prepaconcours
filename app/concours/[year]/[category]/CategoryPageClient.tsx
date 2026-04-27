@@ -11,7 +11,7 @@ import TipsViewer from '@/components/ui/TipsViewer'
 import RecapViewer from '@/components/ui/RecapViewer'
 
 // Years whose recap / tips / revision content is restricted to local development
-const LOCAL_ONLY_CONTENT_YEARS = new Set([2023])
+const LOCAL_ONLY_CONTENT_YEARS = new Set([2022, 2023])
 const LOCAL_ONLY_CATEGORIES = new Set(['course-recap', 'tips-tricks', 'revision-series'])
 
 function useIsLocalDev(): boolean {
