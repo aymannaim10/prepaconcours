@@ -489,14 +489,17 @@ export const RECAP_2024: RecapTopic[] = [
 
 // ── Lookup functions ─────────────────────────────────────────
 import { TIPS_2025, RECAP_2025 } from './content-2025'
+import { TIPS_2023, RECAP_2023 } from './content-2023'
 
 export function getTipsData(year: number): Tip[] | undefined {
+  if (year === 2023) return TIPS_2023
   if (year === 2024) return TIPS_2024
   if (year === 2025) return TIPS_2025
   return undefined
 }
 
 export function getRecapData(year: number): RecapTopic[] | undefined {
+  if (year === 2023) return RECAP_2023
   if (year === 2024) return RECAP_2024
   if (year === 2025) return RECAP_2025
   return undefined

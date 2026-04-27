@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ChevronRight, Lock, Sparkles } from 'lucide-react'
 import { CATEGORIES, getCategoryById } from '@/lib/data'
 import { getExamData } from '@/lib/exam-data'
 import { getTipsData, getRecapData } from '@/lib/content-2024'
@@ -8,6 +9,79 @@ import { getRevisionData } from '@/lib/revision-2024'
 import ExamViewer from '@/components/ui/ExamViewer'
 import TipsViewer from '@/components/ui/TipsViewer'
 import RecapViewer from '@/components/ui/RecapViewer'
+
+// Years whose recap / tips / revision content is restricted to local development
+const LOCAL_ONLY_CONTENT_YEARS = new Set([2023])
+const LOCAL_ONLY_CATEGORIES = new Set(['course-recap', 'tips-tricks', 'revision-series'])
+
+function useIsLocalDev(): boolean {
+  const [isLocal, setIsLocal] = useState(false)
+  useEffect(() => {
+    const h = window.location.hostname
+    setIsLocal(
+      h === 'localhost' ||
+      h === '127.0.0.1' ||
+      h === '::1' ||
+      h.startsWith('192.168.') ||
+      h.startsWith('10.') ||
+      /^172\.(1[6-9]|2\d|3[01])\./.test(h)
+    )
+  }, [])
+  return isLocal
+}
+
+function LockedContentPlaceholder({ year, categoryLabel }: { year: number; categoryLabel: string }) {
+  return (
+    <div
+      className="rounded-2xl overflow-hidden border border-gold/25 relative"
+    >
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-70"
+        style={{
+          background:
+            'linear-gradient(135deg, rgba(201,168,76,0.10), transparent 45%, rgba(229,199,107,0.06) 90%)',
+        }}
+      />
+      <div className="relative bg-gradient-to-br from-[#0d0b08] via-[#100e0a] to-[#0a0807] px-7 py-10">
+        <div className="flex items-start gap-4">
+          <div
+            className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 border"
+            style={{
+              background: 'linear-gradient(135deg, rgba(201,168,76,0.22), rgba(201,168,76,0.04))',
+              borderColor: 'rgba(201,168,76,0.45)',
+              boxShadow: '0 0 22px rgba(201,168,76,0.18)',
+            }}
+          >
+            <Lock size={22} className="text-gold" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles size={12} className="text-gold" />
+              <span className="text-[0.66rem] font-extrabold tracking-[0.18em] uppercase text-gold">
+                Premium · {year}
+              </span>
+            </div>
+            <h2 className="text-foreground font-display font-bold text-xl leading-tight mb-2">
+              {categoryLabel} for {year} is reserved for premium access
+            </h2>
+            <p className="text-[0.92rem] leading-relaxed text-text-secondary mb-5 max-w-[640px]">
+              The full {categoryLabel.toLowerCase()} content for the {year} concours — including detailed formulas,
+              theorems, pitfalls, strategic shortcuts, and exam-style practice — is reserved for premium subscribers.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold tracking-wide bg-gold/15 border border-gold/40 text-gold hover:bg-gold/22 transition-colors no-underline"
+            >
+              <Lock size={14} />
+              Unlock the full {year} content
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 interface Props { year: number; categoryId: string }
 
@@ -69,10 +143,17 @@ function StatBadge({ children, color, bg, border }: { children: React.ReactNode;
 
 export default function CategoryPageClient({ year, categoryId }: Props) {
   const category = getCategoryById(categoryId)!
+  const isLocalDev = useIsLocalDev()
   const examData = getExamData(year, categoryId)
   const tipsData = categoryId === 'tips-tricks' ? getTipsData(year) : undefined
   const recapData = categoryId === 'course-recap' ? getRecapData(year) : undefined
   const revisionData = categoryId === 'revision-series' ? getRevisionData(year) : undefined
+
+  // On the deployed site, hide tips / recap / revision for years marked LOCAL_ONLY
+  const contentRestricted =
+    !isLocalDev &&
+    LOCAL_ONLY_CONTENT_YEARS.has(year) &&
+    LOCAL_ONLY_CATEGORIES.has(categoryId)
 
   const hasContent = examData || tipsData || recapData || revisionData
 
@@ -162,22 +243,29 @@ export default function CategoryPageClient({ year, categoryId }: Props) {
           </>
         )}
 
-        {/* REVISION SERIES */}
-        {revisionData && (
+        {/* LOCKED CONTENT PLACEHOLDER (deployed site only, for restricted years) */}
+        {contentRestricted ? (
+          <LockedContentPlaceholder year={year} categoryLabel={category.label} />
+        ) : (
           <>
-            <div className="px-6 py-5 rounded-xl mb-10 info-panel-purple">
-              <div className="text-foreground font-bold text-sm mb-1">{revisionData.title}</div>
-              <div className="text-muted text-xs">{revisionData.instructions}</div>
-            </div>
-            <ExamViewer exam={revisionData} />
+            {/* REVISION SERIES */}
+            {revisionData && (
+              <>
+                <div className="px-6 py-5 rounded-xl mb-10 info-panel-purple">
+                  <div className="text-foreground font-bold text-sm mb-1">{revisionData.title}</div>
+                  <div className="text-muted text-xs">{revisionData.instructions}</div>
+                </div>
+                <ExamViewer exam={revisionData} />
+              </>
+            )}
+
+            {/* TIPS & TRICKS */}
+            {tipsData && <TipsViewer tips={tipsData} />}
+
+            {/* COURSE RECAP */}
+            {recapData && <RecapViewer topics={recapData} />}
           </>
         )}
-
-        {/* TIPS & TRICKS */}
-        {tipsData && <TipsViewer tips={tipsData} />}
-
-        {/* COURSE RECAP */}
-        {recapData && <RecapViewer topics={recapData} />}
 
         {/* No content fallback */}
         {!hasContent ? (
