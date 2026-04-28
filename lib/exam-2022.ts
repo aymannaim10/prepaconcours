@@ -368,17 +368,31 @@ export const EXAM_2022_REAL: ExamData = {
           latex: `\\lim_{x\\to -\\infty} h(x) = \\dfrac{0-1}{0+1} = -1 \\;,\\quad \\lim_{x\\to +\\infty} h(x) = \\dfrac{1 - e^{-x}}{1 + e^{-x}}\\bigg|_{e^{-x}\\to 0} = 1`,
         },
         {
-          label: `Since $h$ is strictly increasing and continuous, $h(\\mathbb{R}) = \\,]-1\\,;1[$ (boundaries not attained)`,
-          latex: `h(\\mathbb{R}) = \\,]-1\\,;1[`,
+          label: `Why is the interval $]-1\\,;1[$ OPEN and NOT $[-1\\,;1]$? The values $-1$ and $+1$ are LIMITS, not actual values reached by $h$. Try to solve $h(x) = 1$: this gives $e^{x} - 1 = e^{x} + 1 \\iff -1 = 1$ — impossible`,
+          latex: `h(x) = 1 \\iff e^{x} - 1 = e^{x} + 1 \\iff -1 = 1 \\;\\text{(impossible)} \\implies 1 \\notin h(\\mathbb{R})`,
         },
         {
-          label: `Therefore $h^{-1}$ is defined on $]-1\\,;1[$`,
+          label: `Same for $-1$: solving $h(x) = -1$ gives $e^{x} - 1 = -(e^{x} + 1) \\iff 2e^{x} = 0 \\iff e^{x} = 0$ — impossible since $e^{x} > 0$ always`,
+          latex: `h(x) = -1 \\iff 2e^{x} = 0 \\;\\text{(impossible since } e^{x} > 0\\text{)} \\implies -1 \\notin h(\\mathbb{R})`,
+        },
+        {
+          label: `Since $h$ is strictly increasing, continuous, and BOTH boundary values $\\pm 1$ are EXCLUDED, the image is the OPEN interval`,
+          latex: `h(\\mathbb{R}) = \\,]-1\\,;1[ \\;\\text{(open, neither endpoint attained)}`,
+        },
+        {
+          label: `Therefore $h^{-1}$ is defined on $]-1\\,;1[$ — option E ($[-1\\,;1]$) is wrong because it includes points $\\pm 1$ that have no preimage`,
           latex: `\\boxed{h^{-1}: \\,]-1\\,;1[ \\,\\to\\, \\mathbb{R} \\implies \\text{Answer: B}}`,
         },
       ],
       difficulty: 'medium',
       tags: ['function-range', 'inverse-function', 'exponential'],
       relatedTips: ['function-range'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'h-2022-q10',
+        title: 'Graph of h(x) = (eˣ − 1)/(eˣ + 1) — bounded between −1 and 1',
+        description: 'Move the zoom slider to extend x further: the curve approaches the red dashed lines y = ±1 but NEVER touches them.',
+      },
     },
 
     // ── Q11 (Q76) ───────────────────────────────────────────

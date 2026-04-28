@@ -12,6 +12,7 @@ import VennDiagram2Sets from './VennDiagram2Sets'
 import ProbabilityBreakdown from './ProbabilityBreakdown'
 import UrnTreeDiagram from './UrnTreeDiagram'
 import BinomialArrangements from './BinomialArrangements'
+import HyperbolicTangentPlot from './HyperbolicTangentPlot'
 
 export default function QuestionVisualization({ viz }: { viz: Viz }) {
   if (viz.type === 'affine-recurrence') {
@@ -31,6 +32,9 @@ export default function QuestionVisualization({ viz }: { viz: Viz }) {
   }
   if (viz.type === 'function-plot' && viz.preset === 'cubic-2019-ex15') {
     return <CubicRootsPlot title={viz.title} description={viz.description} />
+  }
+  if (viz.type === 'function-plot' && viz.preset === 'h-2022-q10') {
+    return <HyperbolicTangentPlot title={viz.title} description={viz.description} />
   }
   if (viz.type === 'locus-2d' && viz.preset === 'lines-2023-ex6') {
     return <LocusPlot2023Ex6 title={viz.title} description={viz.description} />

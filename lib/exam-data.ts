@@ -27,7 +27,7 @@ export type QuestionVisualization =
   | {
       type: 'function-plot'
       /** Plot preset — each one is a hand-tuned chart for a specific exam function */
-      preset: 'f-2024-ex7' | 'cubic-2019-ex15'
+      preset: 'f-2024-ex7' | 'cubic-2019-ex15' | 'h-2022-q10'
       title?: string
       description?: string
     }
