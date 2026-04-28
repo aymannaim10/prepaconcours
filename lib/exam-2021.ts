@@ -265,21 +265,51 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Compute the limit of $\\dfrac{x^4}{x^4+1}$ as $x \\to +\\infty$ — divide by $x^4$`,
-          latex: `\\lim_{x\\to+\\infty} \\dfrac{x^4}{x^4+1} = \\lim_{x\\to+\\infty} \\dfrac{1}{1 + 1/x^4} = 1`,
+          label: `⚠ STEP 0 — Spot the trap. The expression $f(x) = 2x + 1 - \\dfrac{x^{4}}{x^{4}+1}$ shows "$2x + 1$" plainly, so option A ($y = 2x+1$) looks "obvious". But the rational fraction is NOT negligible — it has a finite, NON-ZERO limit at $+\\infty$. We MUST compute carefully`,
+          latex: `\\text{NEVER trust the "literal" expression. Always test } \\lim [f(x) - ax] \\text{ to validate any candidate asymptote.}`,
         },
         {
-          label: `Therefore $f(x) = 2x + 1 - 1 + \\bigl(\\,1 - \\tfrac{x^4}{x^4+1}\\,\\bigr) = 2x + \\dfrac{1}{x^4+1}$`,
-          latex: `f(x) - 2x = 1 - \\dfrac{x^4}{x^4+1} = \\dfrac{1}{x^4+1}`,
+          label: `STEP 1 — Compute the limit of the rational part. Divide numerator and denominator by $x^{4}$ (the highest power)`,
+          latex: `\\dfrac{x^{4}}{x^{4}+1} = \\dfrac{1}{1 + \\frac{1}{x^{4}}} \\xrightarrow[x\\to+\\infty]{} \\dfrac{1}{1+0} = 1`,
         },
         {
-          label: `Check: $\\lim_{x\\to+\\infty}[\\,f(x) - 2x\\,] = 0$. So the oblique asymptote is $y = 2x$`,
+          label: `STEP 2 — The fraction tends to 1 (NOT to 0!). So as $x \\to +\\infty$, $f(x)$ behaves like $2x + 1 - 1 = 2x$, not like $2x + 1$. The "+1" is CANCELLED by the "−(x⁴/(x⁴+1)) → −1"`,
+          latex: `f(x) = 2x + 1 - \\dfrac{x^{4}}{x^{4}+1} \\xrightarrow[x\\to+\\infty]{} 2x + 1 - 1 = 2x`,
+        },
+        {
+          label: `STEP 3 — Apply the standard test: candidate asymptote $y = ax + b$ requires $\\lim f(x)/x = a$ (slope) AND $\\lim [f(x) - ax] = b$ (intercept). Compute $\\lim f(x)/x$ first`,
+          latex: `\\dfrac{f(x)}{x} = 2 + \\dfrac{1}{x} - \\dfrac{x^{3}}{x^{4}+1} \\xrightarrow[x\\to+\\infty]{} 2 + 0 - 0 = 2 \\implies a = 2`,
+        },
+        {
+          label: `STEP 4 — Compute $b = \\lim [f(x) - 2x]$. Algebraic simplification using the identity $1 - \\dfrac{x^{4}}{x^{4}+1} = \\dfrac{(x^{4}+1) - x^{4}}{x^{4}+1} = \\dfrac{1}{x^{4}+1}$`,
+          latex: `f(x) - 2x = 1 - \\dfrac{x^{4}}{x^{4}+1} = \\dfrac{1}{x^{4}+1} \\xrightarrow[x\\to+\\infty]{} 0 \\implies b = 0`,
+        },
+        {
+          label: `STEP 5 — Conclude. The asymptote is $y = ax + b = 2x + 0 = 2x$. The "+1" intercept does NOT appear`,
           latex: `\\boxed{y = 2x \\implies \\text{Answer: D}}`,
         },
+        {
+          label: `STEP 6 — Why option A ($y = 2x + 1$) is WRONG. Test it directly`,
+          latex: `f(x) - (2x+1) = -\\dfrac{x^{4}}{x^{4}+1} \\xrightarrow[x\\to+\\infty]{} -1 \\neq 0`,
+        },
+        {
+          label: `The vertical gap to $y = 2x+1$ STABILIZES at $-1$ (constant, NOT zero) — so the curve runs PARALLEL to but never approaches $y = 2x+1$. That line is NOT an asymptote`,
+          latex: `\\text{Distance to } y = 2x+1 \\text{ converges to } -1 \\;\\text{(constant gap)} \\implies \\text{NOT an asymptote.}`,
+        },
+        {
+          label: `STEP 7 — Sanity check with numerics. At $x = 10$: $f(10) \\approx 21.0001$, so $f(10) - 2(10) = 1.0001 \\to$ wait, that's close to $1$, not $0$? Let me re-verify: $f(10) = 21 - 10000/10001 = 21 - 0.9999 = 20.0001$. So $f(10) - 20 = 0.0001 \\to 0$. And $f(10) - 21 = -0.9999 \\to -1$. ✓`,
+          latex: `f(10) = 20.0001 \\implies f(10) - 2(10) = 0.0001 \\;\\text{(close to 0)} \\;,\\; f(10) - (2(10)+1) = -0.9999 \\;\\text{(close to } -1\\text{)}`,
+        },
       ],
-      difficulty: 'medium',
-      tags: ['asymptote', 'oblique', 'limits'],
+      difficulty: 'hard',
+      tags: ['asymptote', 'oblique', 'limits', 'trap-question'],
       relatedTips: ['asymptotes'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'oblique-asymp-2021-q8',
+        title: 'f(x) = 2x + 1 − x⁴/(x⁴+1) — only y = 2x is the asymptote',
+        description: 'Watch the gaps: f(x) − 2x → 0 (true asymptote), f(x) − (2x+1) → −1 (parallel but NOT asymptotic).',
+      },
     },
 
     // ── Q9 (Q69) ────────────────────────────────────────────

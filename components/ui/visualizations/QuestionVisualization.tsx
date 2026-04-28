@@ -15,6 +15,7 @@ import BinomialArrangements from './BinomialArrangements'
 import HyperbolicTangentPlot from './HyperbolicTangentPlot'
 import RootsOfUnityPlot from './RootsOfUnityPlot'
 import GenericFunctionPlot2021 from './GenericFunctionPlot2021'
+import ObliqueAsymptotePlot2021Q8 from './ObliqueAsymptotePlot2021Q8'
 
 export default function QuestionVisualization({ viz }: { viz: Viz }) {
   if (viz.type === 'affine-recurrence') {
@@ -46,6 +47,9 @@ export default function QuestionVisualization({ viz }: { viz: Viz }) {
       viz.preset === 'tangent-log-2021-q12')
   ) {
     return <GenericFunctionPlot2021 preset={viz.preset} title={viz.title} description={viz.description} />
+  }
+  if (viz.type === 'function-plot' && viz.preset === 'oblique-asymp-2021-q8') {
+    return <ObliqueAsymptotePlot2021Q8 title={viz.title} description={viz.description} />
   }
   if (viz.type === 'roots-of-unity') {
     return (

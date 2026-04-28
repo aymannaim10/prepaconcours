@@ -35,6 +35,7 @@ export type QuestionVisualization =
         | 'xlnx-2021-q13'
         | 'minimum-2021-q20'
         | 'tangent-log-2021-q12'
+        | 'oblique-asymp-2021-q8'
       title?: string
       description?: string
     }
