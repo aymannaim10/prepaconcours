@@ -27,7 +27,34 @@ export type QuestionVisualization =
   | {
       type: 'function-plot'
       /** Plot preset — each one is a hand-tuned chart for a specific exam function */
-      preset: 'f-2024-ex7' | 'cubic-2019-ex15' | 'h-2022-q10'
+      preset:
+        | 'f-2024-ex7'
+        | 'cubic-2019-ex15'
+        | 'h-2022-q10'
+        | 'cubic-log-2021-q11'
+        | 'xlnx-2021-q13'
+        | 'minimum-2021-q20'
+        | 'tangent-log-2021-q12'
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'roots-of-unity'
+      /** n-th roots of unity (or shifted): visualize on the unit circle */
+      n: number
+      /** Highlight indices (0..n-1) for specific roots */
+      highlight?: number[]
+      /** Optional label for the highlighted roots (e.g., "z₁, z₂") */
+      highlightLabels?: string[]
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'rotation-2d'
+      /** Visualize a rotation z' = e^(iθ) z around the origin */
+      thetaNumerator: number
+      thetaDenominator: number
+      sourcePoints?: { re: number; im: number; label: string }[]
       title?: string
       description?: string
     }

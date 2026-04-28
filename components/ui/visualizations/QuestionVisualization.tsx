@@ -13,6 +13,8 @@ import ProbabilityBreakdown from './ProbabilityBreakdown'
 import UrnTreeDiagram from './UrnTreeDiagram'
 import BinomialArrangements from './BinomialArrangements'
 import HyperbolicTangentPlot from './HyperbolicTangentPlot'
+import RootsOfUnityPlot from './RootsOfUnityPlot'
+import GenericFunctionPlot2021 from './GenericFunctionPlot2021'
 
 export default function QuestionVisualization({ viz }: { viz: Viz }) {
   if (viz.type === 'affine-recurrence') {
@@ -35,6 +37,26 @@ export default function QuestionVisualization({ viz }: { viz: Viz }) {
   }
   if (viz.type === 'function-plot' && viz.preset === 'h-2022-q10') {
     return <HyperbolicTangentPlot title={viz.title} description={viz.description} />
+  }
+  if (
+    viz.type === 'function-plot' &&
+    (viz.preset === 'cubic-log-2021-q11' ||
+      viz.preset === 'xlnx-2021-q13' ||
+      viz.preset === 'minimum-2021-q20' ||
+      viz.preset === 'tangent-log-2021-q12')
+  ) {
+    return <GenericFunctionPlot2021 preset={viz.preset} title={viz.title} description={viz.description} />
+  }
+  if (viz.type === 'roots-of-unity') {
+    return (
+      <RootsOfUnityPlot
+        n={viz.n}
+        highlight={viz.highlight}
+        highlightLabels={viz.highlightLabels}
+        title={viz.title}
+        description={viz.description}
+      />
+    )
   }
   if (viz.type === 'locus-2d' && viz.preset === 'lines-2023-ex6') {
     return <LocusPlot2023Ex6 title={viz.title} description={viz.description} />

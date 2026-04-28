@@ -335,21 +335,37 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Solve with the discriminant $\\Delta = 1 - 4 = -3$, giving $z_{1,2} = \\dfrac{-1 \\pm i\\sqrt{3}}{2}$`,
-          latex: `z_1 = \\dfrac{-1+i\\sqrt 3}{2} \\;,\\quad z_2 = \\dfrac{-1-i\\sqrt 3}{2}`,
+          label: `STEP 1 — Solve the equation. Compute the discriminant: $\\Delta = b^{2} - 4ac = 1 - 4 = -3 < 0$, so the roots are complex conjugates`,
+          latex: `\\Delta = -3 \\implies z_{1,2} = \\dfrac{-1 \\pm i\\sqrt{3}}{2}`,
         },
         {
-          label: `Notice that $z_2 = \\bar z_1$. Compute $|z_1|^2 = \\frac{1}{4} + \\frac{3}{4} = 1$, so $|z_1| = 1$`,
-          latex: `|z_1| = 1 \\implies z_1 \\bar z_1 = 1 \\implies \\bar z_1 = \\dfrac{1}{z_1}`,
+          label: `STEP 2 — Recognize the roots geometrically. These are exactly $j = e^{i\\,2\\pi/3}$ and $j^{2} = e^{-i\\,2\\pi/3}$ — the two primitive cube roots of unity (along with $1$)`,
+          latex: `z_{1} = e^{i\\,2\\pi/3} \\;,\\quad z_{2} = e^{-i\\,2\\pi/3} = \\bar z_{1}`,
         },
         {
-          label: `Combine: $z_2 = \\bar z_1 = 1/z_1$. Equivalently, this matches Vieta's $z_1 z_2 = 1$ from $z_1 z_2 = c/a = 1$`,
-          latex: `\\boxed{z_2 = \\dfrac{1}{z_1} \\implies \\text{Answer: A}}`,
+          label: `STEP 3 — Use modulus = 1. Compute $|z_{1}|^{2} = \\tfrac{1}{4} + \\tfrac{3}{4} = 1$, so $|z_{1}| = 1$. By definition of conjugate: $z_{1}\\,\\bar z_{1} = |z_{1}|^{2} = 1$`,
+          latex: `|z_{1}| = 1 \\implies z_{1}\\,\\bar z_{1} = 1 \\implies \\bar z_{1} = \\dfrac{1}{z_{1}}`,
+        },
+        {
+          label: `STEP 4 — Combine. Since $z_{2} = \\bar z_{1}$ AND $\\bar z_{1} = 1/z_{1}$, we get $z_{2} = 1/z_{1}$. (Vieta's formulas confirm: $z_{1}\\,z_{2} = c/a = 1$, so $z_{2} = 1/z_{1}$ — same conclusion)`,
+          latex: `z_{2} = \\bar z_{1} = \\dfrac{1}{z_{1}}`,
+        },
+        {
+          label: `STEP 5 — Reject the wrong options. Option C says $z_{1} z_{2} = 1$ — TRUE but trivial (just a product, not a relation between $z_{1}$ and $z_{2}$). The MCQ asks for the relation expressing $z_{2}$ as a function of $z_{1}$, which is option A`,
+          latex: `\\boxed{z_{2} = \\dfrac{1}{z_{1}} \\implies \\text{Answer: A}}`,
         },
       ],
       difficulty: 'medium',
       tags: ['complex-numbers', 'quadratic', 'roots-of-unity'],
       relatedTips: ['complex-arg'],
+      visualization: {
+        type: 'roots-of-unity',
+        n: 3,
+        highlight: [1, 2],
+        highlightLabels: ['z₁', 'z₂'],
+        title: 'z² + z + 1 = 0 — the two primitive cube roots of unity',
+        description: 'The roots z₁ = j and z₂ = j² (along with 1) form an equilateral triangle on the unit circle. Symmetric about the real axis.',
+      },
     },
 
     // ── Q11 (Q71) ───────────────────────────────────────────
@@ -368,21 +384,39 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Define $g(x) = x^3 + \\ln(x)$ on $]0,+\\infty[$. Then $g'(x) = 3x^2 + \\tfrac{1}{x} > 0$ — strictly increasing`,
-          latex: `g'(x) = 3x^2 + \\dfrac{1}{x} > 0 \\;,\\; \\forall x > 0`,
+          label: `STEP 1 — Define and study $g$. Let $g(x) = x^{3} + \\ln(x)$ on $]0, +\\infty[$. We seek the unique $\\alpha$ with $g(\\alpha) = 0$`,
+          latex: `g(x) = x^{3} + \\ln(x) \\;,\\; x \\in \\,]0, +\\infty[`,
         },
         {
-          label: `Check signs at strategic points: $g(1) = 1 + 0 = 1 > 0$ and $g(1/e) = 1/e^3 - 1 < 0$`,
-          latex: `g(1) = 1 > 0 \\;,\\quad g\\!\\left(\\dfrac{1}{e}\\right) = \\dfrac{1}{e^3} - 1 < 0`,
+          label: `STEP 2 — Show $g$ is strictly increasing. Differentiate: both terms have positive derivatives on $]0, +\\infty[$`,
+          latex: `g'(x) = 3x^{2} + \\dfrac{1}{x} > 0 \\;,\\; \\forall x > 0 \\implies g \\nearrow`,
         },
         {
-          label: `By the Intermediate Value Theorem, $\\alpha \\in \\,]1/e\\,;1[ \\subset \\,]0\\,;1[$`,
+          label: `STEP 3 — Check boundary limits: $g(0^{+}) = 0 + (-\\infty) = -\\infty$ and $g(+\\infty) = +\\infty + (+\\infty) = +\\infty$. By IVT + monotonicity, there is a UNIQUE root $\\alpha$ in $]0, +\\infty[$`,
+          latex: `\\lim_{x\\to 0^{+}} g(x) = -\\infty \\;,\\; \\lim_{x\\to+\\infty} g(x) = +\\infty \\implies \\exists!\\, \\alpha > 0,\\, g(\\alpha) = 0`,
+        },
+        {
+          label: `STEP 4 — Localize $\\alpha$. Test at $x = 1/e$ and $x = 1$ (strategic since $\\ln(1) = 0$ and $\\ln(1/e) = -1$)`,
+          latex: `g\\!\\left(\\dfrac{1}{e}\\right) = \\dfrac{1}{e^{3}} - 1 < 0 \\;\\text{(since } 1/e^{3} \\approx 0.05 < 1\\text{)} \\;,\\quad g(1) = 1 + 0 = 1 > 0`,
+        },
+        {
+          label: `STEP 5 — Conclude with IVT. Since $g$ is continuous, strictly increasing, $g(1/e) < 0$ and $g(1) > 0$, the unique root satisfies`,
+          latex: `\\dfrac{1}{e} < \\alpha < 1 \\implies 0 < \\alpha < 1`,
+        },
+        {
+          label: `Reject other intervals: options A and B are negative (out of domain), D and E require $\\alpha \\geq 1$ but $g(1) > 0$ already`,
           latex: `\\boxed{0 < \\alpha < 1 \\implies \\text{Answer: C}}`,
         },
       ],
       difficulty: 'medium',
       tags: ['IVT', 'logarithm', 'monotonicity'],
       relatedTips: ['function-range'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'cubic-log-2021-q11',
+        title: 'g(x) = x³ + ln(x) — unique root α in ]1/e, 1[',
+        description: 'The curve crosses y = 0 once in the interval ]1/e ; 1[. Strictly increasing, sign change confirmed.',
+      },
     },
 
     // ── Q12 (Q72) ───────────────────────────────────────────
@@ -401,25 +435,35 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Verify the point: $f(0) = \\ln(0+0+4) = \\ln 4 = 2\\ln 2$ ✓`,
-          latex: `f(0) = \\ln(4) = 2\\ln 2`,
+          label: `STEP 1 — Verify the point lies on the curve. Substitute $x = 0$ into $f$`,
+          latex: `f(0) = \\ln(0 + 0 + 4) = \\ln(4) = 2\\ln(2) \\;\\checkmark`,
         },
         {
-          label: `Compute the derivative using the chain rule on $\\ln(u(x))$`,
-          latex: `f'(x) = \\dfrac{2x+1}{x^2+x+4}`,
+          label: `STEP 2 — Compute $f'$ via the chain rule on $\\ln(u(x))$ with $u(x) = x^{2}+x+4$. Recall $(\\ln u)' = u'/u$`,
+          latex: `f'(x) = \\dfrac{u'(x)}{u(x)} = \\dfrac{2x + 1}{x^{2} + x + 4}`,
         },
         {
-          label: `Evaluate the slope at $x=0$`,
+          label: `STEP 3 — Evaluate the slope at the point $x_{0} = 0$. The numerator is $2(0)+1 = 1$, the denominator is $0+0+4 = 4$`,
           latex: `f'(0) = \\dfrac{1}{4}`,
         },
         {
-          label: `Apply the tangent equation $y - f(x_0) = f'(x_0)(x - x_0)$ at $(0, 2\\ln 2)$`,
+          label: `STEP 4 — Apply the tangent equation $T_{a}: y = f'(a)(x - a) + f(a)$ at $a = 0$, plugging in numbers`,
+          latex: `T_{0}:\\ y = \\dfrac{1}{4}(x - 0) + 2\\ln 2 = \\dfrac{1}{4}x + 2\\ln 2`,
+        },
+        {
+          label: `STEP 5 — Reject wrong options. Option B has the wrong sign for the constant; D has wrong slope (1/2 instead of 1/4); E ignores the slope (only the y-value)`,
           latex: `\\boxed{y = \\dfrac{1}{4}x + 2\\ln 2 \\implies \\text{Answer: C}}`,
         },
       ],
       difficulty: 'easy',
       tags: ['tangent', 'logarithm', 'derivative'],
       relatedTips: ['product-derivative'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'tangent-log-2021-q12',
+        title: 'f(x) = ln(x² + x + 4) and its tangent at P(0, 2 ln 2)',
+        description: 'Toggle the tangent (purple dashed) — slope 1/4 passing through P. The curve hugs the tangent near x = 0.',
+      },
     },
 
     // ── Q13 (Q73) ───────────────────────────────────────────
@@ -438,21 +482,43 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Compute $f'(x) = \\ln(x) + 1$. Set $f'(x) = 0 \\iff \\ln(x) = -1 \\iff x = 1/e$`,
-          latex: `f'(x) = \\ln(x) + 1 \\;,\\quad f'(1/e) = 0`,
+          label: `STEP 1 — Compute $f'$ using the product rule on $x \\cdot \\ln(x)$`,
+          latex: `f'(x) = (x)' \\ln(x) + x\\,(\\ln x)' = \\ln(x) + x \\cdot \\dfrac{1}{x} = \\ln(x) + 1`,
         },
         {
-          label: `On $]0\\,;1/e]$: $f' < 0$ (decreasing). On $[1/e\\,;1]$: $f' > 0$ (increasing). Minimum at $x=1/e$`,
-          latex: `f(1/e) = \\dfrac{1}{e}\\cdot(-1) = -\\dfrac{1}{e}`,
+          label: `STEP 2 — Find critical points: $f'(x) = 0 \\iff \\ln(x) = -1 \\iff x = e^{-1} = 1/e \\approx 0.368$. This $x$ is in $]0, 1]$`,
+          latex: `f'(x) = 0 \\iff x = \\dfrac{1}{e}`,
         },
         {
-          label: `Boundary values: $\\lim_{x\\to 0^+} x\\ln(x) = 0$ and $f(1) = 0$. So $f$ ranges between min $-1/e$ and 0 (attained at $x=1$)`,
-          latex: `\\boxed{f\\bigl(]0\\,;1]\\bigr) = \\left[-\\dfrac{1}{e}\\,;0\\right] \\implies \\text{Answer: A}}`,
+          label: `STEP 3 — Sign analysis of $f'$. $\\ln(x) + 1 < 0 \\iff x < 1/e$, so $f$ is DECREASING on $]0, 1/e]$ and INCREASING on $[1/e, 1]$`,
+          latex: `\\begin{array}{c|ccc} x & 0 & 1/e & 1 \\\\\\hline f'(x) & & - \\;\\; 0 \\;\\; + & \\\\\\hline f(x) & 0 & \\searrow \\; -1/e \\; \\nearrow & 0 \\end{array}`,
+        },
+        {
+          label: `STEP 4 — Compute the extreme values. The minimum is at $x = 1/e$`,
+          latex: `f(1/e) = \\dfrac{1}{e}\\cdot\\ln\\!\\left(\\dfrac{1}{e}\\right) = \\dfrac{1}{e}\\cdot(-1) = -\\dfrac{1}{e}`,
+        },
+        {
+          label: `STEP 5 — Compute boundary values. At $x = 1$: $f(1) = 1 \\cdot 0 = 0$. At the OPEN boundary $x \\to 0^{+}$: classical limit $\\lim_{x\\to 0^{+}} x\\ln x = 0$`,
+          latex: `\\lim_{x\\to 0^{+}} x\\ln(x) = 0 \\;\\text{(classical)} \\;,\\; f(1) = 0`,
+        },
+        {
+          label: `STEP 6 — Read the image off the table. $f$ takes the minimum value $-1/e$ AT $x = 1/e \\in \\,]0, 1]$, and reaches $0$ at $x = 1$ (closed bound). Both bounds are ATTAINED — the image is a CLOSED interval`,
+          latex: `\\boxed{f\\bigl(]0,1]\\bigr) = \\left[-\\dfrac{1}{e}\\,;\\, 0\\right] \\implies \\text{Answer: A}}`,
+        },
+        {
+          label: `Why not option B ($[-1/e, 0[$)? Because $0$ IS attained at $x = 1$. Why not D or E (positive values)? Because $f \\leq 0$ everywhere on $]0, 1]$ since $\\ln(x) \\leq 0$ and $x > 0$`,
+          latex: `\\text{All other options either miss the attained max or have wrong sign.}`,
         },
       ],
       difficulty: 'medium',
       tags: ['function-range', 'logarithm', 'extremum'],
       relatedTips: ['function-range'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'xlnx-2021-q13',
+        title: 'f(x) = x·ln(x) on ]0, 1] — minimum at (1/e, −1/e)',
+        description: 'The curve dips to its minimum at x = 1/e, then climbs back to 0 at x = 1. Both bounds of the image are attained.',
+      },
     },
 
     // ── Q14 (Q74) ───────────────────────────────────────────
@@ -570,21 +636,41 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Recognize $j$ as a primitive cube root of unity: $j = e^{i\\,2\\pi/3}$ and $j^3 = 1$`,
-          latex: `|j| = 1 \\;,\\; \\arg(j) = \\dfrac{2\\pi}{3} \\;\\implies\\; j^3 = e^{i\\,2\\pi} = 1`,
+          label: `STEP 1 — Identify $j$ in exponential form. $j = -1/2 + i\\sqrt{3}/2$ has $|j|^{2} = 1/4 + 3/4 = 1$ and argument $2\\pi/3$ (Q2)`,
+          latex: `j = e^{i\\,2\\pi/3} \\;,\\; |j| = 1 \\;,\\; \\arg(j) = \\dfrac{2\\pi}{3}`,
         },
         {
-          label: `Use the geometric sum formula with ratio $j \\neq 1$`,
-          latex: `S = \\dfrac{j^{12} - 1}{j - 1} = \\dfrac{(j^3)^4 - 1}{j-1} = \\dfrac{1-1}{j-1} = 0`,
+          label: `STEP 2 — Show $j$ is a primitive cube root of unity. Cube it: argument multiplies by 3, giving $2\\pi \\equiv 0$, so $j^{3} = e^{i\\,2\\pi} = 1$`,
+          latex: `j^{3} = e^{i\\,2\\pi} = 1`,
         },
         {
-          label: `(Equivalent shortcut: group three by three, using $1+j+j^2=0$)`,
-          latex: `\\boxed{S = 0 \\implies \\text{Answer: B}}`,
+          label: `STEP 3 — Method 1 (geometric sum). $S$ has 12 terms, ratio $j \\neq 1$, first term $1$. Apply $\\sum_{k=0}^{n} q^{k} = (q^{n+1}-1)/(q-1)$`,
+          latex: `S = \\sum_{k=0}^{11} j^{k} = \\dfrac{j^{12} - 1}{j - 1}`,
+        },
+        {
+          label: `STEP 4 — Use $j^{3} = 1$ to simplify $j^{12}$`,
+          latex: `j^{12} = (j^{3})^{4} = 1^{4} = 1 \\implies S = \\dfrac{1 - 1}{j - 1} = \\dfrac{0}{j-1} = 0`,
+        },
+        {
+          label: `STEP 5 — Method 2 (grouping). The 12 terms split into 4 groups of 3, each summing to $1 + j + j^{2} = 0$ (well-known property of cube roots of unity)`,
+          latex: `S = \\underbrace{(1 + j + j^{2})}_{= 0} + \\underbrace{(j^{3} + j^{4} + j^{5})}_{= 0} + \\underbrace{(j^{6} + j^{7} + j^{8})}_{= 0} + \\underbrace{(j^{9} + j^{10} + j^{11})}_{= 0} = 0`,
+        },
+        {
+          label: `STEP 6 — Geometric interpretation. The 12 powers $j^{0}, j^{1}, \\ldots, j^{11}$ visit only 3 distinct points (since $j^{3} = 1$): $1$, $j$, $j^{2}$, each appearing 4 times. Sum = $4(1 + j + j^{2}) = 0$`,
+          latex: `\\boxed{S = 4 \\cdot (1 + j + j^{2}) = 0 \\implies \\text{Answer: B}}`,
         },
       ],
       difficulty: 'medium',
       tags: ['complex-numbers', 'roots-of-unity', 'geometric-sum'],
       relatedTips: ['complex-arg', 'geometric-sum'],
+      visualization: {
+        type: 'roots-of-unity',
+        n: 3,
+        highlight: [0, 1, 2],
+        highlightLabels: ['1', 'j', 'j²'],
+        title: 'The 3 cube roots of unity — sum is zero',
+        description: 'Since j³ = 1, the 12 powers cycle through these 3 points. Their sum is 0 (centroid of an equilateral triangle at origin).',
+      },
     },
 
     // ── Q18 (Q78) ───────────────────────────────────────────
@@ -673,25 +759,43 @@ export const EXAM_2021_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `Differentiate $f$ using the product rule on $x\\,e^{-x}$`,
-          latex: `f'(x) = -\\bigl(\\,e^{-x} + x\\cdot(-e^{-x})\\,\\bigr) = -e^{-x}(1 - x) = (x-1)\\,e^{-x}`,
+          label: `STEP 1 — Compute $f'$ using product rule on $x \\cdot e^{-x}$. Recall $(e^{-x})' = -e^{-x}$`,
+          latex: `f'(x) = 0 - \\bigl[\\,(x)' e^{-x} + x \\cdot (e^{-x})'\\,\\bigr] = -\\bigl[e^{-x} - x e^{-x}\\bigr] = -e^{-x}(1 - x) = (x - 1)\\,e^{-x}`,
         },
         {
-          label: `Sign of $f'$: since $e^{-x} > 0$ always, $f'(x)$ has the sign of $x-1$. So $f' < 0$ for $x<1$ and $f' > 0$ for $x>1$ — minimum at $x = 1$`,
-          latex: `f'(x) < 0 \\text{ on } ]-\\infty,1[ \\;,\\; f'(x) > 0 \\text{ on } ]1,+\\infty[`,
+          label: `STEP 2 — Find critical points: $f'(x) = 0$. Since $e^{-x} > 0$ always, only the linear factor matters`,
+          latex: `f'(x) = 0 \\iff x - 1 = 0 \\iff x = 1`,
         },
         {
-          label: `Evaluate $f(1)$`,
-          latex: `f(1) = 1 - 1\\cdot e^{-1} = 1 - \\dfrac{1}{e}`,
+          label: `STEP 3 — Sign analysis. $e^{-x} > 0$ everywhere, so $f'(x)$ has the sign of $(x - 1)$`,
+          latex: `\\begin{array}{c|ccccc} x & -\\infty & & 1 & & +\\infty \\\\\\hline f'(x) & & - & 0 & + & \\\\\\hline f(x) & +\\infty & \\searrow & 1 - 1/e & \\nearrow & 1 \\end{array}`,
         },
         {
-          label: `Conclude`,
+          label: `STEP 4 — Identify minimum. $f'$ changes sign $-\\to+$ at $x = 1$, so this is a global MINIMUM (the unique critical point on $\\mathbb{R}$)`,
+          latex: `f'\\text{ changes } - \\to + \\text{ at } x=1 \\implies x = 1 \\text{ is global min}`,
+        },
+        {
+          label: `STEP 5 — Evaluate the minimum value`,
+          latex: `f(1) = 1 - 1 \\cdot e^{-1} = 1 - \\dfrac{1}{e}`,
+        },
+        {
+          label: `STEP 6 — Verify boundary behavior. As $x \\to +\\infty$: $x e^{-x} \\to 0$ (exponential beats polynomial), so $f(x) \\to 1$. As $x \\to -\\infty$: $x e^{-x} = x \\cdot e^{|x|} \\to -\\infty$, so $f(x) \\to +\\infty$. Min value is achieved at $x=1$, NOT at boundaries`,
+          latex: `\\lim_{x\\to+\\infty} f = 1 \\;,\\; \\lim_{x\\to-\\infty} f = +\\infty \\;,\\; f(1) = 1 - 1/e \\approx 0.632`,
+        },
+        {
+          label: `Reject wrong options: A ($0$) — never reached; B ($1-e \\approx -1.7$) — too small; C ($1+e$) and D ($1+1/e$) — bigger than $1$, but $f \\leq 1$ for $x \\geq 0$`,
           latex: `\\boxed{\\min_{\\mathbb{R}} f = 1 - e^{-1} \\implies \\text{Answer: E}}`,
         },
       ],
       difficulty: 'easy',
       tags: ['function-analysis', 'derivative', 'minimum', 'exponential'],
       relatedTips: ['function-range'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'minimum-2021-q20',
+        title: 'f(x) = 1 − x·e⁻ˣ — global minimum at x = 1',
+        description: 'The curve dips at x = 1 to its minimum 1 − 1/e ≈ 0.632, then rises asymptotically to y = 1.',
+      },
     },
   ],
 }
