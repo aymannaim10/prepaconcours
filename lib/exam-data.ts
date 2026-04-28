@@ -27,7 +27,7 @@ export type QuestionVisualization =
   | {
       type: 'function-plot'
       /** Plot preset — each one is a hand-tuned chart for a specific exam function */
-      preset: 'f-2024-ex7'
+      preset: 'f-2024-ex7' | 'cubic-2019-ex15'
       title?: string
       description?: string
     }
@@ -35,6 +35,15 @@ export type QuestionVisualization =
       type: 'locus-2d'
       /** Locus preset — a hand-tuned 2D geometric figure for a specific exam question */
       preset: 'lines-2023-ex6' | 'hyperbola-2023-ex7'
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'circle-locus'
+      /** Parameterized circle locus: |z - z0| = R, drawn in the complex plane */
+      cx: number
+      cy: number
+      R: number
       title?: string
       description?: string
     }

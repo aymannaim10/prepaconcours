@@ -416,6 +416,14 @@ export const EXAM_2022_REAL: ExamData = {
       difficulty: 'easy',
       tags: ['complex-numbers', 'locus', 'circle', 'modulus'],
       relatedTips: ['locus-complex'],
+      visualization: {
+        type: 'circle-locus',
+        cx: 0,
+        cy: 1,
+        R: 5,
+        title: 'Locus |z − i| = 5 — circle centered at i with radius 5',
+        description: 'Every point on this circle satisfies |MΩ| = 5 where Ω has affix i.',
+      },
     },
 
     // ── Q13 (Q78) ───────────────────────────────────────────

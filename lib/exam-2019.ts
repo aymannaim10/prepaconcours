@@ -516,6 +516,12 @@ export const EXAM_2019_REAL: ExamData = {
       difficulty: 'medium',
       tags: ['IVT', 'cubic', 'monotonicity'],
       relatedTips: ['function-range'],
+      visualization: {
+        type: 'function-plot',
+        preset: 'cubic-2019-ex15',
+        title: 'Graph of f(x) = x³ − 3x − 1 — three real roots',
+        description: 'Local max at x=−1 (value 1), local min at x=1 (value −3). Both extrema have opposite signs ⟹ three real solutions.',
+      },
     },
   ],
 }

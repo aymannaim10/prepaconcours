@@ -194,6 +194,14 @@ export const EXAM_2020_REAL: ExamData = {
       difficulty: 'medium',
       tags: ['complex-numbers', 'locus', 'circle', 'modulus'],
       relatedTips: ['locus-complex'],
+      visualization: {
+        type: 'circle-locus',
+        cx: 0,
+        cy: -1,
+        R: 2,
+        title: 'Locus |iz − 1| = |1 − i√3| — circle of center −i and radius 2',
+        description: 'After factoring i, the equation becomes |z − (−i)| = 2 — a circle centered at −i with radius 2.',
+      },
     },
 
     // ── Q7 (Q67) ────────────────────────────────────────────
