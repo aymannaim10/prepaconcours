@@ -174,6 +174,14 @@ export const REVISION_2022: ExamData = {
       number: 6, exercise: 6, topic: 'Probability', difficulty: 'medium',
       tags: ['probability', 'binomial'],
       relatedTips: ['binomial-2022'],
+      visualization: {
+        type: 'binomial-pmf',
+        n: 5,
+        p: 1 / 6,
+        k: 2,
+        title: 'Binomial X ~ B(5, 1/6) — exactly 2 sixes in 5 rolls',
+        description: 'Skewed distribution (p < 1/2). The asked value k=2 is highlighted in green.',
+      },
       statement: `\\text{A fair die is rolled 5 times.}`,
       question: `\\text{The probability of obtaining exactly two "6"s is:}`,
       choices: [

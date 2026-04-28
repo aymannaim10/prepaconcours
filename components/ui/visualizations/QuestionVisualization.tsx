@@ -7,6 +7,9 @@ import LocusPlot2023Ex6 from './LocusPlot2023Ex6'
 import HyperbolaPlot2023Ex7 from './HyperbolaPlot2023Ex7'
 import CircleLocusPlot from './CircleLocusPlot'
 import CubicRootsPlot from './CubicRootsPlot'
+import BinomialPmfChart from './BinomialPmfChart'
+import VennDiagram2Sets from './VennDiagram2Sets'
+import ProbabilityBreakdown from './ProbabilityBreakdown'
 
 export default function QuestionVisualization({ viz }: { viz: Viz }) {
   if (viz.type === 'affine-recurrence') {
@@ -39,6 +42,40 @@ export default function QuestionVisualization({ viz }: { viz: Viz }) {
         cx={viz.cx}
         cy={viz.cy}
         R={viz.R}
+        title={viz.title}
+        description={viz.description}
+      />
+    )
+  }
+  if (viz.type === 'binomial-pmf') {
+    return (
+      <BinomialPmfChart
+        n={viz.n}
+        p={viz.p}
+        k={viz.k}
+        title={viz.title}
+        description={viz.description}
+      />
+    )
+  }
+  if (viz.type === 'venn-2-sets') {
+    return (
+      <VennDiagram2Sets
+        pA={viz.pA}
+        pB={viz.pB}
+        pAandB={viz.pAandB}
+        labelA={viz.labelA}
+        labelB={viz.labelB}
+        title={viz.title}
+        description={viz.description}
+      />
+    )
+  }
+  if (viz.type === 'prob-breakdown') {
+    return (
+      <ProbabilityBreakdown
+        total={viz.total}
+        items={viz.items}
         title={viz.title}
         description={viz.description}
       />

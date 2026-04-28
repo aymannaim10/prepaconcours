@@ -243,6 +243,14 @@ export const EXAM_2022_REAL: ExamData = {
       difficulty: 'easy',
       tags: ['probability', 'binomial', 'coin-toss'],
       relatedTips: ['binomial-pmf'],
+      visualization: {
+        type: 'binomial-pmf',
+        n: 4,
+        p: 0.5,
+        k: 2,
+        title: 'Binomial X ~ B(4, 1/2) — exactly 2 heads in 4 tosses',
+        description: 'Symmetric distribution (p = 1/2). The asked value k=2 sits at the peak.',
+      },
     },
 
     // ── Q8 (Q73) ────────────────────────────────────────────
@@ -276,6 +284,16 @@ export const EXAM_2022_REAL: ExamData = {
       difficulty: 'easy',
       tags: ['probability', 'with-replacement', 'independence'],
       relatedTips: ['conditional-prob'],
+      visualization: {
+        type: 'prob-breakdown',
+        title: 'Marginal probability of drawing a yellow ball',
+        description: 'With replacement, the two draws are independent — the 2nd draw is just a single marginal draw.',
+        total: { label: 'P(2nd yellow)', value: '1 / 3' },
+        items: [
+          { label: 'Yellow', value: 2 / 6, color: '#E5C76B', explanation: '$2$ yellow / $6$ total $= 1/3$' },
+          { label: 'Blue', value: 4 / 6, color: '#4CADE8', explanation: '$4$ blue / $6$ total $= 2/3$' },
+        ],
+      },
     },
 
     // ── Q9 (Q74) ────────────────────────────────────────────
@@ -309,6 +327,16 @@ export const EXAM_2022_REAL: ExamData = {
       difficulty: 'easy',
       tags: ['probability', 'inclusion-exclusion'],
       relatedTips: ['conditional-prob'],
+      visualization: {
+        type: 'venn-2-sets',
+        pA: 0.5,
+        pB: 0.6,
+        pAandB: 0.4,
+        labelA: 'A',
+        labelB: 'B',
+        title: 'Venn diagram — P(A) = 0.5, P(B) = 0.6, P(A ∪ B) = 0.7',
+        description: 'Inclusion-exclusion gives P(A ∩ B) = 0.5 + 0.6 − 0.7 = 0.4.',
+      },
     },
 
     // ── Q10 (Q75) ───────────────────────────────────────────

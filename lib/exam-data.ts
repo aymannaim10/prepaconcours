@@ -47,6 +47,34 @@ export type QuestionVisualization =
       title?: string
       description?: string
     }
+  | {
+      type: 'binomial-pmf'
+      /** Binomial distribution X ~ B(n, p). Highlights the asked value k. */
+      n: number
+      p: number
+      k: number
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'venn-2-sets'
+      /** Two-set Venn diagram with the four region probabilities. */
+      pA: number
+      pB: number
+      pAandB: number
+      labelA?: string
+      labelB?: string
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'prob-breakdown'
+      /** Generic decomposition: P(event) = Σ items[i].value. */
+      total: { label: string; value: string }
+      items: { label: string; value: number; color?: string; explanation?: string }[]
+      title?: string
+      description?: string
+    }
 
 export interface ExamQuestion {
   number: number

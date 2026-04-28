@@ -339,6 +339,14 @@ export const EXAM_2019_REAL: ExamData = {
       difficulty: 'easy',
       tags: ['probability', 'binomial', 'with-replacement'],
       relatedTips: ['binomial-pmf'],
+      visualization: {
+        type: 'binomial-pmf',
+        n: 4,
+        p: 2 / 3,
+        k: 2,
+        title: 'Binomial X ~ B(4, 2/3) — exactly 2 green balls in 4 draws',
+        description: 'P(success) = 6/9 = 2/3. The asked value k=2 is highlighted in green.',
+      },
     },
 
     // ── Q11 (Q56) ───────────────────────────────────────────

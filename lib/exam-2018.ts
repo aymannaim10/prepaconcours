@@ -371,6 +371,17 @@ export const EXAM_2018_REAL: ExamData = {
       difficulty: 'easy',
       tags: ['probability', 'with-replacement', 'independence'],
       relatedTips: ['conditional-prob'],
+      visualization: {
+        type: 'prob-breakdown',
+        title: 'P(same color) breakdown — 3 R, 3 G, 1 W with replacement',
+        description: 'P(same color) = P(RR) + P(GG) + P(WW). With replacement → independent draws.',
+        total: { label: 'P(same color)', value: '19 / 49' },
+        items: [
+          { label: 'P(RR)', value: 9 / 49, color: '#E84C4C', explanation: '$P(RR) = (3/7)^{2} = 9/49$' },
+          { label: 'P(GG)', value: 9 / 49, color: '#4CE87C', explanation: '$P(GG) = (3/7)^{2} = 9/49$' },
+          { label: 'P(WW)', value: 1 / 49, color: '#FFFFFF', explanation: '$P(WW) = (1/7)^{2} = 1/49$' },
+        ],
+      },
     },
   ],
 }
