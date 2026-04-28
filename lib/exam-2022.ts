@@ -244,12 +244,16 @@ export const EXAM_2022_REAL: ExamData = {
       tags: ['probability', 'binomial', 'coin-toss'],
       relatedTips: ['binomial-pmf'],
       visualization: {
-        type: 'binomial-pmf',
+        type: 'binomial-arrangements',
         n: 4,
         p: 0.5,
         k: 2,
-        title: 'Binomial X ~ B(4, 1/2) — exactly 2 heads in 4 tosses',
-        description: 'Symmetric distribution (p = 1/2). The asked value k=2 sits at the peak.',
+        successLabel: 'Heads',
+        failureLabel: 'Tails',
+        successIcon: 'H',
+        failureIcon: 'T',
+        title: '4 coin tosses — exactly 2 heads',
+        description: 'Each row below is one of the C(4,2) = 6 arrangements where exactly 2 of the 4 tosses are heads.',
       },
     },
 
@@ -285,14 +289,15 @@ export const EXAM_2022_REAL: ExamData = {
       tags: ['probability', 'with-replacement', 'independence'],
       relatedTips: ['conditional-prob'],
       visualization: {
-        type: 'prob-breakdown',
-        title: 'Marginal probability of drawing a yellow ball',
-        description: 'With replacement, the two draws are independent — the 2nd draw is just a single marginal draw.',
-        total: { label: 'P(2nd yellow)', value: '1 / 3' },
-        items: [
-          { label: 'Yellow', value: 2 / 6, color: '#E5C76B', explanation: '$2$ yellow / $6$ total $= 1/3$' },
-          { label: 'Blue', value: 4 / 6, color: '#4CADE8', explanation: '$4$ blue / $6$ total $= 2/3$' },
+        type: 'urn-tree',
+        title: 'Bag with 4 blue, 2 yellow — 2 draws with replacement',
+        description: 'All 4 possible outcomes shown. Favorable cases (2nd ball yellow) are highlighted in green.',
+        balls: [
+          { color: '#4CADE8', label: 'Blue', count: 4 },
+          { color: '#E5C76B', label: 'Yellow', count: 2 },
         ],
+        withReplacement: true,
+        favorable: { type: 'second-is', label: 'Yellow' },
       },
     },
 

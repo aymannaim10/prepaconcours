@@ -75,6 +75,29 @@ export type QuestionVisualization =
       title?: string
       description?: string
     }
+  | {
+      type: 'urn-tree'
+      /** Bag illustration + probability tree for 2 sequential draws. */
+      balls: { color: string; label: string; count: number }[]
+      withReplacement: boolean
+      /** Which leaves of the tree should be highlighted as favorable outcomes */
+      favorable: 'same-color' | { type: 'second-is'; label: string }
+      title?: string
+      description?: string
+    }
+  | {
+      type: 'binomial-arrangements'
+      /** n positions with k successes — shows C(n,k) arrangements explicitly. */
+      n: number
+      p: number
+      k: number
+      successLabel: string
+      failureLabel: string
+      successIcon?: string
+      failureIcon?: string
+      title?: string
+      description?: string
+    }
 
 export interface ExamQuestion {
   number: number

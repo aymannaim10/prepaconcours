@@ -10,6 +10,8 @@ import CubicRootsPlot from './CubicRootsPlot'
 import BinomialPmfChart from './BinomialPmfChart'
 import VennDiagram2Sets from './VennDiagram2Sets'
 import ProbabilityBreakdown from './ProbabilityBreakdown'
+import UrnTreeDiagram from './UrnTreeDiagram'
+import BinomialArrangements from './BinomialArrangements'
 
 export default function QuestionVisualization({ viz }: { viz: Viz }) {
   if (viz.type === 'affine-recurrence') {
@@ -76,6 +78,32 @@ export default function QuestionVisualization({ viz }: { viz: Viz }) {
       <ProbabilityBreakdown
         total={viz.total}
         items={viz.items}
+        title={viz.title}
+        description={viz.description}
+      />
+    )
+  }
+  if (viz.type === 'urn-tree') {
+    return (
+      <UrnTreeDiagram
+        balls={viz.balls}
+        withReplacement={viz.withReplacement}
+        favorable={viz.favorable}
+        title={viz.title}
+        description={viz.description}
+      />
+    )
+  }
+  if (viz.type === 'binomial-arrangements') {
+    return (
+      <BinomialArrangements
+        n={viz.n}
+        p={viz.p}
+        k={viz.k}
+        successLabel={viz.successLabel}
+        failureLabel={viz.failureLabel}
+        successIcon={viz.successIcon}
+        failureIcon={viz.failureIcon}
         title={viz.title}
         description={viz.description}
       />
