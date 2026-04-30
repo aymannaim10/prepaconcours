@@ -489,24 +489,72 @@ export const EXAM_2022_REAL: ExamData = {
       ],
       solution: [
         {
-          label: `The line $(OA)$ has direction vector $\\vec{OA} = (-1\\,;1\\,;2)$. Any nonzero scalar multiple is also a valid direction`,
-          latex: `\\vec{OA} = (-1\\,;1\\,;2) \\;\\;\\text{(or any multiple)}`,
+          label: `STEP 1 — Recall the rule. A parametric representation of a line uses exactly ONE parameter $t$. The line $(OA)$ passes through both $O = (0\\,;0\\,;0)$ and $A = (-1\\,;1\\,;2)$, so its direction vector is $\\vec{OA} = A - O$. Any non-zero scalar multiple of $\\vec{OA}$ is also a valid direction`,
+          latex: `\\vec{OA} = A - O = (-1\\,;1\\,;2) \\;\\;\\text{(or any non-zero multiple)}`,
         },
         {
-          label: `Test option B: direction $(2\\,;-2\\,;-4) = -2 \\cdot (-1\\,;1\\,;2)$ — a valid scalar multiple of $\\vec{OA}$. ✓ Direction parallel.`,
-          latex: `(2\\,;-2\\,;-4) = -2\\,\\vec{OA}`,
+          label: `STEP 2 — Two-criteria test. A parametric form $\\{x = a t + x_{0},\\, y = b t + y_{0},\\, z = c t + z_{0}\\}$ represents the line $(OA)$ if AND ONLY IF: (i) the direction $(a\\,;b\\,;c)$ is parallel to $\\vec{OA}$, AND (ii) the line passes through $O$ (or equivalently $A$). Both conditions must hold`,
+          latex: `\\text{(i) direction } \\parallel \\vec{OA} \\;\\;\\text{ AND }\\;\\; \\text{(ii) the parametric trace passes through } O \\text{ and } A`,
         },
         {
-          label: `Verify B passes through $A$ at $t=0$: $(2(0)-1\\,;-2(0)+1\\,;-4(0)+2) = (-1\\,;1\\,;2) = A$ ✓`,
-          latex: `t = 0 \\implies (x,y,z) = (-1\\,;1\\,;2) = A`,
+          label: `❌ ELIMINATION of option A. The form has THREE independent parameters $(t, h, k) \\in \\mathbb{R}^{3}$ — that's a 3D set (the whole space), NOT a 1D line. A line has only ONE parameter. Option A is structurally invalid as a line representation`,
+          latex: `\\text{A: } x = -t-1,\\ y = k+1,\\ z = h+2 \\;\\text{with 3 params} \\implies \\text{NOT a line}`,
         },
         {
-          label: `Verify B passes through $O$ at $t = 1/2$: $(2(1/2)-1\\,;-2(1/2)+1\\,;-4(1/2)+2) = (0\\,;0\\,;0) = O$ ✓`,
+          label: `✅ VERIFICATION of option B. Direction $(2\\,;-2\\,;-4) = -2 \\cdot (-1\\,;1\\,;2) = -2\\,\\vec{OA}$ — parallel ✓`,
+          latex: `\\vec{u}_{B} = (2\\,;-2\\,;-4) = -2 \\cdot \\vec{OA} \\implies \\vec{u}_{B} \\parallel \\vec{OA}`,
+        },
+        {
+          label: `Check B passes through $A$ at $t = 0$: substitute $t=0$ into B`,
+          latex: `t = 0 \\implies (2(0) - 1\\,;\\,-2(0) + 1\\,;\\,-4(0) + 2) = (-1\\,;1\\,;2) = A \\;\\checkmark`,
+        },
+        {
+          label: `Check B passes through $O$ at $t = 1/2$: substitute $t = 1/2$`,
+          latex: `t = \\tfrac{1}{2} \\implies (2 \\cdot \\tfrac{1}{2} - 1\\,;\\,-2 \\cdot \\tfrac{1}{2} + 1\\,;\\,-4 \\cdot \\tfrac{1}{2} + 2) = (0\\,;0\\,;0) = O \\;\\checkmark`,
+        },
+        {
+          label: `Both endpoints belong to the parametric trace AND the direction is parallel to $\\vec{OA}$. Therefore B is the line $(OA)$ ✓`,
+          latex: `\\text{B passes through } O \\text{ AND } A \\text{ with direction } \\parallel \\vec{OA} \\implies \\text{B IS the line } (OA)`,
+        },
+        {
+          label: `❌ ELIMINATION of option C. Direction $(1\\,;1\\,;1)$. Test parallel to $\\vec{OA} = (-1\\,;1\\,;2)$: need $\\lambda$ such that $1 = -\\lambda,\\ 1 = \\lambda,\\ 1 = 2\\lambda$. The first gives $\\lambda = -1$, the second $\\lambda = 1$ — INCOMPATIBLE`,
+          latex: `\\text{C: direction } (1\\,;1\\,;1) \\not\\parallel (-1\\,;1\\,;2) \\implies \\text{wrong direction}`,
+        },
+        {
+          label: `(Note: C does pass through $A$ at $t = 0$, but with the wrong direction it describes a DIFFERENT line through $A$, not $(OA)$.)`,
+          latex: `\\text{C passes through } A \\text{ but NOT through } O \\implies \\text{not } (OA)`,
+        },
+        {
+          label: `❌ ELIMINATION of option D. Direction $(-1\\,;1\\,;2) = \\vec{OA}$ — parallel ✓. But check if D passes through $O$: solve $(-t+1\\,;t+2\\,;2t-2) = (0\\,;0\\,;0)$`,
+          latex: `\\text{D: direction OK, but does it pass through } O\\,?`,
+        },
+        {
+          label: `From $-t+1 = 0$: $t = 1$. From $t+2 = 0$: $t = -2$. CONTRADICTION — no value of $t$ gives $O$. Same issue with $A$: the parameters disagree`,
+          latex: `t = 1 \\;\\text{and}\\; t = -2 \\;\\text{simultaneously} \\implies \\text{impossible} \\implies O \\notin \\text{D}`,
+        },
+        {
+          label: `So D is a line PARALLEL to $(OA)$ but DISTINCT from it (it doesn't pass through the origin)`,
+          latex: `\\text{D} \\parallel (OA) \\;\\text{but}\\; \\text{D} \\neq (OA)`,
+        },
+        {
+          label: `❌ ELIMINATION of option E. Direction $(2\\,;-2\\,;4)$. Test parallel to $\\vec{OA} = (-1\\,;1\\,;2)$: need $\\lambda$ such that $2 = -\\lambda,\\ -2 = \\lambda,\\ 4 = 2\\lambda$. First gives $\\lambda = -2$, second $\\lambda = -2$ ✓, but third gives $\\lambda = 2$ — INCOMPATIBLE on the z-component`,
+          latex: `\\text{E: direction } (2\\,;-2\\,;4) \\implies \\lambda_{x,y} = -2 \\;\\text{but}\\; \\lambda_{z} = +2 \\implies \\text{NOT parallel}`,
+        },
+        {
+          label: `(The trap: $(2\\,;-2\\,;4)$ looks like $-2 \\cdot \\vec{OA}$ at first glance, but the z-component should be $-4$, not $+4$. Sign matters!)`,
+          latex: `-2 \\cdot \\vec{OA} = (2\\,;-2\\,;\\mathbf{-4}) \\neq (2\\,;-2\\,;\\mathbf{+4})`,
+        },
+        {
+          label: `STEP 3 — Summary table of eliminations`,
+          latex: `\\begin{array}{c|c|c|c} \\text{Option} & \\text{Direction} \\parallel \\vec{OA}? & \\text{Passes through } O\\text{ and } A? & \\text{Verdict} \\\\\\hline \\text{A} & \\text{(3 params, not a line)} & - & \\times \\\\ \\text{B} & \\checkmark\\;(-2\\,\\vec{OA}) & \\checkmark\\;\\text{at } t=\\frac{1}{2},\\,t=0 & \\checkmark \\\\ \\text{C} & \\times\\;(1,1,1) & \\text{passes } A \\text{ only} & \\times \\\\ \\text{D} & \\checkmark\\;(\\vec{OA}) & \\times\\;\\text{passes neither} & \\times \\\\ \\text{E} & \\times\\;(z\\text{-sign}) & - & \\times \\end{array}`,
+        },
+        {
+          label: `Conclude`,
           latex: `\\boxed{\\text{Answer: B}}`,
         },
       ],
-      difficulty: 'medium',
-      tags: ['geometry-3d', 'parametric-line', 'vectors'],
+      difficulty: 'hard',
+      tags: ['geometry-3d', 'parametric-line', 'vectors', 'trap-question'],
       relatedTips: ['parametric-line'],
     },
 
