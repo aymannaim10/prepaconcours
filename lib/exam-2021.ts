@@ -359,7 +359,7 @@ export const EXAM_2021_REAL: ExamData = {
       choices: [
         { id: 'A', latex: `z_2 = \\dfrac{1}{z_1}`, isCorrect: true },
         { id: 'B', latex: `z_2 = 1 + z_1`, isCorrect: false },
-        { id: 'C', latex: `z_2 z_1 = 1`, isCorrect: false },
+        { id: 'C', latex: `z_2 + z_1 = 1`, isCorrect: false },
         { id: 'D', latex: `z_1 \\times z_2 = 0`, isCorrect: false },
         { id: 'E', latex: `z_2 = -z_1`, isCorrect: false },
       ],
@@ -377,11 +377,15 @@ export const EXAM_2021_REAL: ExamData = {
           latex: `|z_{1}| = 1 \\implies z_{1}\\,\\bar z_{1} = 1 \\implies \\bar z_{1} = \\dfrac{1}{z_{1}}`,
         },
         {
-          label: `STEP 4 — Combine. Since $z_{2} = \\bar z_{1}$ AND $\\bar z_{1} = 1/z_{1}$, we get $z_{2} = 1/z_{1}$. (Vieta's formulas confirm: $z_{1}\\,z_{2} = c/a = 1$, so $z_{2} = 1/z_{1}$ — same conclusion)`,
+          label: `STEP 4 — Combine. Since $z_{2} = \\bar z_{1}$ AND $\\bar z_{1} = 1/z_{1}$, we get $z_{2} = 1/z_{1}$. (Vieta confirms: $z_{1}\\,z_{2} = c/a = 1$, so $z_{2} = 1/z_{1}$ — same conclusion)`,
           latex: `z_{2} = \\bar z_{1} = \\dfrac{1}{z_{1}}`,
         },
         {
-          label: `STEP 5 — Reject the wrong options. Option C says $z_{1} z_{2} = 1$ — TRUE but trivial (just a product, not a relation between $z_{1}$ and $z_{2}$). The MCQ asks for the relation expressing $z_{2}$ as a function of $z_{1}$, which is option A`,
+          label: `STEP 5 — Reject the other options using Vieta's: $z_{1}+z_{2} = -b/a = -1$ and $z_{1}z_{2} = c/a = 1$`,
+          latex: `z_{1}+z_{2} = -1 \\;,\\quad z_{1}\\cdot z_{2} = 1`,
+        },
+        {
+          label: `Option B ($z_{2}=1+z_{1}$): would give $z_{1}+z_{2} = 2z_{1}+1$, forcing $z_{1}$ real — false. Option C ($z_{1}+z_{2}=1$): the actual sum is $-1$, not $1$. Option D ($z_{1}z_{2}=0$): the actual product is $1$, not $0$. Option E ($z_{2}=-z_{1}$): would give $z_{1}z_{2}=-z_{1}^{2}$, negative for real $z_{1}$ but here $|z_{1}|^{2}=1$ — incompatible`,
           latex: `\\boxed{z_{2} = \\dfrac{1}{z_{1}} \\implies \\text{Answer: A}}`,
         },
       ],
